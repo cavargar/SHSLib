@@ -47,6 +47,10 @@ lake build
 
 Requires [Lean 4](https://leanprover.github.io/) and [Mathlib](https://github.com/leanprover-community/mathlib4) (pinned via `lakefile.toml`).
 
+## Documentation
+
+Per-module notes are in [`wiki/index.md`](./wiki/index.md) — what each module proves, its key theorems and definitions, and remaining gaps.
+
 ## References
 
 - M. H. A. Davis, *Markov Models and Optimization*, Chapman & Hall, 1993.
