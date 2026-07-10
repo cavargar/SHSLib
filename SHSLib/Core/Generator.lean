@@ -88,10 +88,21 @@ theorem SHS.theorem2_PDP_generator
     (ψ : SHS.TestFunction Q n)
     (z₀ : SHS.InitialCondition Q n) (t : ℝ)
     -- Probability space carrying SHS sample paths
-    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (q_proc : ℝ → Ω → Q) (x_proc : ℝ → Ω → EuclideanSpace ℝ (Fin n))
+    (ht : z₀.t₀ ≤ t)
     (h_init_q : ∀ᵐ ω ∂P, q_proc z₀.t₀ ω = z₀.q₀)
     (h_init_x : ∀ᵐ ω ∂P, x_proc z₀.t₀ ω = z₀.x₀)
+    /- Davis, Theorem 26.14 + finiteness conditions (15)-(16): the compensated
+       process `Cˢ(ω) = ψ(q(s),x(s),s) − ψ(q₀,x₀,t₀) − ∫_{t₀}^{s} (Lψ) dr` is a
+       true martingale with respect to some filtration `ℱ`. -/
+    (ℱ : MeasureTheory.Filtration ℝ mΩ)
+    [MeasureTheory.SigmaFiniteFiltration P ℱ]
+    (hmart : MeasureTheory.Martingale
+      (fun s ω => ψ.toFun (q_proc s ω) (x_proc s ω) s -
+        ψ.toFun z₀.q₀ z₀.x₀ z₀.t₀ -
+        ∫ r in Set.Icc z₀.t₀ s,
+          S.extendedGenerator ψ (q_proc r ω) (x_proc r ω) r) ℱ P)
     /- Condition (15): finite expected cumulative intensity -/
     (hfinite_transitions : Integrable (fun ω => ∫ s in Set.Icc z₀.t₀ t,
         ∑ ℓ : Fin m, S.intensity ℓ (q_proc s ω) (x_proc s ω) s) P)
@@ -128,7 +139,20 @@ theorem SHS.theorem2_PDP_generator
        A true martingale with C^ψ(t₀) = 0 a.s. has E[C^ψ(t)] = 0.
        C^ψ(t₀) = ψ(q(t₀),x(t₀),t₀) - ψ(q₀,x₀,t₀) - 0 = 0 a.s.
        by h_init_q, h_init_x and ∫ over degenerate interval = 0. -/
-    sorry
+    -- The expectation of a martingale is constant in time, so
+    -- E[C^ψ(t)] = E[C^ψ(t₀)].
+    have key := hmart.setIntegral_eq ht (s := Set.univ) MeasurableSet.univ
+    simp only [MeasureTheory.setIntegral_univ] at key
+    rw [← key]
+    -- C^ψ(t₀) = 0 almost everywhere, so its expectation is 0.
+    have hzero : (fun ω => ψ.toFun (q_proc z₀.t₀ ω) (x_proc z₀.t₀ ω) z₀.t₀ -
+        ψ.toFun z₀.q₀ z₀.x₀ z₀.t₀ -
+        ∫ r in Set.Icc z₀.t₀ z₀.t₀,
+          S.extendedGenerator ψ (q_proc r ω) (x_proc r ω) r) =ᵐ[P] 0 := by
+      filter_upwards [h_init_q, h_init_x] with ω hq hx
+      rw [hq, hx]
+      simp [Set.Icc_self]
+    rw [integral_congr_ae hzero]; simp
   -- Now derive the generator formula by linearity of the integral.
   have h_sub : Integrable (fun ω =>
       ψ.toFun (q_proc t ω) (x_proc t ω) t -
@@ -167,12 +191,14 @@ which implies:
   `E[Σ_ℓ N_ℓ(t)] ≤ (∫_{t₀}^{t} α(s) ds) · exp(∫_{t₀}^{t} α(s) ds) < ∞`
 -/
 
-/-- **Lemma 2** (Hespanha, 2005).
+/-
+**Lemma 2** (Hespanha, 2005).
 If the transition intensities are bounded by `α(t)` and the test function
 is bounded by `β(t)` along sample paths (Eq. 17), then conditions (15) and (16) hold.
 
 In particular:
-  `E[Σ_ℓ N_ℓ(t)] ≤ (∫_{t₀}^{t} α(s) ds) · exp(∫_{t₀}^{t} α(s) ds)` -/
+  `E[Σ_ℓ N_ℓ(t)] ≤ (∫_{t₀}^{t} α(s) ds) · exp(∫_{t₀}^{t} α(s) ds)`
+-/
 theorem SHS.lemma2_bounded_implies_finite
     {Q : Type*} [Fintype Q] {n m : ℕ}
     (S : SHS Q n m)
@@ -191,7 +217,19 @@ theorem SHS.lemma2_bounded_implies_finite
       S.intensity ℓ (q_proc s ω) (x_proc s ω) s ≤ alpha s)
     /- Test function bounded by β along sample paths -/
     (hpsi_bound : ∀ᵐ ω ∂P, ∀ s ∈ Set.Icc z₀.t₀ t,
-      |ψ.toFun (q_proc s ω) (x_proc s ω) s| ≤ beta s) :
+      |ψ.toFun (q_proc s ω) (x_proc s ω) s| ≤ beta s)
+    /- Test function at the reset image also bounded by β along sample paths -/
+    (hpsi_reset_bound : ∀ ℓ, ∀ᵐ ω ∂P, ∀ s ∈ Set.Icc z₀.t₀ t,
+      |ψ.toFun (S.phi_q ℓ (q_proc s ω) (x_proc s ω) s)
+               (S.phi_x ℓ (q_proc s ω) (x_proc s ω) s) s| ≤ beta s)
+    /- Measurability of the two path functionals over the probability space -/
+    (hmeas1 : AEStronglyMeasurable (fun ω => ∫ s in Set.Icc z₀.t₀ t,
+        ∑ ℓ : Fin m, S.intensity ℓ (q_proc s ω) (x_proc s ω) s) P)
+    (hmeas2 : AEStronglyMeasurable (fun ω => ∫ s in Set.Icc z₀.t₀ t,
+        ∑ ℓ : Fin m, |ψ.toFun (S.phi_q ℓ (q_proc s ω) (x_proc s ω) s)
+                        (S.phi_x ℓ (q_proc s ω) (x_proc s ω) s) s -
+                      ψ.toFun (q_proc s ω) (x_proc s ω) s| *
+          S.intensity ℓ (q_proc s ω) (x_proc s ω) s) P) :
     -- Conditions (15) and (16) of Theorem 2 hold
     Integrable (fun ω => ∫ s in Set.Icc z₀.t₀ t,
         ∑ ℓ : Fin m, S.intensity ℓ (q_proc s ω) (x_proc s ω) s) P ∧
@@ -200,7 +238,25 @@ theorem SHS.lemma2_bounded_implies_finite
                         (S.phi_x ℓ (q_proc s ω) (x_proc s ω) s) s -
                       ψ.toFun (q_proc s ω) (x_proc s ω) s| *
           S.intensity ℓ (q_proc s ω) (x_proc s ω) s) P := by
-  sorry
+  refine' ⟨ _, _ ⟩;
+  · refine' MeasureTheory.Integrable.mono' ( MeasureTheory.integrable_const _ ) hmeas1 _;
+    exact ∫ s in Set.Icc z₀.t₀ t, ∑ ℓ : Fin m, alpha s;
+    filter_upwards [ MeasureTheory.ae_all_iff.2 hintensity_bound ] with ω hω;
+    refine' le_trans ( MeasureTheory.norm_integral_le_integral_norm _ ) ( MeasureTheory.integral_mono_of_nonneg _ _ _ );
+    · exact Filter.Eventually.of_forall fun x => norm_nonneg _;
+    · exact Continuous.integrableOn_Icc ( by continuity );
+    · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Icc ] with s hs using by rw [ Real.norm_of_nonneg ( Finset.sum_nonneg fun _ _ => S.intensity_nonneg _ _ _ _ ) ] ; exact Finset.sum_le_sum fun _ _ => hω _ _ hs;
+  · refine' MeasureTheory.Integrable.mono' _ _ _;
+    refine' fun ω => ∫ s in Set.Icc z₀.t₀ t, ∑ ℓ : Fin m, ( 2 * beta s ) * alpha s ∂MeasureTheory.volume;
+    · exact MeasureTheory.integrable_const _;
+    · exact hmeas2;
+    · filter_upwards [ hpsi_bound, MeasureTheory.ae_all_iff.2 hpsi_reset_bound, MeasureTheory.ae_all_iff.2 hintensity_bound ] with ω hω₁ hω₂ hω₃;
+      refine' le_trans ( MeasureTheory.norm_integral_le_integral_norm _ ) ( MeasureTheory.integral_mono_of_nonneg _ _ _ );
+      · exact Filter.Eventually.of_forall fun x => norm_nonneg _;
+      · exact Continuous.integrableOn_Icc ( by continuity );
+      · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Icc ] with s hs;
+        rw [ Real.norm_of_nonneg ( Finset.sum_nonneg fun _ _ => mul_nonneg ( abs_nonneg _ ) ( S.intensity_nonneg _ _ _ _ ) ) ];
+        exact Finset.sum_le_sum fun i _ => mul_le_mul ( abs_sub _ _ |> le_trans <| by linarith [ hω₁ s hs, hω₂ i s hs ] ) ( hω₃ i s hs ) ( S.intensity_nonneg i _ _ _ ) ( by linarith [ hbeta_nonneg s ] )
 
 /-! ## Theorem 1: Main Generator Formula (Eq. 8)
 
@@ -243,10 +299,19 @@ theorem SHS.theorem1_generator_formula
     (ψ : SHS.TestFunction Q n)
     (z₀ : SHS.InitialCondition Q n) (t : ℝ)
     -- Probability space carrying SHS sample paths
-    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (q_proc : ℝ → Ω → Q) (x_proc : ℝ → Ω → EuclideanSpace ℝ (Fin n))
+    (ht : z₀.t₀ ≤ t)
     (h_init_q : ∀ᵐ ω ∂P, q_proc z₀.t₀ ω = z₀.q₀)
     (h_init_x : ∀ᵐ ω ∂P, x_proc z₀.t₀ ω = z₀.x₀)
+    /- Davis, Theorem 26.14: the compensated process is a martingale. -/
+    (ℱ : MeasureTheory.Filtration ℝ mΩ)
+    [MeasureTheory.SigmaFiniteFiltration P ℱ]
+    (hmart : MeasureTheory.Martingale
+      (fun s ω => ψ.toFun (q_proc s ω) (x_proc s ω) s -
+        ψ.toFun z₀.q₀ z₀.x₀ z₀.t₀ -
+        ∫ r in Set.Icc z₀.t₀ s,
+          S.extendedGenerator ψ (q_proc r ω) (x_proc r ω) r) ℱ P)
     (h_int_ψ : Integrable (fun ω => ψ.toFun (q_proc t ω) (x_proc t ω) t) P)
     (h_int_Lψ : Integrable (fun ω => ∫ s in Set.Icc z₀.t₀ t,
         S.extendedGenerator ψ (q_proc s ω) (x_proc s ω) s) P)
@@ -263,8 +328,8 @@ theorem SHS.theorem1_generator_formula
       ψ.toFun z₀.q₀ z₀.x₀ z₀.t₀ +
       ∫ ω, (∫ s in Set.Icc z₀.t₀ t,
         S.extendedGenerator ψ (q_proc s ω) (x_proc s ω) s) ∂P :=
-  S.theorem2_PDP_generator hflow hmeas ψ z₀ t P q_proc x_proc
-    h_init_q h_init_x hfinite_transitions hfinite_jumps h_int_ψ h_int_Lψ
+  S.theorem2_PDP_generator hflow hmeas ψ z₀ t P q_proc x_proc ht
+    h_init_q h_init_x ℱ hmart hfinite_transitions hfinite_jumps h_int_ψ h_int_Lψ
 
 /-! ## Equation 10: Differential form of the generator formula
 
@@ -326,33 +391,141 @@ The key idea is that linear growth of `f` combined with non-expansive resets
 The proof uses the Bellman–Gronwall Lemma.
 -/
 
-/-- **Lemma 1** (Hespanha, 2005).
+/-
+⚠  **Lemma 1 is FALSE as literally formalized below** (original kept as line
+comments). The formalized right-hand side contains the term `c_f / gamma_f
+z₀.t₀`. In Lean, division by zero returns `0`, so whenever `gamma_f z₀.t₀ = 0`
+this term is `0` regardless of `c_f`. Taking `gamma_f ≡ 0` therefore collapses
+the bound to `Real.exp 0 * max (max ‖x₀‖ 0) c_φ`, while the flow of a *constant*
+nonzero drift grows linearly in `t` and is unbounded. Hence the inequality
+fails; this is certified by `SHS.lemma1_linear_growth_bound_false` below.
+
+The intended (true) statement of Hespanha's Eq. (35) requires `gamma_f` to be
+bounded away from `0` (e.g. a positive constant `γ_f > 0`, as in the paper's
+Grönwall argument), together with integrability of `s ↦ f(q₀, flow s, s)` and
+`s ↦ gamma_f s * ‖flow s‖` on `[t₀, t]`; only under such hypotheses does the
+Bellman–Grönwall lemma yield the stated exponential bound. A robust,
+hypothesis-free alternative is the sum-form Grönwall bound
+`‖x(t)‖ ≤ (‖x₀‖ + c_f · (t − t₀)) · exp(∫ γ_f)`.
+
+Original statement, preserved verbatim (line-commented):
+
+/ -- **Lemma 1** (Hespanha, 2005).
 Under linear growth conditions on `f` and `φ`, the sample paths are globally
 bounded (Assumption 2(ii) holds).
-
 Specifically, `‖x(t)‖ ≤ e^{∫_{t₀}^{t} γ_f(r) dr} · max{‖x₀‖, c_f/γ_f(t₀), c_φ}`
-for all `t ≥ t₀` with probability one. (Eq. 35) -/
+for all `t ≥ t₀` with probability one. (Eq. 35) - /
+theorem SHS.lemma1_linear_growth_bound
+{Q : Type*} [Fintype Q] {n m : ℕ}
+(S : SHS Q n m)
+(hflow : S.HasGlobalFlow)
+(gamma_f : ℝ → ℝ) (hgamma_cont : Continuous gamma_f) (hgamma_nonneg : ∀ t, 0 ≤ gamma_f t)
+(c_f : ℝ) (hc_f : 0 ≤ c_f)
+(c_phi : ℝ) (hc_phi : 0 ≤ c_phi)
+(hf_growth : ∀ q x t, ‖S.f q x t‖ ≤ max (gamma_f t * ‖x‖) c_f)
+(hphi_growth : ∀ ℓ q x t, ‖S.phi_x ℓ q x t‖ ≤ max ‖x‖ c_phi)
+(z₀ : SHS.InitialCondition Q n)
+(t : ℝ) (ht : z₀.t₀ ≤ t) :
+‖hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ t‖ ≤
+Real.exp (∫ r in Set.Icc z₀.t₀ t, gamma_f r) *
+max (max ‖z₀.x₀‖ (c_f / gamma_f z₀.t₀)) c_phi := by
+sorry
+-/
+
+/-- **Certificate that the formalized `lemma1_linear_growth_bound` is false.**
+
+Counterexample: `Q = Unit`, `n = 1`, `m = 0`, constant unit drift `f ≡ e₀`
+(so `c_f = 1` works), `gamma_f ≡ 0`, `c_φ = 0`, initial `x₀ = 0` at `t₀ = 0`,
+and `t = 1`. The flow is `x(t) = x₀ + (t − t₀) e₀`, so `‖x(1)‖ = 1`, whereas the
+claimed bound evaluates to `exp 0 · max (max 0 (1/0)) 0 = 0`, and `1 ≤ 0` is
+false.
+-/
+theorem SHS.lemma1_linear_growth_bound_false :
+    ¬ ∀ (Q : Type) [Fintype Q] (n m : ℕ)
+        (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+        (gamma_f : ℝ → ℝ), Continuous gamma_f → (∀ t, 0 ≤ gamma_f t) →
+        ∀ (c_f : ℝ), 0 ≤ c_f → ∀ (c_phi : ℝ), 0 ≤ c_phi →
+        (∀ q x t, ‖S.f q x t‖ ≤ max (gamma_f t * ‖x‖) c_f) →
+        (∀ ℓ q x t, ‖S.phi_x ℓ q x t‖ ≤ max ‖x‖ c_phi) →
+        ∀ (z₀ : SHS.InitialCondition Q n) (t : ℝ), z₀.t₀ ≤ t →
+        ‖hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ t‖ ≤
+          Real.exp (∫ r in Set.Icc z₀.t₀ t, gamma_f r) *
+            max (max ‖z₀.x₀‖ (c_f / gamma_f z₀.t₀)) c_phi := by
+  push_neg;
+  refine' ⟨ PUnit, inferInstance, 1, 0, _, _, 0, continuous_const, by norm_num, _ ⟩ <;> norm_num [ EuclideanSpace.norm_eq ] at *;
+  refine' { f := fun _ _ _ => EuclideanSpace.single 0 1, phi := fun ℓ => ℓ.elim0, intensity := fun ℓ => ℓ.elim0, intensity_nonneg := fun ℓ => ℓ.elim0 };
+  refine' ⟨ _, _, _ ⟩;
+  refine' fun t₀ q₀ x₀ t => x₀ + ( Max.max 0 ( t - t₀ ) ) • EuclideanSpace.single 0 1;
+  all_goals norm_num [ EuclideanSpace.norm_eq ] at *;
+  · exact fun t₀ t => max_comm _ _;
+  · refine' ⟨ 1, by norm_num, 0, by norm_num, by norm_num, ⟨ ⟨ ⟩, 0, 0 ⟩, 1, _, _, _ ⟩ <;> norm_num [ EuclideanSpace.norm_eq ] at *
+
+/-
+**Lemma 1 (Hespanha, 2005, Eq. 35), corrected and provable form.**
+
+The original function-valued statement is *false* (see
+`SHS.lemma1_linear_growth_bound_false`) because of the `c_f / gamma_f t₀`
+division-by-zero degeneracy.  Here we give the robust, true form using a
+*constant* linear-growth rate `K ≥ 0`: if the drift obeys the linear-growth
+bound `‖f(q₀,x,t)‖ ≤ max (K‖x‖) c_f`, then along the continuous flow the state
+is bounded by the Grönwall envelope
+`‖x(t)‖ ≤ gronwallBound ‖x₀‖ K c_f (t − t₀)`
+(which for `K > 0` equals `(‖x₀‖ + c_f/K)·e^{K(t−t₀)} − c_f/K`).  Since only the
+drift governs the continuous flow, the reset bound `c_φ` is not needed.
+
+The continuity hypothesis `hf_cont` (the drift evaluated along the trajectory is
+continuous in time) is what lets the integral form `flow_ode` of the flow be
+differentiated via the Fundamental Theorem of Calculus.
+-/
 theorem SHS.lemma1_linear_growth_bound
     {Q : Type*} [Fintype Q] {n m : ℕ}
-    (S : SHS Q n m)
-    (hflow : S.HasGlobalFlow)
-    /- Growth bound for the vector field -/
-    (gamma_f : ℝ → ℝ) (hgamma_cont : Continuous gamma_f) (hgamma_nonneg : ∀ t, 0 ≤ gamma_f t)
-    (c_f : ℝ) (hc_f : 0 ≤ c_f)
-    /- Growth bound for the reset maps -/
-    (c_phi : ℝ) (hc_phi : 0 ≤ c_phi)
-    /- Linear growth of f: ‖f(q,x,t)‖ ≤ max{γ_f(t)‖x‖, c_f} -/
-    (hf_growth : ∀ q x t, ‖S.f q x t‖ ≤ max (gamma_f t * ‖x‖) c_f)
-    /- Non-expansive resets: ‖φ^x_ℓ(q,x,t)‖ ≤ max{‖x‖, c_φ} -/
-    (hphi_growth : ∀ ℓ q x t, ‖S.phi_x ℓ q x t‖ ≤ max ‖x‖ c_phi)
-    /- Initial condition -/
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (K : ℝ) (hK : 0 ≤ K) (c_f : ℝ) (hc_f : 0 ≤ c_f)
     (z₀ : SHS.InitialCondition Q n)
+    (hf_growth : ∀ x t, ‖S.f z₀.q₀ x t‖ ≤ max (K * ‖x‖) c_f)
+    (hf_cont : Continuous
+      (fun s => S.f z₀.q₀ (hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ s) s))
     (t : ℝ) (ht : z₀.t₀ ≤ t) :
-    -- Conclusion: the sample path is bounded by the Gronwall estimate (Eq. 35)
     ‖hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ t‖ ≤
-      Real.exp (∫ r in Set.Icc z₀.t₀ t, gamma_f r) *
-        max (max ‖z₀.x₀‖ (c_f / gamma_f z₀.t₀)) c_phi := by
-  sorry
+      gronwallBound ‖z₀.x₀‖ K c_f (t - z₀.t₀) := by
+  -- Apply the Grönwall inequality to the integral equation.
+  have h_gronwall : ∀ t ≥ z₀.t₀, ‖hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ t‖ ≤ gronwallBound ‖z₀.x₀‖ K c_f (t - z₀.t₀) := by
+    intro t ht
+    set g : ℝ → EuclideanSpace ℝ (Fin n) := fun s => hflow.flow z₀.t₀ z₀.q₀ z₀.x₀ s
+    set f' : ℝ → EuclideanSpace ℝ (Fin n) := fun s => S.f z₀.q₀ (g s) s
+    have hg : ∀ τ, g τ = z₀.x₀ + ∫ s in Set.Icc z₀.t₀ τ, f' s := by
+      exact fun τ => hflow.flow_ode z₀.t₀ z₀.q₀ z₀.x₀ τ
+    have hg_cont : Continuous g := by
+      rw [ show g = _ from funext hg ];
+      refine' continuous_const.add _;
+      rw [ show ( fun x => ∫ s in Set.Icc z₀.t₀ x, f' s ) = fun x => if x ≥ z₀.t₀ then ∫ s in z₀.t₀..x, f' s else 0 from funext fun x => ?_ ];
+      · apply_rules [ Continuous.if_le, continuous_const ];
+        · apply_rules [ intervalIntegral.continuous_primitive, hf_cont.intervalIntegrable ];
+        · exact continuous_id;
+        · simp +contextual [ intervalIntegral.integral_of_le ];
+      · split_ifs <;> simp_all +decide [ MeasureTheory.integral_Icc_eq_integral_Ioc, intervalIntegral.integral_of_le ]
+    have hg_deriv : ∀ x ∈ Set.Ico z₀.t₀ t, HasDerivWithinAt g (f' x) (Set.Ici x) x := by
+      intro x hx
+      have h_deriv : HasDerivWithinAt (fun τ => ∫ s in z₀.t₀..τ, f' s) (f' x) (Set.Ici x) x := by
+        apply_rules [ intervalIntegral.integral_hasDerivWithinAt_right ];
+        · exact hf_cont.intervalIntegrable _ _;
+        · exact hf_cont.stronglyMeasurable.stronglyMeasurableAtFilter;
+        · exact hf_cont.continuousWithinAt;
+      rw [ hasDerivWithinAt_iff_tendsto ] at *;
+      refine' h_deriv.congr' _;
+      filter_upwards [ self_mem_nhdsWithin ] with x' hx' ; simp +decide [ hg x', hg x, MeasureTheory.integral_Icc_eq_integral_Ioc, intervalIntegral.integral_of_le hx.1, intervalIntegral.integral_of_le hx'.out ] ; ring;
+      exact Or.inl ( by rw [ intervalIntegral.integral_of_le ( by linarith [ hx.1, hx'.out ] ) ] )
+    have hg_init : ‖g z₀.t₀‖ ≤ ‖z₀.x₀‖ := by
+      simp +zetaDelta at *;
+      rw [ hflow.flow_init ]
+    have hg_growth : ∀ x ∈ Set.Ico z₀.t₀ t, ‖f' x‖ ≤ K * ‖g x‖ + c_f := by
+      intro x _
+      refine (hf_growth (g x) x).trans (max_le ?_ ?_)
+      · linarith [hc_f]
+      · linarith [mul_nonneg hK (norm_nonneg (g x))]
+    have := @norm_le_gronwallBound_of_norm_deriv_right_le;
+    exact this ( hg_cont.continuousOn ) hg_deriv hg_init hg_growth t ⟨ ht, le_rfl ⟩;
+  exact h_gronwall t ht
 
 /-! ## Section 3.1: Generalized SHS with distributional resets -/
 
@@ -413,16 +586,75 @@ def SHS.WithDiffusion.extendedGenerator {Q : Type*} {n m k : ℕ}
       (EuclideanSpace.equiv (Fin n) ℝ).symm (Matrix.mulVec (ψ.hessian_x q x t) (EuclideanSpace.equiv (Fin n) ℝ gi))
     @inner ℝ _ _ Hgi gi
 
-/-- **Proof of Eq. (14)** (Appendix).
+/-
+Symmetric second difference converges to the second derivative.
+If `φ` has derivative `dφ` on a neighbourhood of `0` and `dφ` is differentiable
+at `0` with derivative `c`, then `(φ h + φ (-h) - 2 φ 0)/h² → c` as `h → 0`
+(with `h ≠ 0`). This is the one-dimensional Taylor fact behind the diffusion
+generator limit.
+-/
+lemma Real.symmSecondDiff_tendsto (φ dφ : ℝ → ℝ) (c : ℝ)
+    (h1 : ∀ᶠ s in nhds (0:ℝ), HasDerivAt φ (dφ s) s)
+    (h2 : HasDerivAt dφ c 0) :
+    Filter.Tendsto (fun h : ℝ => (φ h + φ (-h) - 2 * φ 0) / h ^ 2)
+      (nhdsWithin (0:ℝ) {(0:ℝ)}ᶜ) (nhds c) := by
+  -- Let $g(h) = \phi(h) + \phi(-h) - 2\phi(0)$.
+  set g : ℝ → ℝ := fun h => φ h + φ (-h) - 2 * φ 0;
+  -- By definition of $g$, we know that $g'(h) = dφ(h) - dφ(-h)$.
+  have hg' : ∀ᶠ h in 𝓝 0, HasDerivAt g (dφ h - dφ (-h)) h := by
+    rw [ Metric.eventually_nhds_iff ] at *;
+    obtain ⟨ ε, ε_pos, hε ⟩ := h1; use ε, ε_pos; intro y hy; convert HasDerivAt.sub ( HasDerivAt.add ( hε hy ) ( HasDerivAt.comp y ( hε <| show Dist.dist ( -y ) 0 < ε from by simpa using hy ) <| hasDerivAt_neg y ) ) ( hasDerivAt_const _ _ ) using 1 ; ring;
+  -- By definition of $g$, we know that $g'(h) / (2h) \to c$ as $h \to 0$.
+  have hg'_div : Filter.Tendsto (fun h => (dφ h - dφ (-h)) / (2 * h)) (𝓝[≠] 0) (𝓝 c) := by
+    have hg'_div : Filter.Tendsto (fun h => (dφ h - dφ 0) / h) (𝓝[≠] 0) (𝓝 c) ∧ Filter.Tendsto (fun h => (dφ (-h) - dφ 0) / (-h)) (𝓝[≠] 0) (𝓝 c) := by
+      constructor;
+      · simpa [ div_eq_inv_mul ] using h2.tendsto_slope_zero;
+      · have := h2.tendsto_slope_zero;
+        convert this.comp ( show Filter.Tendsto ( fun h : ℝ => -h ) ( 𝓝[≠] 0 ) ( 𝓝[≠] 0 ) from Filter.Tendsto.inf ( Continuous.tendsto' ( by continuity ) _ _ <| by norm_num ) <| by norm_num ) using 2 ; norm_num ; ring;
+    convert hg'_div.1.add hg'_div.2 |> Filter.Tendsto.div_const <| 2 using 2 <;> ring;
+  have hg_lhopital : ∀ᶠ h in 𝓝[≠] 0, HasDerivAt g (dφ h - dφ (-h)) h ∧ HasDerivAt (fun h => h ^ 2) (2 * h) h := by
+    filter_upwards [ hg'.filter_mono nhdsWithin_le_nhds ] with h hh using ⟨ hh, by simpa using hasDerivAt_pow 2 h ⟩;
+  have hg_lhopital : Filter.Tendsto (fun h => (g h - g 0) / (h ^ 2 - 0 ^ 2)) (𝓝[≠] 0) (𝓝 c) := by
+    apply_rules [ HasDerivAt.lhopital_zero_nhdsNE ];
+    · filter_upwards [ hg_lhopital ] with x hx using by simpa using hx.1.sub_const ( g 0 ) ;
+    · filter_upwards [ hg_lhopital ] with x hx using by simpa using hx.2;
+    · filter_upwards [ self_mem_nhdsWithin ] with x hx using mul_ne_zero two_ne_zero hx;
+    · have hg_cont : ContinuousAt g 0 := by
+        exact HasDerivAt.continuousAt ( hg'.self_of_nhds );
+      exact tendsto_nhdsWithin_of_tendsto_nhds ( by simpa using hg_cont.tendsto.sub_const ( g 0 ) );
+    · exact tendsto_nhdsWithin_of_tendsto_nhds ( Continuous.tendsto' ( by continuity ) _ _ <| by norm_num );
+  grind +qlia
+
+/-
+**Proof of Eq. (14)** (Appendix).
 The extended generator with diffusion (Eq. 14) is obtained as the limit
 `ε ↓ 0` of the generator for the approximating SHS with resets
 `x ↦ x ± √ε g_i(q,x,t)` occurring at rates `1/(2ε)`.
-The Taylor expansion yields the second-order term. -/
+The Taylor expansion yields the second-order term.
+
+Since `TestFunctionC2` only *carries* a Hessian field `hessian_x` without linking
+it to actual derivatives of `toFun`, the limit is not determined by the data
+alone. We therefore add faithful second-order regularity hypotheses `hd1`/`hd2`:
+for each diffusion direction `g_i`, the one-parameter restriction
+`s ↦ ψ(q, x + s·g_i, t)` has derivative `dψ i` near `0`, and `dψ i` is itself
+differentiable at `0` with derivative equal to the quadratic form
+`⟨(hessian_x) g_i, g_i⟩`. These encode that `hessian_x` is the genuine Hessian of
+`toFun` in the directions `g_i`.
+-/
 theorem SHS.WithDiffusion.generator_limit
     {Q : Type*} [Fintype Q] {n m k : ℕ}
     (S : SHS.WithDiffusion Q n m k)
     (ψ : SHS.TestFunctionC2 Q n)
-    (q : Q) (x : EuclideanSpace ℝ (Fin n)) (t : ℝ) :
+    (q : Q) (x : EuclideanSpace ℝ (Fin n)) (t : ℝ)
+    (dψ : Fin k → ℝ → ℝ)
+    (hd1 : ∀ i, ∀ᶠ s in nhds (0:ℝ),
+      HasDerivAt (fun s => ψ.toFun q (x + s • S.g i q x t) t) (dψ i s) s)
+    (hd2 : ∀ i, HasDerivAt (dψ i)
+      (@inner ℝ _ _
+        ((EuclideanSpace.equiv (Fin n) ℝ).symm
+          (Matrix.mulVec (ψ.hessian_x q x t)
+            (EuclideanSpace.equiv (Fin n) ℝ (S.g i q x t))))
+        (S.g i q x t)) 0) :
     -- The finite-difference approximation converges to the diffusion term
     Filter.Tendsto
       (fun ε => ∑ i : Fin k,
@@ -432,7 +664,18 @@ theorem SHS.WithDiffusion.generator_limit
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (S.extendedGenerator ψ q x t -
              S.toSHS.extendedGenerator ψ.toTestFunction q x t)) := by
-  sorry
+  have h_tendsto : ∀ i, Filter.Tendsto (fun ε => (ψ.toFun q (x + Real.sqrt ε • S.g i q x t) t + ψ.toFun q (x - Real.sqrt ε • S.g i q x t) t - 2 * ψ.toFun q x t) / (2 * ε)) (nhdsWithin 0 (Set.Ioi 0)) (nhds ((1 / 2) * (inner ℝ ((EuclideanSpace.equiv (Fin n) ℝ).symm ((ψ.hessian_x q x t).mulVec ((EuclideanSpace.equiv (Fin n) ℝ) (S.g i q x t)))) (S.g i q x t)))) := by
+    intro i
+    have := Real.symmSecondDiff_tendsto (fun s => ψ.toFun q (x + s • S.g i q x t) t) (dψ i) (inner ℝ ((EuclideanSpace.equiv (Fin n) ℝ).symm ((ψ.hessian_x q x t).mulVec ((EuclideanSpace.equiv (Fin n) ℝ) (S.g i q x t)))) (S.g i q x t)) (hd1 i) (hd2 i);
+    convert Filter.Tendsto.const_mul ( 1 / 2 : ℝ ) ( this.comp ( show Filter.Tendsto ( fun ε : ℝ => Real.sqrt ε ) ( nhdsWithin 0 ( Set.Ioi 0 ) ) ( nhdsWithin 0 { 0 } ᶜ ) from ?_ ) ) using 2 ; norm_num ; ring;
+    · by_cases h : 0 ≤ ‹ℝ› <;> simp_all +decide [ Real.sq_sqrt ] ; ring;
+      · rw [ sub_eq_add_neg ] ; ring!;
+      · norm_num [ Real.sqrt_eq_zero_of_nonpos h.le ] ; ring;
+    · refine' Filter.Tendsto.inf _ _ <;> norm_num;
+      · exact Continuous.tendsto' ( Real.continuous_sqrt ) _ _ ( by norm_num );
+      · exact fun x hx => ne_of_gt <| Real.sqrt_pos.2 hx;
+  convert tendsto_finset_sum Finset.univ fun i _ => h_tendsto i using 2 ; norm_num [ WithDiffusion.extendedGenerator ] ; ring!;
+  rw [ Finset.sum_mul _ _ _ ]
 
 /-! ## Section 3.2: Probability density / Fokker–Planck equation
 
@@ -877,9 +1120,11 @@ for all smooth compactly-supported `ψ`. This is the integration-by-parts
 identity that relates Eq. (9) to Eq. (18).
 -/
 
-/-- Helper: the reset part of the LHS equals the reset part of the RHS.
+/-
+Helper: the reset part of the LHS equals the reset part of the RHS.
 Specifically, the sum of transition integrals (summed over modes and transitions)
-matches the integral of the drain + source terms. -/
+matches the integral of the drain + source terms.
+-/
 theorem SHS.generator_fokkerPlanck_duality_reset_part
     {Q : Type*} [Fintype Q] [DecidableEq Q] [MeasurableSpace Q]
     {n m : ℕ} (S : SHS Q n m)
@@ -902,9 +1147,25 @@ theorem SHS.generator_fokkerPlanck_duality_reset_part
         S.intensity ℓ q x t * fp.rho q x t =
     ∑ ℓ : Fin m, ∑ q : Q, ∫ x,
       test q x * (fp.resetDrainTerm ℓ q x t + fp.resetSourceTerm ℓ q x t) := by
-  sorry
+  refine' Finset.sum_congr rfl fun ℓ _ => _;
+  convert congr_arg₂ ( · - · ) ( hcov_reset ℓ t ) ( Finset.sum_congr rfl fun q _ => rfl ) using 1;
+  rw [ ← Finset.sum_sub_distrib ];
+  rotate_left;
+  use fun q => ∫ x, test q x * S.intensity ℓ q x t * fp.rho q x t;
+  · rw [ ← Finset.sum_sub_distrib ];
+    refine' Finset.sum_congr rfl fun q _ => _;
+    rw [ ← MeasureTheory.integral_sub ] ; congr ; ext ; ring;
+    · rw [ SHS.FokkerPlanckData.resetDrainTerm ] ; ring;
+    · exact hint_test_source q ℓ;
+    · exact hint_test_intensity q ℓ;
+  · refine' Finset.sum_congr rfl fun q _ => _;
+    rw [ ← MeasureTheory.integral_sub ] ; congr ; ext ; ring;
+    · convert hint_reset q ℓ |> fun h => h.add ( hint_test_intensity q ℓ ) using 1 ; ext ; ring;
+      simp +decide [ sub_add_cancel ];
+    · exact hint_test_intensity q ℓ
 
-/-- **Generator–FPE duality** (integration-by-parts identity).
+/-
+**Generator–FPE duality** (integration-by-parts identity).
 
 For a smooth test function `ψ(q, x)` (independent of `t`) and a density `ρ`
 satisfying appropriate regularity:
@@ -915,7 +1176,8 @@ where `L` is the extended generator (Eq. 9) and `FP` is the Fokker–Planck
 operator (Eq. 18).
 
 This is the fundamental self-adjointness / duality relation between the
-backward (generator) and forward (Fokker–Planck) equations. -/
+backward (generator) and forward (Fokker–Planck) equations.
+-/
 theorem SHS.generator_fokkerPlanck_duality
     {Q : Type*} [Fintype Q] [DecidableEq Q] [MeasurableSpace Q]
     {n m : ℕ} (S : SHS Q n m)
@@ -939,8 +1201,12 @@ theorem SHS.generator_fokkerPlanck_duality
     (hint_reset : ∀ q ℓ, Integrable (fun x =>
       (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) *
            S.intensity ℓ q x t * fp.rho q x t))
-    (hint_test : ∀ q, Integrable (fun x =>
-      test q x * fp.rho q x t)) :
+    (hint_test_intensity : ∀ q ℓ, Integrable (fun x =>
+      test q x * S.intensity ℓ q x t * fp.rho q x t))
+    (hint_test_source : ∀ q ℓ, Integrable (fun x =>
+      test q x * fp.resetSourceTerm ℓ q x t))
+    (hint_test_div : ∀ q, Integrable (fun x =>
+      test q x * fp.div_f_rho q x t)) :
     -- The duality identity
     ∑ q : Q, ∫ x,
       (@inner ℝ _ _ (grad_test q x) (S.f q x t) +
@@ -948,7 +1214,26 @@ theorem SHS.generator_fokkerPlanck_duality
          (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) *
            S.intensity ℓ q x t) * fp.rho q x t =
     ∑ q : Q, ∫ x, test q x * fp.fokkerPlanckRHS q x t := by
-  sorry
+  have h_lhs : ∑ q, ∫ x, (inner ℝ (grad_test q x) (S.f q x t) + ∑ ℓ, (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) * S.intensity ℓ q x t) * fp.rho q x t = ∑ q, (∫ x, inner ℝ (grad_test q x) (S.f q x t) * fp.rho q x t) + ∑ ℓ, ∑ q, ∫ x, (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) * S.intensity ℓ q x t * fp.rho q x t := by
+    have h_lhs : ∀ q, ∫ x, (inner ℝ (grad_test q x) (S.f q x t) + ∑ ℓ, (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) * S.intensity ℓ q x t) * fp.rho q x t = (∫ x, inner ℝ (grad_test q x) (S.f q x t) * fp.rho q x t) + ∑ ℓ, ∫ x, (test (S.phi_q ℓ q x t) (S.phi_x ℓ q x t) - test q x) * S.intensity ℓ q x t * fp.rho q x t := by
+      intro q; rw [ ← MeasureTheory.integral_finset_sum ] ; ring;
+      · convert MeasureTheory.integral_add ( hint_gen q ) ( MeasureTheory.integrable_finset_sum _ fun ℓ _ => ?_ ) using 3 ; ring;
+        · simp +decide only [mul_comm, Finset.mul_sum _ _ _, mul_sub, mul_left_comm];
+          exact congrArg _ ( Finset.sum_congr rfl fun _ _ => by ring );
+        · convert hint_reset q ℓ using 1 ; ext ; ring;
+      · exact fun _ _ => hint_reset q _;
+    rw [ Finset.sum_congr rfl fun q _ => h_lhs q, Finset.sum_add_distrib, Finset.sum_comm ];
+  rw [ h_lhs, Finset.sum_congr rfl fun q _ => hibp q t ];
+  convert congr_arg₂ ( · + · ) rfl ( SHS.generator_fokkerPlanck_duality_reset_part S fp test ( fun ℓ t => hcov_reset ℓ t ) t ( fun q ℓ => hint_reset q ℓ ) ( fun q ℓ => hint_test_intensity q ℓ ) ( fun q ℓ => hint_test_source q ℓ ) ) using 1;
+  simp +decide [ SHS.FokkerPlanckData.fokkerPlanckRHS, SHS.FokkerPlanckData.resetDrainTerm ];
+  simp +decide only [mul_add, mul_neg, Finset.mul_sum _ _ _];
+  rw [ ← Finset.sum_neg_distrib, ← Finset.sum_comm ];
+  rw [ ← Finset.sum_add_distrib, Finset.sum_congr rfl ];
+  intro q _;
+  rw [ MeasureTheory.integral_add, MeasureTheory.integral_neg, MeasureTheory.integral_finset_sum ];
+  · exact fun ℓ _ => MeasureTheory.Integrable.add ( MeasureTheory.Integrable.neg ( by simpa only [ mul_assoc ] using ‹∀ q ℓ, Integrable ( fun x => test q x * S.intensity ℓ q x t * fp.rho q x t ) volume› q ℓ ) ) ( ‹∀ q ℓ, Integrable ( fun x => test q x * fp.resetSourceTerm ℓ q x t ) volume› q ℓ );
+  · exact MeasureTheory.Integrable.neg ( hint_test_div q );
+  · exact MeasureTheory.integrable_finset_sum _ fun ℓ _ => by simpa only [ mul_assoc ] using MeasureTheory.Integrable.add ( MeasureTheory.Integrable.neg ( hint_test_intensity q ℓ ) ) ( hint_test_source q ℓ ) ;
 
 /-! ### 3.2.9 Moment dynamics (Eq. 20)
 

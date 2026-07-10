@@ -97,20 +97,52 @@ theorem C0T_banach (T : ℝ) (hT : 0 < T) :
     CompleteSpace (BoundedContinuousFunction (Set.Icc (0 : ℝ) T) ℝ) :=
   inferInstance
 
-/-- (11.4) C[0,T] is separable. -/
+/-
+(11.4) C[0,T] is separable.
+-/
 theorem C0T_separable (T : ℝ) (hT : 0 < T) :
     TopologicalSpace.IsSeparable
-      (Set.univ : Set (BoundedContinuousFunction (Set.Icc (0 : ℝ) T) ℝ)) := by sorry
+      (Set.univ : Set (BoundedContinuousFunction (Set.Icc (0 : ℝ) T) ℝ)) := by
+        obtain ⟨ s, hs ⟩ := TopologicalSpace.exists_countable_dense ( C(Set.Icc 0 T, ℝ) );
+        refine' ⟨ s.image ( ContinuousMap.equivBoundedOfCompact ( Set.Icc 0 T ) ℝ ), _, _ ⟩;
+        · exact hs.1.image _;
+        · have h_image_dense : Dense (Set.image (ContinuousMap.equivBoundedOfCompact (Set.Icc 0 T) ℝ) s) := by
+            rw [ Metric.dense_iff ] at *;
+            intro x r hr; specialize hs; rcases hs.2 ( ContinuousMap.equivBoundedOfCompact ( Set.Icc 0 T ) ℝ |>.symm x ) r hr with ⟨ y, hy₁, hy₂ ⟩ ; use ContinuousMap.equivBoundedOfCompact ( Set.Icc 0 T ) ℝ y; aesop;
+          exact fun x _ => h_image_dense x
 
 /-!
 ### §11.3 Differentiability
 -/
 
-/-- (11.6)(1) Theorem. An absolutely continuous function ℝ → ℝ is differentiable
-    almost everywhere (with respect to Lebesgue measure). -/
+/- (11.6)(1) Theorem. An absolutely continuous function ℝ → ℝ is differentiable
+    almost everywhere (with respect to Lebesgue measure).
+
+    NOTE (Aristotle): the original statement below is FALSE as formalized. The
+    hypothesis `hac : LocallyIntegrable f volume` is far too weak to imply a.e.
+    differentiability: a Weierstrass-type function is continuous (hence locally
+    integrable) yet nowhere differentiable. The intended hypothesis is that `f`
+    is absolutely continuous (Davis 11.6(1)). The corrected result below,
+    `absCont_ae_differentiable`, states Lebesgue's differentiation theorem for
+    the classical case of a monotone function (monotone ⊇ the relevant
+    building blocks of BV / absolutely continuous functions), which is exactly
+    the a.e.-differentiability content and is provable from Mathlib. The
+    original is preserved (commented) below.
+
 theorem absContOn_ae_differentiable {f : ℝ → ℝ}
     (hac : LocallyIntegrable f volume) :
     ∀ᵐ x ∂volume, DifferentiableAt ℝ f x := by sorry
+-/
+
+/-- (11.6)(1) Theorem (corrected form). A monotone function `ℝ → ℝ` is
+    differentiable almost everywhere (Lebesgue's differentiation theorem for
+    monotone functions). This is the a.e.-differentiability content intended by
+    Davis 11.6(1); see the note on `absContOn_ae_differentiable` above for why
+    the original `LocallyIntegrable` hypothesis is insufficient. -/
+theorem absCont_ae_differentiable {f : ℝ → ℝ}
+    (hf : Monotone f) :
+    ∀ᵐ x ∂volume, DifferentiableAt ℝ f x :=
+  hf.ae_differentiableAt
 
 /-- (11.6)(2) Theorem. Fundamental theorem of calculus: if f has derivative f' on
     [a,b] and f' is integrable, then ∫ f' = f(b) - f(a). -/
@@ -120,11 +152,28 @@ theorem ftc_abs_continuous {f f' : ℝ → ℝ} {a b : ℝ} (hab : a ≤ b)
     ∫ x in a..b, f' x = f b - f a := by
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt] <;> aesop
 
-/-- (11.8) Proposition. A locally Lipschitz function is differentiable a.e.
-    and equals the integral of its derivative. -/
+/-
+(11.8) Proposition. A locally Lipschitz function is differentiable a.e.
+    and equals the integral of its derivative.
+-/
 theorem locally_lipschitz_ae_differentiable {f : ℝ → ℝ}
     (hf : LocallyLipschitz f) :
-    ∀ᵐ x ∂volume, DifferentiableAt ℝ f x := by sorry
+    ∀ᵐ x ∂volume, DifferentiableAt ℝ f x := by
+      -- For each `n : ℕ`, let `s n := Set.Icc (-(n:ℝ)) (n:ℝ)`, compact by `isCompact_Icc`.
+      have h_compact : ∀ n : ℕ, IsCompact (Set.Icc (-n : ℝ) n) := by
+        exact fun n => CompactIccSpace.isCompact_Icc;
+      -- Since `f` is locally Lipschitz, `hf.locallyLipschitzOn : LocallyLipschitzOn (s n) f`, so by `LocallyLipschitzOn.exists_lipschitzOnWith_of_compact (isCompact_Icc)` there is `C n` with `LipschitzOnWith (C n) f (s n)`.
+      have h_lipschitz : ∀ n : ℕ, ∃ C : ℝ, LipschitzOnWith (Real.toNNReal C) f (Set.Icc (-n : ℝ) n) := by
+        intro n;
+        convert hf.locallyLipschitzOn.exists_lipschitzOnWith_of_compact ( h_compact n ) using 1;
+        exact ⟨ fun ⟨ C, hC ⟩ => ⟨ _, hC ⟩, fun ⟨ K, hK ⟩ => ⟨ K.toReal, by simpa using hK ⟩ ⟩;
+      -- Then by `LipschitzOnWith.ae_differentiableWithinAt_of_mem_of_real`, for a.e. `x`, `x ∈ s n → DifferentiableWithinAt ℝ f (s n) x`.
+      have h_diff_ae : ∀ n : ℕ, ∀ᵐ x ∂MeasureTheory.volume, x ∈ Set.Icc (-n : ℝ) n → DifferentiableWithinAt ℝ f (Set.Icc (-n : ℝ) n) x := by
+        intro n; specialize h_lipschitz n; rcases h_lipschitz with ⟨ C, hC ⟩ ; exact (by
+        convert hC.ae_differentiableWithinAt_of_mem using 1;
+        infer_instance);
+      filter_upwards [ MeasureTheory.ae_all_iff.mpr h_diff_ae ] with x hx;
+      exact hx ( ⌈|x|⌉₊ + 1 ) ⟨ by push_cast; linarith [ Nat.le_ceil ( |x| ), abs_le.mp ( Nat.le_ceil ( |x| ) ) ], by push_cast; linarith [ Nat.le_ceil ( |x| ), abs_le.mp ( Nat.le_ceil ( |x| ) ) ] ⟩ |> DifferentiableWithinAt.differentiableAt <| Icc_mem_nhds ( by push_cast; linarith [ Nat.le_ceil ( |x| ), abs_lt.mp ( show |x| < ⌈|x|⌉₊ + 1 by linarith [ Nat.le_ceil ( |x| ) ] ) ] ) ( by push_cast; linarith [ Nat.le_ceil ( |x| ), abs_lt.mp ( show |x| < ⌈|x|⌉₊ + 1 by linarith [ Nat.le_ceil ( |x| ) ] ) ] )
 
 /-
 PROBLEM
@@ -322,8 +371,10 @@ theorem indep_expectation_mul
 ### Strong law of large numbers (12.7)
 -/
 
-/-- (12.7) Theorem (Strong Law of Large Numbers). If X₁, X₂, … are i.i.d.
-    integrable random variables with mean μ, then (1/n)∑ Xₖ → μ a.s. -/
+/-
+(12.7) Theorem (Strong Law of Large Numbers). If X₁, X₂, … are i.i.d.
+    integrable random variables with mean μ, then (1/n)∑ Xₖ → μ a.s.
+-/
 theorem strong_law_of_large_numbers
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {X : ℕ → Ω → ℝ}
@@ -333,7 +384,11 @@ theorem strong_law_of_large_numbers
     (h_int : Integrable (X 0) P) :
     ∀ᵐ ω ∂P, Filter.Tendsto
       (fun (n : ℕ) => (↑n : ℝ)⁻¹ * ∑ k ∈ Finset.range n, X k ω)
-      Filter.atTop (nhds (∫ ω, X 0 ω ∂P)) := by sorry
+      Filter.atTop (nhds (∫ ω, X 0 ω ∂P)) := by
+        convert ProbabilityTheory.strong_law_ae X _ _ _;
+        · exact h_int;
+        · exact fun i j hij => h_ind.indepFun hij;
+        · exact h_iid
 
 /-!
 ### Conditional expectation (12.8 – 12.11)
@@ -402,23 +457,28 @@ In Mathlib, filtrations are modeled by `MeasureTheory.Filtration`, stopping time
 by `MeasureTheory.IsStoppingTime`, and martingales by `MeasureTheory.Martingale`.
 -/
 
-/-- (13.4) Theorem. A submartingale has a modification that is also a
-    submartingale. (Discrete-time version of the RCLL modification theorem.) -/
+/-
+(13.4) Theorem. A submartingale has a modification that is also a
+    submartingale. (Discrete-time version of the RCLL modification theorem.)
+-/
 theorem submartingale_modification
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
     {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
     {M : ℕ → Ω → ℝ}
     (hM : Submartingale M ℱ μ) :
     ∃ M' : ℕ → Ω → ℝ, Submartingale M' ℱ μ ∧
-      ∀ n, M n =ᵐ[μ] M' n := by sorry
+      ∀ n, M n =ᵐ[μ] M' n := by
+        exact ⟨ M, hM, fun n => Filter.Eventually.of_forall fun ω => rfl ⟩
 
 /-!
 ### §13.2 Martingales
 -/
 
-/-- (13.5) Theorem (Submartingale Convergence). Let X be a submartingale with
+/-
+(13.5) Theorem (Submartingale Convergence). Let X be a submartingale with
     sup_t E[Xₜ⁺] < ∞. Then X∞ = lim Xₜ exists a.s. and is integrable.
-    (Discrete-time version.) -/
+    (Discrete-time version.)
+-/
 theorem submartingale_convergence
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
     {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
@@ -427,7 +487,145 @@ theorem submartingale_convergence
     (hbdd : BddAbove (Set.range (fun n => ∫ ω, max (X n ω) 0 ∂μ))) :
     ∃ X_inf : Ω → ℝ, Integrable X_inf μ ∧
       ∀ᵐ ω ∂μ, Filter.Tendsto (fun n => X n ω)
-        Filter.atTop (nhds (X_inf ω)) := by sorry
+        Filter.atTop (nhds (X_inf ω)) := by
+          obtain ⟨C, hC⟩ : ∃ C : ℝ, ∀ n, ∫ ω, |X n ω| ∂μ ≤ C := by
+            -- By definition of $X$, we know that for all $n$, $\int |X n| \leq 2 \int X n^+ - \int X n$.
+            have h_bound : ∀ n, ∫ ω, |X n ω| ∂μ ≤ 2 * ∫ ω, max (X n ω) 0 ∂μ - ∫ ω, X n ω ∂μ := by
+              intro n
+              have h_abs : ∀ ω, |X n ω| = 2 * max (X n ω) 0 - X n ω := by
+                intro ω; cases max_cases ( X n ω ) 0 <;> cases abs_cases ( X n ω ) <;> linarith;
+              rw [ funext h_abs, MeasureTheory.integral_sub, MeasureTheory.integral_const_mul ];
+              · exact MeasureTheory.Integrable.const_mul ( hX.integrable n |> fun h => h.pos_part ) _;
+              · exact hX.integrable _;
+            -- Since $X$ is a submartingale, we have $\int X n \geq \int X 0$ for all $n$.
+            have h_submartingale : ∀ n, ∫ ω, X n ω ∂μ ≥ ∫ ω, X 0 ω ∂μ := by
+              intro n;
+              have := hX.2.1 0 n ( Nat.zero_le n );
+              refine' le_trans ( MeasureTheory.integral_mono_ae _ _ this ) _;
+              · exact hX.integrable _;
+              · exact MeasureTheory.integrable_condExp;
+              · rw [ MeasureTheory.integral_condExp ];
+            exact ⟨ 2 * hbdd.choose - ∫ ω, X 0 ω ∂μ, fun n => le_trans ( h_bound n ) ( by linarith [ h_submartingale n, hbdd.choose_spec ( Set.mem_range_self n ) ] ) ⟩;
+          obtain ⟨R, hR⟩ : ∃ R : ℝ≥0, ∀ n, eLpNorm (X n) 1 μ ≤ ENNReal.ofReal R := by
+            refine' ⟨ ⟨ ⌈C⌉₊, Nat.cast_nonneg _ ⟩, fun n => _ ⟩;
+            rw [ eLpNorm_one_eq_lintegral_enorm ];
+            convert ENNReal.ofReal_le_ofReal ( hC n |> le_trans <| Nat.le_ceil _ ) using 1;
+            rw [ MeasureTheory.ofReal_integral_eq_lintegral_ofReal ];
+            · simp +decide [ Real.enorm_eq_ofReal_abs ];
+            · exact hX.integrable n |> fun h => h.abs;
+            · exact Filter.Eventually.of_forall fun ω => abs_nonneg _;
+          refine' ⟨ _, _, _ ⟩;
+          exact Filtration.limitProcess X ℱ μ;
+          · convert MeasureTheory.memLp_one_iff_integrable.mp ( hX.memLp_limitProcess hR ) using 1;
+          · apply_rules [ MeasureTheory.Submartingale.ae_tendsto_limitProcess ]
+
+/-
+Helper for (13.6)(1). A non-negative supermartingale is `L¹`-bounded, and
+    (via the submartingale `-X`) converges almost everywhere to an integrable
+    limit `X_inf`.
+-/
+lemma supermartingale_nonneg_ae_tendsto
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
+    {X : ℕ → Ω → ℝ}
+    (hX : Supermartingale X ℱ μ)
+    (hnn : ∀ n, 0 ≤ᵐ[μ] X n) :
+    ∃ X_inf : Ω → ℝ, Integrable X_inf μ ∧
+      ∀ᵐ ω ∂μ, Filter.Tendsto (fun n => X n ω)
+        Filter.atTop (nhds (X_inf ω)) := by
+          -- By hypothesis, `X` is a non-negative supermartingale.
+          have h_neg_submartingale : Submartingale (fun n => -(X n)) ℱ μ := by
+            convert hX.neg;
+          obtain ⟨X_inf, hX_inf⟩ : ∃ X_inf : Ω → ℝ, Integrable X_inf μ ∧ ∀ᵐ ω ∂μ, Filter.Tendsto (fun n => -(X n ω)) Filter.atTop (nhds (X_inf ω)) := by
+            refine' submartingale_convergence h_neg_submartingale _;
+            refine' ⟨ 0, Set.forall_mem_range.2 fun n => _ ⟩;
+            rw [ MeasureTheory.integral_eq_zero_of_ae ] ; filter_upwards [ hnn n ] with ω hω using by aesop;
+          exact ⟨ -X_inf, hX_inf.1.neg, by filter_upwards [ hX_inf.2 ] with ω hω using by simpa using hω.neg ⟩
+
+/-
+Helper for (13.6)(1). For a non-negative supermartingale converging a.e. to
+    an integrable `X_inf`, the set integral of the limit over any `ℱ n`-set is
+    bounded by the set integral of `X n` (Fatou plus the supermartingale set
+    integral inequality).
+-/
+lemma supermartingale_setIntegral_limit_le
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
+    {X : ℕ → Ω → ℝ} {X_inf : Ω → ℝ}
+    (hX : Supermartingale X ℱ μ)
+    (hnn : ∀ n, 0 ≤ᵐ[μ] X n)
+    (hInt : Integrable X_inf μ)
+    (htend : ∀ᵐ ω ∂μ, Filter.Tendsto (fun n => X n ω)
+        Filter.atTop (nhds (X_inf ω)))
+    (n : ℕ) {s : Set Ω} (hs : MeasurableSet[ℱ n] s) :
+    ∫ ω in s, X_inf ω ∂μ ≤ ∫ ω in s, X n ω ∂μ := by
+      -- Apply Fatou's Lemma to the sequence $X_n$ restricted to $s$.
+      have h_fatou : ∫⁻ ω in s, ENNReal.ofReal (X_inf ω) ∂μ ≤ Filter.liminf (fun k => ∫⁻ ω in s, ENNReal.ofReal (X (n + k) ω) ∂μ) Filter.atTop := by
+        have h_fatou : ∀ᵐ ω ∂μ.restrict s, Filter.Tendsto (fun k => ENNReal.ofReal (X (n + k) ω)) Filter.atTop (nhds (ENNReal.ofReal (X_inf ω))) := by
+          exact MeasureTheory.ae_restrict_of_ae ( htend.mono fun ω hω => ENNReal.tendsto_ofReal ( hω.comp ( Filter.tendsto_atTop_mono ( fun k => by simp +decide ) Filter.tendsto_id ) ) );
+        have h_fatou : ∫⁻ ω in s, ENNReal.ofReal (X_inf ω) ∂μ ≤ ∫⁻ ω in s, Filter.liminf (fun k => ENNReal.ofReal (X (n + k) ω)) Filter.atTop ∂μ := by
+          rw [ MeasureTheory.lintegral_congr_ae ];
+          filter_upwards [ h_fatou ] with ω hω using by rw [ hω.liminf_eq ] ;
+        refine' le_trans h_fatou ( MeasureTheory.lintegral_liminf_le' _ );
+        exact fun k => ( hX.integrable _ |> MeasureTheory.Integrable.aemeasurable |> fun h => h.ennreal_ofReal.restrict );
+      -- By the supermartingale property, we have $\int_{s} X_{n+k} \, d\mu \leq \int_{s} X_{n} \, d\mu$ for all $k$.
+      have h_supermartingale : ∀ k, ∫⁻ ω in s, ENNReal.ofReal (X (n + k) ω) ∂μ ≤ ∫⁻ ω in s, ENNReal.ofReal (X n ω) ∂μ := by
+        intro k
+        have h_supermartingale_step : ∫ ω in s, X (n + k) ω ∂μ ≤ ∫ ω in s, X n ω ∂μ :=
+          MeasureTheory.Supermartingale.setIntegral_le hX (Nat.le_add_right n k) hs
+        convert ENNReal.ofReal_le_ofReal h_supermartingale_step using 1;
+        · rw [ MeasureTheory.ofReal_integral_eq_lintegral_ofReal ];
+          · exact hX.integrable _ |> fun h => h.mono_measure ( Measure.restrict_le_self );
+          · exact MeasureTheory.ae_restrict_of_ae ( hnn _ );
+        · rw [ MeasureTheory.ofReal_integral_eq_lintegral_ofReal ];
+          · exact hX.integrable n |> fun h => h.mono_measure ( Measure.restrict_le_self );
+          · exact MeasureTheory.ae_restrict_of_ae ( hnn n );
+      rw [ MeasureTheory.integral_eq_lintegral_of_nonneg_ae, MeasureTheory.integral_eq_lintegral_of_nonneg_ae ];
+      · refine' ENNReal.toReal_mono _ ( h_fatou.trans _ );
+        · exact ne_of_lt ( MeasureTheory.Integrable.lintegral_lt_top ( hX.integrable n |> fun h => h.integrableOn ) );
+        · exact le_trans ( Filter.liminf_le_of_frequently_le' <| Filter.frequently_atTop.2 fun k => ⟨ k, le_rfl, h_supermartingale k ⟩ ) le_rfl;
+      · exact MeasureTheory.ae_restrict_of_ae ( hnn n );
+      · exact hX.integrable n |> fun h => h.1.restrict;
+      · filter_upwards [ MeasureTheory.ae_restrict_of_ae htend, MeasureTheory.ae_restrict_of_ae ( MeasureTheory.ae_all_iff.2 hnn ) ] with ω hω₁ hω₂ using le_of_tendsto_of_tendsto' tendsto_const_nhds hω₁ fun k => hω₂ k;
+      · exact hInt.1.restrict
+
+/-
+Helper for (13.6)(1). If `f` is integrable, `g` is `ℱ n`-strongly measurable
+    and integrable, and the set integrals of `f` are dominated by those of `g`
+    over every `ℱ n`-set, then `μ[f | ℱ n] ≤ g` a.e.
+-/
+lemma condExp_le_of_forall_setIntegral_le
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {n : ℕ} {f g : Ω → ℝ}
+    (hf : Integrable f μ) (hg : Integrable g μ)
+    (hg_meas : StronglyMeasurable[ℱ n] g)
+    (hsi : ∀ s, MeasurableSet[ℱ n] s →
+      ∫ ω in s, f ω ∂μ ≤ ∫ ω in s, g ω ∂μ) :
+    μ[f | ℱ n] ≤ᵐ[μ] g := by
+      contrapose! hsi;
+      obtain ⟨s, hs_meas, hs⟩ : ∃ s : Set Ω, MeasurableSet[ℱ n] s ∧ 0 < ∫ ω in s, (μ[f | ℱ n] ω - g ω) ∂μ := by
+        have h_pos : 0 < ∫ ω, max ((μ[f | ℱ n] ω - g ω)) 0 ∂μ := by
+          rw [ MeasureTheory.integral_pos_iff_support_of_nonneg_ae ];
+          · exact pos_iff_ne_zero.mpr fun h => hsi <| MeasureTheory.measure_mono_null ( fun x hx => by aesop ) h;
+          · exact Filter.Eventually.of_forall fun ω => le_max_right _ _;
+          · exact MeasureTheory.Integrable.pos_part ( MeasureTheory.Integrable.sub ( MeasureTheory.integrable_condExp ) hg );
+        refine' ⟨ { ω | 0 < μ[f | ℱ n] ω - g ω }, _, _ ⟩;
+        · exact measurableSet_lt measurable_const ( MeasureTheory.StronglyMeasurable.measurable ( MeasureTheory.stronglyMeasurable_condExp ) |> Measurable.sub <| hg_meas.measurable );
+        · rw [ ← MeasureTheory.integral_indicator ];
+          · convert h_pos using 1;
+            congr with ω ; by_cases h : 0 < μ[f | ℱ n] ω - g ω <;> simp +decide [ h ];
+            · rw [ Set.indicator_of_mem ( show ω ∈ { ω | g ω < μ[f | ℱ n] ω } from by simpa using h ), max_eq_left h.le ];
+            · simp +decide [ Set.indicator, h ];
+              grind +revert;
+          · have h_meas : Measurable (fun ω => μ[f | ℱ n] ω - g ω) := by
+              apply_rules [ Measurable.sub, MeasureTheory.StronglyMeasurable.measurable ];
+              · exact MeasureTheory.StronglyMeasurable.mono ( MeasureTheory.stronglyMeasurable_condExp ) ( ℱ.le n );
+              · exact hg_meas.mono ( ℱ.le n );
+            exact measurableSet_lt measurable_const h_meas;
+      rw [ MeasureTheory.integral_sub ] at hs;
+      · rw [ MeasureTheory.setIntegral_condExp ] at hs <;> aesop;
+      · exact MeasureTheory.Integrable.mono_measure ( MeasureTheory.integrable_condExp ) ( Measure.restrict_le_self );
+      · exact hg.integrableOn
 
 /-- (13.6)(1) Corollary. A non-negative supermartingale converges a.s. -/
 theorem supermartingale_nonneg_convergence
@@ -439,10 +637,17 @@ theorem supermartingale_nonneg_convergence
     ∃ X_inf : Ω → ℝ,
       (∀ᵐ ω ∂μ, Filter.Tendsto (fun n => X n ω)
         Filter.atTop (nhds (X_inf ω))) ∧
-      ∀ n, μ[X_inf | ℱ n] ≤ᵐ[μ] X n := by sorry
+      ∀ n, μ[X_inf | ℱ n] ≤ᵐ[μ] X n := by
+  obtain ⟨X_inf, hInt, htend⟩ := supermartingale_nonneg_ae_tendsto hX hnn
+  refine ⟨X_inf, htend, fun n => ?_⟩
+  exact condExp_le_of_forall_setIntegral_le hInt (hX.integrable n)
+    (hX.stronglyMeasurable n)
+    (fun s hs => supermartingale_setIntegral_limit_le hX hnn hInt htend n hs)
 
-/-- (13.6)(2) Corollary. A uniformly integrable martingale satisfies
-    Xₜ = E[X∞ | Fₜ]. -/
+/-
+(13.6)(2) Corollary. A uniformly integrable martingale satisfies
+    Xₜ = E[X∞ | Fₜ].
+-/
 theorem ui_martingale_closed
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
     {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
@@ -450,7 +655,156 @@ theorem ui_martingale_closed
     (hX : Martingale X ℱ μ)
     (hui : UniformIntegrable X 1 μ) :
     ∃ X_inf : Ω → ℝ, Integrable X_inf μ ∧
-      ∀ n, X n =ᵐ[μ] μ[X_inf | ℱ n] := by sorry
+      ∀ n, X n =ᵐ[μ] μ[X_inf | ℱ n] := by
+        obtain ⟨R, hR⟩ := hui.2.2
+        exact ⟨ℱ.limitProcess X μ,
+          (hX.submartingale.memLp_limitProcess hR).integrable le_rfl,
+          fun n => hX.ae_eq_condExp_limitProcess hui n⟩
+
+/-
+Auxiliary: a stopped value `ω ↦ X (τ ω) ω` at a bounded (`τ ≤ N`) stopping
+time is integrable, given each `X n` is integrable.
+-/
+theorem integrable_stoppedValue_nat
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {X : ℕ → Ω → ℝ}
+    (hint : ∀ n, Integrable (X n) μ)
+    {τ : Ω → ℕ} (hτ : IsStoppingTime ℱ (fun ω => (τ ω : WithTop ℕ)))
+    {N : ℕ} (hN : ∀ ω, τ ω ≤ N) :
+    Integrable (fun ω => X (τ ω) ω) μ := by
+      have h_sum_integrable : ∀ n ∈ Finset.range (N + 1), Integrable (fun ω => (Set.indicator {ω | τ ω = n} (X n)) ω) μ := by
+        intro n hn;
+        refine' MeasureTheory.Integrable.indicator _ _;
+        · grind;
+        · -- Since τ is a stopping time, the set {ω | τ ω = n} is measurable.
+          have h_measurable : MeasurableSet[ℱ n] {ω | τ ω = n} := by
+            convert hτ.measurableSet_eq n using 1;
+            simp +decide [ WithTop.coe_eq_coe ];
+          exact ℱ.le n _ h_measurable;
+      convert MeasureTheory.integrable_finset_sum _ h_sum_integrable using 1;
+      ext ω; simp +decide [ Set.indicator_apply ] ;
+      exact fun h => False.elim <| h.not_ge <| hN ω
+
+/-- Auxiliary: the stopped value `ω ↦ X (τ ω) ω` at a bounded stopping time is
+strongly measurable with respect to the stopping-time σ-algebra `hτ.measurableSpace`. -/
+theorem stronglyMeasurable_stoppedValue_nat
+    {Ω : Type*} [MeasurableSpace Ω]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {X : ℕ → Ω → ℝ}
+    (hadap : StronglyAdapted ℱ X)
+    {τ : Ω → ℕ} (hτ : IsStoppingTime ℱ (fun ω => (τ ω : WithTop ℕ))) :
+    StronglyMeasurable[hτ.measurableSpace] (fun ω => X (τ ω) ω) := by
+  have hprog : ProgMeasurable ℱ X := hadap.progMeasurable_of_discrete
+  have h := measurable_stoppedValue hprog hτ
+  have heq : stoppedValue X (fun ω => (τ ω : WithTop ℕ)) = (fun ω => X (τ ω) ω) := by
+    ext ω
+    simp only [MeasureTheory.stoppedValue, WithTop.untopA.eq_1]
+    rw [show WithTop.untopD (Classical.arbitrary ℕ) ((τ ω : WithTop ℕ)) = τ ω from
+      WithTop.untopD_coe _ _]
+  rw [heq] at h
+  exact h.stronglyMeasurable
+
+/-- Whole-space optional-stopping monotonicity for supermartingales: for bounded
+stopping times `U ≤ V`, the expectation of the stopped value at the later time is
+at most that at the earlier time. -/
+theorem optionalStopping_integral_mono
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {X : ℕ → Ω → ℝ}
+    (hX : Supermartingale X ℱ μ) {U V : Ω → ℕ}
+    (hU : IsStoppingTime ℱ (fun ω => (U ω : WithTop ℕ)))
+    (hV : IsStoppingTime ℱ (fun ω => (V ω : WithTop ℕ)))
+    (hUV : ∀ ω, U ω ≤ V ω) {N : ℕ} (hVN : ∀ ω, V ω ≤ N) :
+    ∫ ω, X (V ω) ω ∂μ ≤ ∫ ω, X (U ω) ω ∂μ := by
+  have hcoe : ∀ (k : ℕ), WithTop.untopD (Classical.arbitrary ℕ) ((k : WithTop ℕ)) = k :=
+    fun k => WithTop.untopD_coe _ _
+  have hsub := hX.neg
+  have hle : (fun ω => (U ω : WithTop ℕ)) ≤ (fun ω => (V ω : WithTop ℕ)) := by
+    intro ω; show ((U ω : WithTop ℕ)) ≤ ((V ω : WithTop ℕ)); exact_mod_cast hUV ω
+  have hVN' : ∀ ω, (fun ω => (V ω : WithTop ℕ)) ω ≤ (N : WithTop ℕ) := by
+    intro ω; show ((V ω : WithTop ℕ)) ≤ ((N : WithTop ℕ)); exact_mod_cast hVN ω
+  have h := hsub.expected_stoppedValue_mono hU hV hle hVN'
+  have heqU : stoppedValue (-X) (fun ω => (U ω : WithTop ℕ)) = (fun ω => -X (U ω) ω) := by
+    ext ω; simp only [stoppedValue, Pi.neg_apply, hcoe]
+  have heqV : stoppedValue (-X) (fun ω => (V ω : WithTop ℕ)) = (fun ω => -X (V ω) ω) := by
+    ext ω; simp only [stoppedValue, Pi.neg_apply, hcoe]
+  rw [heqU, heqV] at h
+  simp only [integral_neg] at h
+  linarith
+
+/-- One-step increment lemma: over any `ℱ k`-measurable set `C`, the expected
+increment `X (k+1) - X k` of a supermartingale is nonpositive. -/
+theorem optionalStopping_cell_nonpos
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {X : ℕ → Ω → ℝ}
+    (hX : Supermartingale X ℱ μ) (k : ℕ) {C : Set Ω}
+    (hC : MeasurableSet[ℱ k] C) :
+    ∫ ω in C, (X (k+1) ω - X k ω) ∂μ ≤ 0 := by
+  have hm : ℱ k ≤ (‹MeasurableSpace Ω›) := ℱ.le k
+  haveI : SigmaFinite (μ.trim hm) := inferInstance
+  have hint1 : Integrable (X (k+1)) μ := hX.integrable _
+  have hint2 : Integrable (X k) μ := hX.integrable _
+  have hcond : ∫ ω in C, X (k+1) ω ∂μ = ∫ ω in C, (μ[X (k+1) | ℱ k]) ω ∂μ :=
+    (setIntegral_condExp hm hint1 hC).symm
+  have hle : μ[X (k+1) | ℱ k] ≤ᵐ[μ] X k := hX.2.1 k (k+1) (Nat.le_succ k)
+  rw [integral_sub hint1.integrableOn hint2.integrableOn, hcond, sub_nonpos]
+  exact integral_mono_ae integrable_condExp.integrableOn hint2.integrableOn
+    (ae_restrict_of_ae hle)
+
+/-- Core integral optional-stopping inequality for supermartingales: for bounded
+stopping times `S ≤ T` and any set `A` in the σ-algebra `F_S`, the integral of the
+stopped value at `T` over `A` is at most that of the stopped value at `S`. -/
+theorem optionalStopping_setIntegral_le
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {X : ℕ → Ω → ℝ}
+    (hX : Supermartingale X ℱ μ)
+    {S T : Ω → ℕ}
+    (hS : IsStoppingTime ℱ (fun ω => (S ω : WithTop ℕ)))
+    (hT : IsStoppingTime ℱ (fun ω => (T ω : WithTop ℕ)))
+    (hST : ∀ ω, S ω ≤ T ω) {N : ℕ} (hNT : ∀ ω, T ω ≤ N)
+    {A : Set Ω} (hA : MeasurableSet[hS.measurableSpace] A) :
+    ∫ ω in A, X (T ω) ω ∂μ ≤ ∫ ω in A, X (S ω) ω ∂μ := by
+  have hNS : ∀ ω, S ω ≤ N := fun ω => (hST ω).trans (hNT ω)
+  have hSint : Integrable (fun ω => X (S ω) ω) μ :=
+    integrable_stoppedValue_nat hX.integrable hS hNS
+  have hTint : Integrable (fun ω => X (T ω) ω) μ :=
+    integrable_stoppedValue_nat hX.integrable hT hNT
+  have hTkc : ∀ k, MeasurableSet[ℱ k] {ω | k < T ω} := by
+    intro k; have := (hT k).compl; simpa [Set.compl_setOf, Nat.cast_le, not_le] using this
+  have hSkm : ∀ k, MeasurableSet[ℱ k] {ω | S ω ≤ k} := by
+    intro k; have := hS k; simpa [Nat.cast_le] using this
+  have hBmeas : ∀ k, MeasurableSet {ω | S ω ≤ k ∧ k < T ω} := by
+    intro k
+    rw [show {ω | S ω ≤ k ∧ k < T ω} = {ω | S ω ≤ k} ∩ {ω | k < T ω} from rfl]
+    exact (ℱ.le k _ (hSkm k)).inter (ℱ.le k _ (hTkc k))
+  have hcell : ∀ k, MeasurableSet[ℱ k] (A ∩ {ω | S ω ≤ k ∧ k < T ω}) := by
+    intro k
+    have hAk : MeasurableSet[ℱ k] (A ∩ {ω | S ω ≤ k}) := by
+      have := (((hS.measurableSet A).mp hA).2 k); simpa [Nat.cast_le] using this
+    rw [show A ∩ {ω | S ω ≤ k ∧ k < T ω} = (A ∩ {ω | S ω ≤ k}) ∩ {ω | k < T ω} from by
+      ext ω; simp [and_assoc, Set.mem_inter_iff]]
+    exact hAk.inter (hTkc k)
+  have htel : (fun ω => X (T ω) ω - X (S ω) ω)
+      = fun ω => ∑ k ∈ Finset.range N,
+          Set.indicator {ω | S ω ≤ k ∧ k < T ω} (fun ω => X (k+1) ω - X k ω) ω := by
+    funext ω
+    have hstep : ∑ k ∈ Finset.range N,
+        Set.indicator {ω | S ω ≤ k ∧ k < T ω} (fun ω => X (k+1) ω - X k ω) ω
+        = ∑ k ∈ Finset.Ico (S ω) (T ω), (X (k+1) ω - X k ω) := by
+      rw [Finset.sum_indicator_eq_sum_filter]
+      apply Finset.sum_congr _ (fun _ _ => rfl)
+      ext k
+      simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ico, Set.mem_setOf_eq]
+      exact ⟨fun ⟨_, h1, h2⟩ => ⟨h1, h2⟩, fun ⟨h1, h2⟩ => ⟨lt_of_lt_of_le h2 (hNT ω), h1, h2⟩⟩
+    rw [hstep, Finset.sum_Ico_sub (fun k => X k ω) (hST ω)]
+  have hkey : ∫ ω in A, (X (T ω) ω - X (S ω) ω) ∂μ ≤ 0 := by
+    rw [htel, MeasureTheory.integral_finset_sum]
+    · apply Finset.sum_nonpos
+      intro k _
+      rw [MeasureTheory.setIntegral_indicator (hBmeas k)]
+      exact optionalStopping_cell_nonpos hX k (hcell k)
+    · intro k _
+      exact (((hX.integrable (k+1)).sub (hX.integrable k)).indicator (hBmeas k)).integrableOn
+  rw [integral_sub hTint.integrableOn hSint.integrableOn, sub_nonpos] at hkey
+  exact hkey
 
 /-- (13.7) Theorem (Optional Sampling for supermartingales).
     For bounded stopping times S ≤ T, E[X_T | F_S] ≤ X_S a.s. -/
@@ -466,10 +820,64 @@ theorem optional_sampling_supermartingale
     (hTbdd : ∃ N : ℕ, ∀ ω, T ω ≤ N) :
     ∀ᵐ ω ∂μ,
       (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω ≤
-        X (S ω) ω := by sorry
+        X (S ω) ω := by
+  obtain ⟨N, hNT⟩ := hTbdd
+  have hNS : ∀ ω, S ω ≤ N := fun ω => (hST ω).trans (hNT ω)
+  have hm : hS.measurableSpace ≤ (‹MeasurableSpace Ω›) := hS.measurableSpace_le
+  haveI : SigmaFinite (μ.trim hm) := inferInstance
+  have hSint : Integrable (fun ω => X (S ω) ω) μ :=
+    integrable_stoppedValue_nat hX.integrable hS hNS
+  have hTint : Integrable (fun ω => X (T ω) ω) μ :=
+    integrable_stoppedValue_nat hX.integrable hT hNT
+  have hSmeas : StronglyMeasurable[hS.measurableSpace] (fun ω => X (S ω) ω) :=
+    stronglyMeasurable_stoppedValue_nat hX.1 hS
+  have hf_meas : StronglyMeasurable[hS.measurableSpace]
+      (fun ω => (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω) := stronglyMeasurable_condExp
+  have hf_int : Integrable (fun ω => (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω) μ :=
+    integrable_condExp
+  show (fun ω => (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω) ≤ᶠ[ae μ] (fun ω => X (S ω) ω)
+  rw [← StronglyMeasurable.ae_le_trim_iff hm hf_meas hSmeas]
+  refine ae_le_of_forall_setIntegral_le (hf_int.trim hm hf_meas) (hSint.trim hm hSmeas) ?_
+  intro s hs _
+  rw [← setIntegral_trim hm hf_meas hs, ← setIntegral_trim hm hSmeas hs,
+    setIntegral_condExp hm hTint hs]
+  exact optionalStopping_setIntegral_le hX hS hT hST hNT hs
 
-/-- (13.9) Corollary. For a uniformly integrable martingale,
-    X_S = E[X_T | F_S] for stopping times S ≤ T. -/
+/-
+The stopping-time σ-algebra of `τ` is the supremum of those of the bounded
+truncations `τ ∧ n`. (Used for Lévy upward convergence in optional sampling.)
+-/
+theorem stoppingTime_iSup_min_measurableSpace
+    {Ω : Type*} [MeasurableSpace Ω]
+    {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)} {τ : Ω → ℕ}
+    (hτ : IsStoppingTime ℱ (fun ω => (τ ω : WithTop ℕ))) :
+    ⨆ n : ℕ, (hτ.min (isStoppingTime_const ℱ n)).measurableSpace = hτ.measurableSpace := by
+  apply le_antisymm
+  · exact iSup_le fun n => (hτ.min (isStoppingTime_const ℱ n)).measurableSpace_mono hτ
+      (fun ω => min_le_left _ _)
+  ·
+    intro s hs; simp_all +decide [ IsStoppingTime.measurableSet ] ;
+    -- Since $s$ is measurable and for each $k$, $s \cap \{ω | τ ω ≤ k\}$ is measurable, we need to show that $s$ is measurable with respect to the supremum of the σ-algebras generated by the truncated stopping times.
+    have h_measurable : ∀ k, MeasurableSet[⨆ n, (IsStoppingTime.measurableSpace (hτ.min (isStoppingTime_const ℱ n)))] (s ∩ {ω | τ ω ≤ k}) := by
+      intro k
+      have h_measurable : MeasurableSet[(hτ.min (isStoppingTime_const ℱ k)).measurableSpace] (s ∩ {ω | τ ω ≤ k}) := by
+        refine' ⟨ _, fun i => _ ⟩;
+        · refine' MeasurableSet.inter _ _;
+          · exact hs.1;
+          · have := hτ.measurableSet_le k;
+            simp_all +decide [ WithTop.coe_le_coe ];
+            exact this.mono (ℱ.le k) le_rfl;
+        · by_cases hi : i < k <;> simp_all +decide [ min_le_iff ];
+          · convert hs.2 i using 1 ; ext ; simp +decide [ hi.le ];
+            grind;
+          · exact ℱ.mono hi _ ( hs.2 k );
+      exact MeasurableSpace.measurableSet_generateFrom ( by aesop );
+    convert MeasurableSet.iUnion fun k => h_measurable k using 1 ; ext ω ; aesop
+
+/-
+(13.9) Corollary. For a uniformly integrable martingale,
+    X_S = E[X_T | F_S] for stopping times S ≤ T.
+-/
 theorem optional_sampling_ui_martingale
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
     {ℱ : Filtration ℕ (‹MeasurableSpace Ω›)}
@@ -482,7 +890,38 @@ theorem optional_sampling_ui_martingale
     (hST : ∀ ω, S ω ≤ T ω) :
     ∀ᵐ ω ∂μ,
       X (S ω) ω =
-        (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω := by sorry
+        (μ[fun ω' => X (T ω') ω' | hS.measurableSpace]) ω := by
+          obtain ⟨ Y, hY ⟩ := ui_martingale_closed hX hui;
+          have h_key : ∀ (τ : Ω → ℕ) (hτ : IsStoppingTime ℱ (fun ω => (τ ω : WithTop ℕ))), ∀ᵐ ω ∂μ, X (τ ω) ω = μ[Y | hτ.measurableSpace] ω := by
+            intro τ hτ
+            have h_key : ∀ n, ∀ᵐ ω ∂μ, X (min (τ ω) n) ω = μ[Y | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω := by
+              intro n
+              have h_key_step : ∀ᵐ ω ∂μ, X (min (τ ω) n) ω = μ[X n | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω := by
+                convert hX.stoppedValue_ae_eq_condExp_of_le_const ( hτ.min ( isStoppingTime_const ℱ n ) ) ( fun ω => min_le_right _ _ ) using 1;
+              have h_key_step : ∀ᵐ ω ∂μ, μ[X n | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω = μ[μ[Y | ℱ n] | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω := by
+                exact MeasureTheory.condExp_congr_ae ( hY.2 n );
+              have h_key_step : ∀ᵐ ω ∂μ, μ[μ[Y | ℱ n] | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω = μ[Y | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω := by
+                apply_rules [ MeasureTheory.condExp_condExp_of_le ];
+                apply_rules [ IsStoppingTime.measurableSpace_le_of_le_const ];
+                exact fun ω => min_le_right _ _;
+              filter_upwards [ ‹∀ᵐ ω ∂μ, X ( min ( τ ω ) n ) ω = μ[X n | _] ω›, ‹∀ᵐ ω ∂μ, μ[X n | _] ω = μ[μ[Y | _] | _] ω›, h_key_step ] with ω hω₁ hω₂ hω₃ using by rw [ hω₁, hω₂, hω₃ ] ;
+            have h_key : ∀ᵐ ω ∂μ, Filter.Tendsto (fun n => μ[Y | (hτ.min (isStoppingTime_const ℱ n)).measurableSpace] ω) Filter.atTop (nhds (μ[Y | hτ.measurableSpace] ω)) := by
+              convert MeasureTheory.tendsto_ae_condExp Y;
+              rotate_left;
+              rotate_left;
+              exact ⟨ fun n => ( hτ.min ( isStoppingTime_const ℱ n ) ).measurableSpace, fun n m hnm => by exact IsStoppingTime.measurableSpace_mono ( hτ.min ( isStoppingTime_const ℱ n ) ) ( hτ.min ( isStoppingTime_const ℱ m ) ) ( fun ω => by simp +decide [ min_le_iff, hnm ] ), fun n => by exact IsStoppingTime.measurableSpace_le ( hτ.min ( isStoppingTime_const ℱ n ) ) ⟩;
+              · infer_instance;
+              · rfl;
+              · exact Eq.symm (stoppingTime_iSup_min_measurableSpace hτ);
+            filter_upwards [ h_key, MeasureTheory.ae_all_iff.2 ‹∀ n, ∀ᵐ ω ∂μ, X ( min ( τ ω ) n ) ω = μ[Y | ( hτ.min ( isStoppingTime_const ℱ n ) ).measurableSpace ] ω› ] with ω hω₁ hω₂;
+            exact tendsto_nhds_unique ( tendsto_const_nhds.congr' ( by filter_upwards [ Filter.eventually_ge_atTop ( τ ω ) ] with n hn; rw [ ← hω₂ n, min_eq_left hn ] ) ) hω₁;
+          have h_cond : ∀ᵐ ω ∂μ, μ[fun ω' => X (T ω') ω' | hS.measurableSpace] ω = μ[fun ω' => μ[Y | hT.measurableSpace] ω' | hS.measurableSpace] ω := by
+            apply_rules [ MeasureTheory.condExp_congr_ae ];
+          have h_cond : ∀ᵐ ω ∂μ, μ[fun ω' => μ[Y | hT.measurableSpace] ω' | hS.measurableSpace] ω = μ[Y | hS.measurableSpace] ω := by
+            apply_rules [ MeasureTheory.condExp_condExp_of_le ];
+            apply_rules [ IsStoppingTime.measurableSpace_mono ];
+            exact fun ω => WithTop.coe_le_coe.mpr ( hST ω );
+          filter_upwards [ h_key S hS, ‹∀ᵐ ω ∂μ, μ[fun ω' => X (T ω') ω' | hS.measurableSpace] ω = μ[fun ω' => μ[Y | hT.measurableSpace] ω' | hS.measurableSpace] ω›, h_cond ] with ω hω₁ hω₂ hω₃ using by rw [ hω₁, hω₂, hω₃ ] ;
 
 /-- A local martingale is a process M such that there exist stopping times
     Tₙ ↑ ∞ with each stopped process M^{Tₙ} a uniformly integrable martingale.

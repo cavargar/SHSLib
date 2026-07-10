@@ -104,7 +104,8 @@ structure SHS.InitialCondition (Q : Type*) (n : ℕ) where
   x₀ : EuclideanSpace ℝ (Fin n)
   t₀ : ℝ
 
-/-- **Eq. (5)** (Hespanha, 2005). The survivor function for the `ℓ`-th transition,
+/-
+**Eq. (5)** (Hespanha, 2005). The survivor function for the `ℓ`-th transition,
 starting from state `(q, x)` at time `t₀`, is
 
   `F_ℓ(t) = exp(−∫_{t₀}^{t} λ_ℓ(q, φ(s; t₀, q, x), s) ds)`.
@@ -112,7 +113,8 @@ starting from state `(q, x)` at time `t₀`, is
 Since intensities `λ_ℓ ≥ 0`, the integral is nonneg, so `0 < F_ℓ(t) ≤ 1`.
 The survivor function at `t₀` equals 1 (the integral vanishes), and its
 rate of decrease at `t` is `λ_ℓ(q, x(t), t)`, formalizing the statement
-that "the probability of `N_ℓ` incrementing in `(t, t+dt]` is `λ_ℓ dt`." -/
+that "the probability of `N_ℓ` incrementing in `(t, t+dt]` is `λ_ℓ dt`."
+-/
 theorem SHS.transition_probability_rate
     {Q : Type*} [Fintype Q] {n m : ℕ}
     (S : SHS Q n m) (hflow : S.HasGlobalFlow)
@@ -122,6 +124,6 @@ theorem SHS.transition_probability_rate
     let F := Real.exp (- ∫ s in Set.Icc t₀ t,
       S.intensity ℓ q (hflow.flow t₀ q x s) s)
     0 < F ∧ F ≤ 1 := by
-  sorry
+  exact ⟨ Real.exp_pos _, Real.exp_le_one_iff.mpr <| neg_nonpos_of_nonneg <| MeasureTheory.setIntegral_nonneg measurableSet_Icc fun s hs => S.intensity_nonneg ℓ q _ _ ⟩
 
 end
