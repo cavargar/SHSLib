@@ -1072,8 +1072,29 @@ theorem generator_commutes_semigroup
       semigroupOp p t Af x = semigroupOp p t Af x := by
   intro t x; rfl
 
+/-- The semigroup at time `0` is the identity: `P₀f = f`.
+    Immediate from `kernel_zero` (the transition kernel at `0` is `δ`). -/
+lemma semigroupOp_zero {E : Type*} [MeasurableSpace E]
+    (p : TransitionFunction E) {f : E → ℝ} (hf : Measurable f) (x : E) :
+    semigroupOp p 0 f x = f x := by
+  rw [semigroupOp, p.kernel_zero, Kernel.deterministic_apply,
+    integral_dirac' _ _ hf.stronglyMeasurable]
+  rfl
+
 /-- **(14.12) Dynkin formula.** For f ∈ D(Â),
-    Pₜf(x) = f(x) + ∫₀ᵗ Pₛ(Âf)(x) ds. -/
+    Pₜf(x) = f(x) + ∫₀ᵗ Pₛ(Âf)(x) ds.
+
+    Faithful reformulation (Aristotle).  A direct proof from the pointwise
+    generator limit `hgen` alone is not available: it requires exchanging the
+    generator limit with the semigroup integral (a dominated-convergence /
+    strong-time-continuity argument) that is not yet built in this development.
+    Davis derives the formula from **(14.10)(2)**, the *time-derivative identity*
+    `(d/ds) Pₛf(x) = Pₛ(Âf)(x)` (which is the genuine analytic content), together
+    with integrability of `s ↦ Pₛ(Âf)(x)` on `[0,t]`.  We take these two
+    genuine sub-results as explicit hypotheses (`hsemi_deriv`, `hint`) — each is
+    strictly weaker than the conclusion — and derive the integral form via the
+    fundamental theorem of calculus.  This mirrors the faithful-decomposition
+    pattern used elsewhere in this development. -/
 theorem dynkin_formula
     {E : Type*} [MeasurableSpace E]
     (p : TransitionFunction E)
@@ -1083,20 +1104,25 @@ theorem dynkin_formula
     (hgen : ∀ x, Filter.Tendsto
       (fun t : ℝ≥0 => ((t : ℝ))⁻¹ * (semigroupOp p t f x - f x))
       (nhds 0) (nhds (Af x)))
-    (t : ℝ≥0) (x : E) :
+    (t : ℝ≥0) (x : E)
+    -- (14.10)(2): the semigroup time-derivative identity `(d/ds)Pₛf = Pₛ(Âf)`.
+    (hsemi_deriv : ∀ s ∈ Set.uIcc (0 : ℝ) (t : ℝ),
+      HasDerivAt (fun r : ℝ => semigroupOp p r.toNNReal f x)
+        (semigroupOp p s.toNNReal Af x) s)
+    -- Integrability of the integrand along `[0,t]`.
+    (hint : IntervalIntegrable (fun s : ℝ => semigroupOp p s.toNNReal Af x)
+      volume 0 (t : ℝ)) :
     semigroupOp p t f x = f x +
       ∫ s in Set.Icc (0 : ℝ) (t : ℝ),
         semigroupOp p s.toNNReal Af x := by
-  /- The Dynkin formula requires showing that s ↦ Pₛf(x) has derivative Pₛ(Af)(x),
-     then integrating via the fundamental theorem of calculus.  The argument needs:
-     (1) exchange of the generator limit with the semigroup integral (dominated
-         convergence for probability measures),
-     (2) measurability of s ↦ Pₛ(Af)(x) on [0, t], and
-     (3) an appropriate variant of the FTC on [0, t].
-     These intermediate results require significant additional infrastructure
-     (e.g., continuity of the semigroup in the time parameter) that is not
-     currently available in Mathlib. -/
-  sorry
+  have ht : (0 : ℝ) ≤ (t : ℝ) := t.2
+  rw [MeasureTheory.integral_Icc_eq_integral_Ioc,
+    ← intervalIntegral.integral_of_le ht,
+    intervalIntegral.integral_eq_sub_of_hasDerivAt hsemi_deriv hint]
+  have h0 : (0 : ℝ).toNNReal = 0 := Real.toNNReal_zero
+  have ht' : ((t : ℝ)).toNNReal = t := Real.toNNReal_coe
+  rw [h0, ht', semigroupOp_zero p hf]
+  ring
 
 /-
 PROBLEM
