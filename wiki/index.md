@@ -15,8 +15,8 @@ Documentation for the public **SHSLib** distribution: the foundational theory of
 
 | Module | Status | Summary |
 |--------|--------|---------|
-| [Foundations.DavisCh1](modules/Foundations.DavisCh1.md) | ⚠️ 1 sorry | Davis Ch. 1 — analysis, measure theory, martingales, Dynkin |
-| [Foundations.DavisCh2](modules/Foundations.DavisCh2.md) | ⚠️ 13 sorries | Davis Ch. 2 — PDMP theory, ODE flows, Grönwall, inverse-transform sampling |
+| [Foundations.DavisCh1](modules/Foundations.DavisCh1.md) | ⚠️ 3 sorries | Davis Ch. 1 — analysis, measure theory, martingales, Dynkin |
+| [Foundations.DavisCh2](modules/Foundations.DavisCh2.md) | ⚠️ 9 sorries | Davis Ch. 2 — PDMP theory, ODE flows, Grönwall, inverse-transform sampling |
 
 ## References
 
