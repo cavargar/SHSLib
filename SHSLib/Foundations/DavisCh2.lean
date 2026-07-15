@@ -2934,6 +2934,1141 @@ theorem pdpSemigroup_add {E : Type*} [MeasurableSpace E]
           convert funext fun n => pdpSemigroupOp_iterate_add pdp f g hf _ _ hg _ _ hflow c hrate hcont n t x using 1;
           exacts [ hf_bdd.choose, hf_bdd.choose_spec, hg_bdd.choose, hg_bdd.choose_spec ]
 
+/-
+Single-step homogeneity of the renewal operator in the target and argument
+    functions: `G_{a·f}(a·ψ) = a · G_f ψ`. This is unconditional — it only pulls
+    the scalar `a` out of the (inner kernel and outer jump) integrals via
+    `MeasureTheory.integral_const_mul`.
+-/
+theorem pdpSemigroupOp_smul_step {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (a : ℝ) (f : E → ℝ) (psi : ℝ≥0 × E → ℝ)
+    (q : ℝ≥0 × E) :
+    pdpSemigroupOp pdp.toPDP (fun z => a * f z) (fun p => a * psi p) q =
+      a * pdpSemigroupOp pdp.toPDP f psi q := by
+        unfold pdpSemigroupOp; simp +decide [ mul_assoc, mul_left_comm, MeasureTheory.integral_const_mul ] ; ring;
+
+/-
+Homogeneity of the renewal iterates in the target function:
+    `G_{a·f}ⁿ0 = a · G_fⁿ0` pointwise (induction on `pdpSemigroupOp_smul_step`,
+    using that the start `0` satisfies `0 = a · 0`).
+-/
+theorem pdpSemigroupOp_iterate_smul {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (a : ℝ) (f : E → ℝ)
+    (n : ℕ) (s : ℝ≥0) (y : E) :
+    (pdpSemigroupOp pdp.toPDP (fun z => a * f z))^[n] (fun _ => 0) (s, y) =
+      a * (pdpSemigroupOp pdp.toPDP f)^[n] (fun _ => 0) (s, y) := by
+        induction' n with n ih generalizing s y;
+        · simp +decide;
+        · rw [ Function.iterate_succ_apply', Function.iterate_succ_apply' ];
+          rw [ show ( pdpSemigroupOp pdp.toPDP fun z => a * f z )^[n] ( fun x => 0 ) = fun p => a * ( pdpSemigroupOp pdp.toPDP f )^[n] ( fun x => 0 ) p from funext fun p => ih p.1 p.2 ];
+          convert pdpSemigroupOp_smul_step pdp a f _ ( s, y ) using 1
+
+/-
+**(27) Homogeneity / scalar-linearity of the transition semigroup.**
+    `Pₜ(a · f) = a · Pₜf`. Each renewal iterate from `0` is homogeneous in the
+    target function (`pdpSemigroupOp_iterate_smul`); passing to the limit
+    (`semigroup_iterate_converges` for `a·f` and `f`, `Tendsto.const_mul`, and
+    uniqueness of limits) yields homogeneity of `Pₜ`. Combined with
+    `pdpSemigroup_add` this makes `Pₜ` a linear operator.
+-/
+theorem pdpSemigroup_smul {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (a : ℝ) (f : E → ℝ)
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (t : ℝ≥0) (x : E) :
+    pdpSemigroup pdp.toPDP t (fun y => a * f y) x =
+      a * pdpSemigroup pdp.toPDP t f x := by
+        convert Tendsto.limUnder_eq _ using 1;
+        · infer_instance;
+        · exact Filter.atTop_neBot;
+        · convert Filter.Tendsto.const_mul a ( semigroup_iterate_converges pdp f ( fun _ => 0 ) hf hf_bdd measurable_const ⟨ 0, fun _ => by norm_num ⟩ hflow c hrate hcont t x ) using 1;
+          ext n; exact pdpSemigroupOp_iterate_smul pdp a f n t x;
+
+/-
+**(27) Monotonicity of the transition semigroup.** If `f ≤ g` pointwise then
+    `Pₜf ≤ Pₜg`. Write `g = f + (g - f)` with `g - f ≥ 0`; then
+    `Pₜg = Pₜf + Pₜ(g - f)` (`pdpSemigroup_add`) and `Pₜ(g - f) ≥ 0`
+    (`pdpSemigroup_nonneg`), so `Pₜf ≤ Pₜg`.
+-/
+theorem pdpSemigroup_mono {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f g : E → ℝ)
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hg : Measurable g) (hg_bdd : ∃ C : ℝ, ∀ x, |g x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hfg : ∀ y, f y ≤ g y) (t : ℝ≥0) (x : E) :
+    pdpSemigroup pdp.toPDP t f x ≤ pdpSemigroup pdp.toPDP t g x := by
+      convert le_add_of_nonneg_right ( pdpSemigroup_nonneg pdp ( fun y => g y - f y ) ( hg.sub hf ) ?_ hflow c hrate hcont ?_ t x ) using 1;
+      · convert pdpSemigroup_add pdp f ( fun y => g y - f y ) hf hf_bdd ( hg.sub hf ) ?_ hflow c hrate hcont t x using 1;
+        · simp +decide [ hfg ];
+        · exact ⟨ hf_bdd.choose + hg_bdd.choose, fun x => by rw [ abs_le ] ; constructor <;> linarith [ abs_le.mp ( hf_bdd.choose_spec x ), abs_le.mp ( hg_bdd.choose_spec x ) ] ⟩;
+      · exact ⟨ hf_bdd.choose + hg_bdd.choose, fun x => by rw [ abs_le ] ; constructor <;> linarith [ abs_le.mp ( hf_bdd.choose_spec x ), abs_le.mp ( hg_bdd.choose_spec x ) ] ⟩;
+      · exact fun y => sub_nonneg.2 ( hfg y )
+
+/-
+**(27) Strong continuity of the transition semigroup at time 0** (non-negative
+    case). For a continuous, non-negative, bounded `f`, `Pₜf(x) → f(x)` as
+    `t ↓ 0`. The renewal decomposition sandwiches
+    `S(t,x)·f(φ(t,x)) ≤ Pₜf(x) ≤ S(t,x)·f(φ(t,x)) + C·(1 − S(t,x))`
+    (exactly the bound `h_bound` used in
+    `alpha_excessive_right_continuous_along_flow`); as `t ↓ 0`,
+    `S(t,x) → 1` (`pdpSurvivorFunction_tendsto_one`) and, by joint continuity of
+    the flow (`hflow_cont`, so `t ↦ φ(t,x)` is continuous and `φ(0,x) = x`) and
+    continuity of `f`, `f(φ(t,x)) → f(x)`. Hence both bounds tend to `f(x)` and
+    a squeeze gives `Pₜf(x) → f(x)`.
+-/
+theorem pdpSemigroup_tendsto_zero_nonneg {E : Type*} [MeasurableSpace E]
+    [TopologicalSpace E]
+    (pdp : PDPStandard E)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C) (x : E) :
+    Filter.Tendsto (fun t : ℝ≥0 => pdpSemigroup pdp.toPDP t f x)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (f x)) := by
+        have h_bound : ∀ t : ℝ≥0, pdpSurvivorFunction pdp.toPDP t x * f (pdp.toPDP.flow t x) ≤ pdpSemigroup pdp.toPDP t f x ∧ pdpSemigroup pdp.toPDP t f x ≤ pdpSurvivorFunction pdp.toPDP t x * f (pdp.toPDP.flow t x) + C * (1 - pdpSurvivorFunction pdp.toPDP t x) := by
+          intro t
+          have h_bound : ∀ n : ℕ, pdpSurvivorFunction pdp.toPDP t x * f (pdp.toPDP.flow t x) ≤ (pdpSemigroupOp pdp.toPDP f)^[n + 1] (fun _ => 0) (t, x) ∧ (pdpSemigroupOp pdp.toPDP f)^[n + 1] (fun _ => 0) (t, x) ≤ pdpSurvivorFunction pdp.toPDP t x * f (pdp.toPDP.flow t x) + C * (1 - pdpSurvivorFunction pdp.toPDP t x) := by
+            intro n
+            apply And.intro;
+            · have := pdpSemigroupOp_survivor_flow_le pdp.toPDP f ( ( pdpSemigroupOp pdp.toPDP f ) ^[ n ] ( fun _ => 0 ) ) ( fun y => hf_nonneg y ) ( fun q => pdpSemigroupOp_iterate_nonneg pdp.toPDP f ( fun y => hf_nonneg y ) n q ) t x; simp_all +decide [ Function.iterate_succ_apply' ] ;
+            · convert pdpSemigroupOp_le_survivor_flow_add pdp.toPDP f ( fun q => ( pdpSemigroupOp pdp.toPDP f )^[n] ( fun _ => 0 ) q ) C _ _ _ t x _ using 1;
+              · simp +decide [ Function.iterate_succ_apply' ];
+              · exact le_trans ( abs_nonneg _ ) ( hfC x );
+              · exact hf_nonneg;
+              · apply pdpSemigroupOp_iterate_abs_le pdp.toPDP f hf hflow c hrate hcont C (by
+                exact le_trans ( abs_nonneg _ ) ( hfC x )) hfC (fun _ => 0) (by
+                exact measurable_const) (by
+                exact fun _ => by simpa using hfC x |> le_trans ( abs_nonneg _ ) ;) n;
+              · exact Continuous.continuousOn ( hcont x );
+          have h_limit : Filter.Tendsto (fun n => (pdpSemigroupOp pdp.toPDP f)^[n + 1] (fun _ => 0) (t, x)) Filter.atTop (nhds (pdpSemigroup pdp.toPDP t f x)) := by
+            convert semigroup_iterate_converges pdp f ( fun _ => 0 ) hf ?_ measurable_const ?_ hflow c hrate hcont t x |> Filter.Tendsto.comp <| Filter.tendsto_add_atTop_nat 1 using 1;
+            · exact ⟨ C, hfC ⟩;
+            · exact ⟨ 0, fun _ => by norm_num ⟩;
+          exact ⟨ le_of_tendsto_of_tendsto' tendsto_const_nhds h_limit fun n => h_bound n |>.1, le_of_tendsto_of_tendsto' h_limit tendsto_const_nhds fun n => h_bound n |>.2 ⟩;
+        have h_S_tendsto : Filter.Tendsto (fun t : ℝ≥0 => pdpSurvivorFunction pdp.toPDP t x) (nhdsWithin 0 (Set.Ioi 0)) (nhds 1) := by
+          exact pdpSurvivorFunction_tendsto_one pdp.toPDP x hflow c hrate |> Filter.Tendsto.mono_left <| nhdsWithin_le_nhds;
+        have h_f_tendsto : Filter.Tendsto (fun t : ℝ≥0 => f (pdp.toPDP.flow t x)) (nhdsWithin 0 (Set.Ioi 0)) (nhds (f x)) := by
+          convert hf_cont.continuousAt.tendsto.comp ( hflow_cont.continuousAt.tendsto.comp ( show Filter.Tendsto ( fun t : ℝ≥0 => ( t, x ) ) ( nhdsWithin 0 ( Set.Ioi 0 ) ) ( nhds ( 0, x ) ) from Filter.Tendsto.prodMk_nhds ( Filter.tendsto_id.mono_left inf_le_left ) tendsto_const_nhds ) ) using 1;
+          rw [ pdp.flow_zero ];
+        exact tendsto_of_tendsto_of_tendsto_of_le_of_le' ( by simpa using h_S_tendsto.mul h_f_tendsto ) ( by simpa using h_S_tendsto.mul h_f_tendsto |> Filter.Tendsto.add <| tendsto_const_nhds.mul ( h_S_tendsto.const_sub 1 ) ) ( Filter.eventually_of_mem self_mem_nhdsWithin fun t ht => h_bound t |>.1 ) ( Filter.eventually_of_mem self_mem_nhdsWithin fun t ht => h_bound t |>.2 )
+
+/-
+**(27) Strong continuity of the transition semigroup at time 0.** For any
+    continuous bounded `f`, `Pₜf(x) → f(x)` as `t ↓ 0`. Reduce to the
+    non-negative case via `g := fun y => f y + C ≥ 0` (`|f| ≤ C ⇒ f ≥ -C`),
+    which is continuous, measurable and bounded (by `2C`): by
+    `pdpSemigroup_add` and `pdpSemigroup_const`,
+    `Pₜg(x) = Pₜf(x) + C`, and `pdpSemigroup_tendsto_zero_nonneg` gives
+    `Pₜg(x) → g(x) = f(x) + C`, so `Pₜf(x) = Pₜg(x) - C → f(x)`.
+-/
+theorem pdpSemigroup_tendsto_zero {E : Type*} [MeasurableSpace E]
+    [TopologicalSpace E]
+    (pdp : PDPStandard E)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C) (x : E) :
+    Filter.Tendsto (fun t : ℝ≥0 => pdpSemigroup pdp.toPDP t f x)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (f x)) := by
+        convert Tendsto.sub_const ( pdpSemigroup_tendsto_zero_nonneg pdp hflow hflow_cont c hrate hcont ( hf.add measurable_const ) ( hf_cont.add continuous_const ) ( fun y => show 0 ≤ f y + C by linarith [ abs_le.mp ( hfC y ) ] ) ( 2 * C ) ( fun y => show |f y + C| ≤ 2 * C by rw [ abs_le ] ; constructor <;> linarith [ abs_le.mp ( hfC y ) ] ) x ) C using 2 ; ring;
+        · have := pdpSemigroup_add pdp f ( fun _ => C ) hf ⟨ C, hfC ⟩ measurable_const ⟨ |C|, fun _ => le_rfl ⟩ hflow c hrate hcont ‹_› x; simp_all +decide [ add_comm ] ;
+          rw [ pdpSemigroup_const pdp C hflow c hrate hcont ] ; ring;
+        · ring
+
+/-
+**(27) Contraction / sup-norm bound of the transition semigroup.**
+    If `|f| ≤ C` then `|Pₜf(x)| ≤ C`. The renewal iterates from `0` are all
+    bounded by `C` (`pdpSemigroupOp_iterate_abs_le`) and converge to `Pₜf(x)`
+    (`semigroup_iterate_converges`), so the limit is bounded by `C`.
+-/
+theorem pdpSemigroup_abs_le {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ)
+    (hf : Measurable f)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (C : ℝ) (hC : 0 ≤ C) (hfC : ∀ y, |f y| ≤ C) (t : ℝ≥0) (x : E) :
+    |pdpSemigroup pdp.toPDP t f x| ≤ C := by
+      have := @semigroup_iterate_converges;
+      specialize this pdp f ( fun _ => 0 ) hf ⟨ C, hfC ⟩ measurable_const ⟨ 0, fun _ => by simp +decide [ hC ] ⟩ hflow c hrate hcont t x;
+      exact le_of_tendsto' ( this.abs ) fun n => by simpa using pdpSemigroupOp_iterate_abs_le pdp.toPDP f hf hflow c hrate hcont C hC hfC ( fun _ => 0 ) measurable_const ( fun _ => by simp +decide [ hC ] ) n ( t, x ) ;
+
+/-
+**(27) Subtractivity / linearity of the transition semigroup.**
+    `Pₜ(f - g) = Pₜf - Pₜg`. Immediate from additivity `pdpSemigroup_add` and
+    homogeneity `pdpSemigroup_smul` (with scalar `-1`).
+-/
+theorem pdpSemigroup_sub {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f g : E → ℝ)
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hg : Measurable g) (hg_bdd : ∃ C : ℝ, ∀ x, |g x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (t : ℝ≥0) (x : E) :
+    pdpSemigroup pdp.toPDP t (fun y => f y - g y) x =
+      pdpSemigroup pdp.toPDP t f x - pdpSemigroup pdp.toPDP t g x := by
+        have := pdpSemigroup_add pdp f ( fun y => -g y ) hf hf_bdd ( by measurability ) ⟨ hg_bdd.choose, fun y => by simpa using hg_bdd.choose_spec y ⟩ hflow c hrate hcont t x; simp_all +decide [ sub_eq_add_neg ] ;
+        simpa using pdpSemigroup_smul pdp ( -1 ) g hg hg_bdd hflow c hrate hcont t x
+
+/-
+**(27) Sup-norm Lipschitz dependence on the target function.**
+    If `|f - g| ≤ M` pointwise then `|Pₜf(x) - Pₜg(x)| ≤ M`. Write the
+    difference as `Pₜ(f - g)(x)` (`pdpSemigroup_sub`) and bound it by the
+    contraction estimate `pdpSemigroup_abs_le` applied to `f - g`.
+-/
+theorem pdpSemigroup_dist_le {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f g : E → ℝ)
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hg : Measurable g) (hg_bdd : ∃ C : ℝ, ∀ x, |g x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (M : ℝ) (hM : 0 ≤ M) (hfg : ∀ y, |f y - g y| ≤ M) (t : ℝ≥0) (x : E) :
+    |pdpSemigroup pdp.toPDP t f x - pdpSemigroup pdp.toPDP t g x| ≤ M := by
+      rw [ ← pdpSemigroup_sub pdp f g hf hf_bdd hg hg_bdd hflow c hrate hcont t x ];
+      convert pdpSemigroup_abs_le pdp ( fun y => f y - g y ) ( hf.sub hg ) hflow c hrate hcont M hM hfg t x using 1
+
+/-
+**Survivor cocycle (flow-multiplicativity).** The probability of surviving
+    (no jump) up to time `s + t` factors as the probability of surviving to
+    time `s` times the probability of surviving a further time `t` started from
+    the flowed state `φ(s, y)`:
+      `S(s + t, y) = S(s, y) · S(t, φ(s, y))`.
+    This is the additive-cocycle identity for the hazard integral
+    `∫₀^{s+t} λ(φ(u,y)) du = ∫₀ˢ λ(φ(u,y)) du + ∫₀ᵗ λ(φ(u, φ(s,y))) du`, the
+    second integral obtained by the substitution `u ↦ u + s` together with the
+    flow group law `flow_add` (`φ(u+s, y) = φ(u, φ(s, y))`). Continuity of the
+    hazard along the flow supplies the interval-integrability needed to split
+    the integral.
+-/
+theorem pdpSurvivorFunction_mul {E : Type*} [MeasurableSpace E]
+    (p : PDP E) (y : E)
+    (hcont : Continuous (fun s : ℝ => (p.jumpRate (p.flow s.toNNReal y) : ℝ)))
+    (s t : ℝ≥0) :
+    pdpSurvivorFunction p (s + t) y
+      = pdpSurvivorFunction p s y * pdpSurvivorFunction p t (p.flow s y) := by
+  -- Apply the fact that the integral of a sum is the sum of the integrals.
+  have h_integral_split : ∫ u in Set.Icc (0 : ℝ) ((s + t) : ℝ), (p.jumpRate (p.flow u.toNNReal y) : ℝ) = (∫ u in Set.Icc (0 : ℝ) (s : ℝ), (p.jumpRate (p.flow u.toNNReal y) : ℝ)) + (∫ u in Set.Ioc (s : ℝ) ((s + t) : ℝ), (p.jumpRate (p.flow u.toNNReal y) : ℝ)) := by
+    norm_num [ MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le, add_nonneg ];
+    rw [ intervalIntegral.integral_add_adjacent_intervals ] <;> apply_rules [ Continuous.intervalIntegrable, hcont ];
+  -- Apply the substitution $u = v + s$ to the integral over $[s, s+t]$.
+  have h_integral_subst : ∫ u in Set.Ioc (s : ℝ) ((s + t) : ℝ), (p.jumpRate (p.flow u.toNNReal y) : ℝ) = ∫ v in Set.Ioc (0 : ℝ) (t : ℝ), (p.jumpRate (p.flow (v + s).toNNReal y) : ℝ) := by
+    rw [ ← intervalIntegral.integral_of_le ( by linarith [ NNReal.coe_nonneg s, NNReal.coe_nonneg t ] ), ← intervalIntegral.integral_of_le ( by linarith [ NNReal.coe_nonneg s, NNReal.coe_nonneg t ] ) ] ; rw [ intervalIntegral.integral_comp_add_right fun u => ( p.jumpRate ( p.flow u.toNNReal y ) : ℝ ) ] ; norm_num; ring;
+  -- Apply the flow group law to rewrite the integral over $[0, t]$.
+  have h_integral_flow : ∫ v in Set.Ioc (0 : ℝ) (t : ℝ), (p.jumpRate (p.flow (v + s).toNNReal y) : ℝ) = ∫ v in Set.Ioc (0 : ℝ) (t : ℝ), (p.jumpRate (p.flow v.toNNReal (p.flow s y)) : ℝ) := by
+    refine' MeasureTheory.setIntegral_congr_fun measurableSet_Ioc fun v hv => _;
+    rw [ Real.toNNReal_add ] <;> norm_num [ hv.1.le ];
+    rw [ p.flow_add ];
+  unfold pdpSurvivorFunction; simp +decide [ *, MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le ] ; ring;
+  rw [ ← Real.exp_add ] ; ring
+
+/-
+**Joint measurability of the transition semigroup.** The map
+    `(t, x) ↦ Pₜf(x)` is measurable on `ℝ≥0 × E`. It is the pointwise limit of
+    the renewal iterates `Gⁿ0`, each of which is jointly measurable
+    (`pdpSemigroupOp_iterate_measurable`); convergence at every point is
+    `semigroup_iterate_converges`, so `measurable_of_tendsto_metrizable`
+    applies.
+-/
+theorem pdpSemigroup_measurable {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ) (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ))) :
+    Measurable (fun q : ℝ≥0 × E => pdpSemigroup pdp.toPDP q.1 f q.2) := by
+  convert measurable_of_tendsto_metrizable _ _;
+  all_goals try infer_instance;
+  use fun n => fun q => ( pdpSemigroupOp pdp.toPDP f )^[n] ( fun _ => 0 ) ( q.1, q.2 );
+  · exact fun n => pdpSemigroupOp_iterate_measurable pdp.toPDP f hf hflow ( fun _ => 0 ) measurable_const n;
+  · refine' tendsto_pi_nhds.mpr _;
+    intro q;
+    convert semigroup_iterate_converges pdp f ( fun _ => 0 ) hf hf_bdd measurable_const ?_ hflow c hrate hcont q.1 q.2 using 1;
+    exact ⟨ 0, fun _ => by norm_num ⟩
+
+/-
+**Renewal (fixed-point) equation for the transition semigroup.** The
+    semigroup `Pₜf` is the fixed point of the one-step renewal operator `G`
+    (`pdpSemigroupOp`), i.e. it satisfies Davis's renewal equation (27.2):
+      `Pₜf(x) = S(t,x)·f(φ(t,x)) + ∫₀ᵗ S(s,x)·λ(φ(s,x))·[∫ P_{t−s}f(y) Q(dy; φ(s,x))] ds`.
+    Proof: the iterates `aₙ = Gⁿ0` converge to `Pₜf(x)`
+    (`semigroup_iterate_converges`), and `aₙ₊₁ = G aₙ` also converges to the
+    same limit; on the other hand `G aₙ (t,x) → G ψ (t,x)` where
+    `ψ = fun q => P_{q.1}f q.2`, because the integrand difference is controlled
+    by the uniform-in-`(s,y)` iterate-to-limit bound
+    `|aₙ(t−s,y) − P_{t−s}f(y)| ≤ 2C·ρ(t−s)ⁿ ≤ 2C·ρ(t)ⁿ → 0`
+    (`pdpSemigroup_sub_iterate_le`, monotonicity of `ρ` in the horizon). Hence
+    `Pₜf(x) = G ψ (t,x)`, which is the displayed right-hand side.
+-/
+theorem pdpSemigroup_renewal_equation {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ) (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (t : ℝ≥0) (x : E) :
+    pdpSemigroup pdp.toPDP t f x =
+      pdpSurvivorFunction pdp.toPDP t x * f (pdp.flow t x) +
+      ∫ s in Set.Icc (0 : ℝ) (t : ℝ),
+        pdpSurvivorFunction pdp.toPDP s.toNNReal x *
+        (pdp.jumpRate (pdp.flow s.toNNReal x) : ℝ) *
+        (∫ y, pdpSemigroup pdp.toPDP ((t : ℝ) - s).toNNReal f y
+          ∂(pdp.transitionMeasure (pdp.flow s.toNNReal x))) := by
+  obtain ⟨ C, hC ⟩ := hf_bdd;
+  set ψ' : ℝ≥0 × E → ℝ := fun q => pdpSemigroup pdp.toPDP q.1 f q.2
+  have hψ'm : ∀ r, Measurable (fun y => ψ' (r, y)) := by
+    intro r;
+    apply (pdp_semigroup_maps_bounded_measurable pdp r hf ⟨C, hC⟩ hflow c hrate hcont).left.comp measurable_id';
+  have hψ'm_bdd : ∀ q, |ψ' q| ≤ C := by
+    exact fun q => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( le_trans ( abs_nonneg _ ) ( hC q.2 ) ) hC q.1 q.2;
+  have h_limit : Filter.Tendsto (fun n => pdpSemigroupOp pdp.toPDP f ((pdpSemigroupOp pdp.toPDP f)^[n] (fun _ => 0)) (t, x)) Filter.atTop (nhds (pdpSemigroupOp pdp.toPDP f ψ' (t, x))) := by
+    refine' tendsto_iff_norm_sub_tendsto_zero.mpr _;
+    refine' squeeze_zero ( fun _ => norm_nonneg _ ) ( fun n => _ ) _;
+    use fun n => 2 * C * ( 1 - Real.exp ( - ( c : ℝ ) * ( t : ℝ ) ) ) ^ n * ( 1 - pdpSurvivorFunction pdp.toPDP t x );
+    · apply_rules [ pdpSemigroupOp_dist_le_horizon ];
+      any_goals exact Continuous.continuousOn ( hcont x );
+      any_goals exact pdpSemigroupOp_integrand_integrableOn pdp.toPDP _ ( pdpSemigroupOp_iterate_measurable pdp.toPDP f hf hflow _ measurable_const n ) C ( pdpSemigroupOp_iterate_abs_le pdp.toPDP f hf hflow c hrate hcont C ( show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hC x ) ) ( fun y => hC y ) ( fun _ => 0 ) measurable_const ( fun _ => by simp +decide [ show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hC x ) ] ) n ) hflow c hrate t x;
+      · exact mul_nonneg ( mul_nonneg zero_le_two ( le_trans ( abs_nonneg _ ) ( hC x ) ) ) ( pow_nonneg ( sub_nonneg.2 ( Real.exp_le_one_iff.2 ( by nlinarith [ show ( c : ℝ ) ≥ 0 by positivity, show ( t : ℝ ) ≥ 0 by positivity ] ) ) ) _ );
+      · apply pdpSemigroupOp_iterate_abs_le pdp.toPDP f hf hflow c hrate hcont C ( show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hC x ) ) ( fun y => hC y ) ( fun _ => 0 ) measurable_const ( fun _ => by simp +decide [ show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hC x ) ] ) n;
+      · exact fun r => pdpSemigroupOp_iterate_measurable pdp.toPDP f hf hflow ( fun _ => 0 ) measurable_const n |> Measurable.comp <| measurable_prodMk_left;
+      · intro q hq;
+        refine' le_trans _ ( mul_le_mul_of_nonneg_left ( pow_le_pow_left₀ _ _ _ ) ( by linarith [ abs_le.mp ( hC x ) ] ) );
+        convert pdpSemigroup_sub_iterate_le pdp f hf hflow c hrate hcont C ( show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hC x ) ) ( fun y => hC y ) q.1 n q.2 using 1;
+        · exact sub_nonneg.2 ( Real.exp_le_one_iff.2 <| by nlinarith [ show ( c : ℝ ) ≥ 0 by positivity, show ( q.1 : ℝ ) ≥ 0 by positivity ] );
+        · exact sub_le_sub_left ( Real.exp_le_exp.mpr ( mul_le_mul_of_nonpos_left ( mod_cast hq ) ( neg_nonpos.mpr ( NNReal.coe_nonneg _ ) ) ) ) _;
+      · apply_rules [ pdpSemigroupOp_integrand_integrableOn ];
+        exact pdpSemigroup_measurable pdp f hf ⟨ C, hC ⟩ hflow c hrate hcont;
+    · by_cases hc : c = 0 <;> simp_all +decide [ Real.exp_neg ];
+      · exact tendsto_const_nhds.congr' ( by filter_upwards [ Filter.eventually_ne_atTop 0 ] with n hn; simp +decide [ hn ] );
+      · simpa using Filter.Tendsto.mul ( tendsto_const_nhds.mul ( tendsto_pow_atTop_nhds_zero_of_lt_one ( sub_nonneg.2 <| inv_le_one_of_one_le₀ <| Real.one_le_exp <| by positivity ) <| sub_lt_self _ <| inv_pos.2 <| Real.exp_pos _ ) ) tendsto_const_nhds;
+  convert tendsto_nhds_unique _ h_limit using 1;
+  convert semigroup_iterate_converges pdp f ( fun _ => 0 ) hf ⟨ C, hC ⟩ measurable_const ⟨ 0, fun _ => by norm_num ⟩ hflow c hrate hcont t x |> Filter.Tendsto.comp <| Filter.tendsto_add_atTop_nat 1 using 1;
+  exact funext fun n => by rw [ Function.comp_apply, Function.iterate_succ_apply' ] ; rfl;
+
+/-
+**Uniqueness of the renewal fixed point.** Under a globally bounded jump rate,
+    the one-step renewal operator `ψ ↦ pdpSemigroupOp pdp g ψ` has at most one
+    bounded, jointly-measurable fixed point. Two such fixed points `u`, `v` (both
+    `|·| ≤ C`) coincide everywhere. The proof is a geometric-contraction
+    induction on a finite horizon `T`: from `pdpSemigroupOp_dist_le_horizon` and
+    the survivor lower bound `pdpSurvivorFunction_ge_exp` one gets, for every `n`,
+    `|u q − v q| ≤ 2C·(1 − e^{−cT})ⁿ` whenever `q.1 ≤ T`; letting `n → ∞`
+    (`tendsto_pow_atTop_nhds_zero_of_lt_one`, `1 − e^{−cT} < 1`) forces
+    `u q = v q`. Since every `q` has `q.1 ≤ q.1`, this gives `u = v`.
+-/
+theorem pdpSemigroupOp_fixedpoint_unique {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (g : E → ℝ) (C : ℝ) (hC : 0 ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (u v : ℝ≥0 × E → ℝ)
+    (hu_bdd : ∀ q, |u q| ≤ C) (hv_bdd : ∀ q, |v q| ≤ C)
+    (hu_meas : Measurable u) (hv_meas : Measurable v)
+    (hu_fix : ∀ q, u q = pdpSemigroupOp pdp.toPDP g u q)
+    (hv_fix : ∀ q, v q = pdpSemigroupOp pdp.toPDP g v q) :
+    ∀ q, u q = v q := by
+      intro q
+      set T := q.1 with hT
+      have hT_le : T ≤ T := by
+        rfl;
+      -- By induction on n, we can show that |u q - v q| ≤ 2 * C * (1 - Real.exp (-(c : ℝ) * (T : ℝ))) ^ n for all n.
+      have h_ind : ∀ n : ℕ, ∀ q : ℝ≥0 × E, q.1 ≤ T → |u q - v q| ≤ 2 * C * (1 - Real.exp (-(c : ℝ) * (T : ℝ))) ^ n := by
+        intro n
+        induction' n with n ih;
+        · exact fun q hq => by simpa using abs_sub ( u q ) ( v q ) |> le_trans <| by linarith [ hu_bdd q, hv_bdd q ] ;
+        · intro q hq_le_T
+          have h_ind_step : |u q - v q| ≤ 2 * C * (1 - Real.exp (-(c : ℝ) * (T : ℝ))) ^ n * (1 - pdpSurvivorFunction pdp.toPDP q.1 q.2) := by
+            rw [ hu_fix, hv_fix ];
+            apply_rules [ pdpSemigroupOp_dist_le_horizon ];
+            grind +extAll;
+            exact fun r => hu_meas.comp ( measurable_const.prodMk measurable_id' );
+            · exact fun r => hv_meas.comp ( measurable_const.prodMk measurable_id' );
+            · exact fun q' hq'_le_q => ih q' ( le_trans hq'_le_q hq_le_T );
+            · exact Continuous.continuousOn ( hcont _ );
+            · apply_rules [ pdpSemigroupOp_integrand_integrableOn ];
+            · apply_rules [ pdpSemigroupOp_integrand_integrableOn ];
+          have h_survivor_bound : 1 - pdpSurvivorFunction pdp.toPDP q.1 q.2 ≤ 1 - Real.exp (-(c : ℝ) * (T : ℝ)) := by
+            apply_rules [ sub_le_sub_left, pdpSurvivorFunction_ge_exp ];
+          convert h_ind_step.trans ( mul_le_mul_of_nonneg_left h_survivor_bound _ ) using 1 ; ring;
+          exact mul_nonneg ( mul_nonneg zero_le_two hC ) ( pow_nonneg ( sub_nonneg.2 ( Real.exp_le_one_iff.2 ( by nlinarith [ show ( c : ℝ ) ≥ 0 by positivity, show ( T : ℝ ) ≥ 0 by positivity ] ) ) ) _ );
+      -- Since $1 - \exp(-(c : ℝ) * (T : ℝ)) < 1$, we have $(1 - \exp(-(c : ℝ) * (T : ℝ)))^n \to 0$ as $n \to \infty$.
+      have h_exp_zero : Filter.Tendsto (fun n : ℕ => (1 - Real.exp (-(c : ℝ) * (T : ℝ))) ^ n) Filter.atTop (nhds 0) := by
+        exact tendsto_pow_atTop_nhds_zero_of_lt_one ( sub_nonneg.2 <| Real.exp_le_one_iff.2 <| by nlinarith [ show ( c : ℝ ) ≥ 0 by positivity, show ( T : ℝ ) ≥ 0 by positivity ] ) ( sub_lt_self _ <| Real.exp_pos _ );
+      exact sub_eq_zero.mp ( by simpa using le_antisymm ( le_of_tendsto_of_tendsto' tendsto_const_nhds ( by simpa using h_exp_zero.const_mul ( 2 * C ) ) fun n => h_ind n q hT_le ) ( abs_nonneg _ ) )
+
+/-
+**Shifted renewal equation (Chapman–Kolmogorov building block).** The
+    time-shifted transition function `(s, x) ↦ P_{s+t}f(x)` is a fixed point of
+    the one-step renewal operator whose *terminal* function is `g = P_t f`:
+      `P_{s+t}f(x) = S(s,x)·(P_t f)(φ(s,x))
+                     + ∫₀ˢ S(w,x)·λ(φ(w,x))·∫ P_{(s−w)+t}f dQ(φ(w,x)) dw`.
+    This is Davis's renewal equation (27.2) applied at horizon `s+t` and split at
+    `s`: on `[0,s]` the tail `P_{(s+t)−w}f = P_{(s−w)+t}f` reproduces the jump
+    integral above, while `S(s+t,x)f(φ(s+t,x)) + ∫ₛ^{s+t} …` collapses to
+    `S(s,x)·(P_t f)(φ(s,x))` via the survivor cocycle
+    `pdpSurvivorFunction_mul`, the flow group law `flow_add`, and the change of
+    variables `w ↦ w + s` in the jump integral of the renewal equation for
+    `P_t f` evaluated at `φ(s,x)`.
+-/
+set_option maxHeartbeats 1600000 in
+theorem pdpSemigroup_renewal_equation_shift {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ) (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (t : ℝ≥0) :
+    ∀ q : ℝ≥0 × E,
+      pdpSemigroup pdp.toPDP (q.1 + t) f q.2
+        = pdpSemigroupOp pdp.toPDP (fun y => pdpSemigroup pdp.toPDP t f y)
+            (fun q => pdpSemigroup pdp.toPDP (q.1 + t) f q.2) q := by
+              intro q;
+              -- Apply the renewal equation to split the semigroup into the survivor function and the integral.
+              have h_split : pdpSemigroup pdp.toPDP (q.1 + t) f q.2 = pdpSurvivorFunction pdp.toPDP (q.1 + t) q.2 * f (pdp.flow (q.1 + t) q.2) + ∫ s in Set.Icc (0 : ℝ) ((q.1 + t) : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2))) := by
+                convert pdpSemigroup_renewal_equation pdp f hf hf_bdd hflow c hrate hcont ( q.1 + t ) q.2 using 1;
+              -- Apply the renewal equation to split the integral into two parts.
+              have h_split_integral : ∫ s in Set.Icc (0 : ℝ) ((q.1 + t) : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2))) = (∫ s in Set.Icc (0 : ℝ) (q.1 : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2)))) + (∫ s in Set.Icc (q.1 : ℝ) ((q.1 + t) : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2)))) := by
+                rw [ MeasureTheory.integral_Icc_eq_integral_Ioc, MeasureTheory.integral_Icc_eq_integral_Ioc, MeasureTheory.integral_Icc_eq_integral_Ioc, ← MeasureTheory.setIntegral_union ] <;> norm_num;
+                · have h_integrable : IntervalIntegrable (fun s : ℝ => pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2)))) MeasureTheory.volume 0 (q.1 + t) := by
+                    convert pdpSemigroupOp_integrand_integrableOn pdp.toPDP ( fun q => pdpSemigroup pdp.toPDP q.1 f q.2 ) _ _ _ _ _ _ _ _ using 1;
+                    rw [ intervalIntegrable_iff_integrableOn_Icc_of_le ( by positivity ) ];
+                    rotate_left;
+                    exact pdpSemigroup_measurable pdp f hf hf_bdd hflow c hrate hcont;
+                    exact Classical.choose hf_bdd;
+                    exact fun q => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont ( Classical.choose hf_bdd ) ( by linarith [ Classical.choose_spec hf_bdd q.2, abs_nonneg ( f q.2 ) ] ) ( Classical.choose_spec hf_bdd ) q.1 q.2;
+                    exact hflow;
+                    exact c;
+                    exact hrate;
+                    exact q.1 + t; all_goals norm_cast;
+                  exact h_integrable.1.mono_set ( Set.Ioc_subset_Ioc_right ( by linarith [ show ( t : ℝ ) ≥ 0 by positivity ] ) );
+                · refine' MeasureTheory.IntegrableOn.mono_set _ ( Set.Ioc_subset_Ioc_left ( show ( q.1 : ℝ ) ≥ 0 by positivity ) );
+                  have h_integrable : IntervalIntegrable (fun s : ℝ => pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2)))) MeasureTheory.volume 0 (q.1 + t) := by
+                    convert pdpSemigroupOp_integrand_integrableOn pdp.toPDP ( fun q => pdpSemigroup pdp.toPDP q.1 f q.2 ) _ _ _ _ _ _ _ _ using 1;
+                    rw [ intervalIntegrable_iff_integrableOn_Icc_of_le ( by positivity ) ];
+                    rotate_left;
+                    exact pdpSemigroup_measurable pdp f hf hf_bdd hflow c hrate hcont;
+                    exact Classical.choose hf_bdd;
+                    exact fun q => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont ( Classical.choose hf_bdd ) ( by linarith [ Classical.choose_spec hf_bdd q.2, abs_nonneg ( f q.2 ) ] ) ( Classical.choose_spec hf_bdd ) q.1 q.2;
+                    exact hflow;
+                    exact c;
+                    exact hrate;
+                    exact q.1 + t; all_goals norm_cast;
+                  exact h_integrable.1;
+              -- Apply the renewal equation to split the integral into two parts and simplify.
+              have h_split_integral_simplified : ∫ s in Set.Icc (q.1 : ℝ) ((q.1 + t) : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2))) = pdpSurvivorFunction pdp.toPDP q.1 q.2 * pdpSemigroup pdp.toPDP t f (pdp.flow q.1 q.2) - pdpSurvivorFunction pdp.toPDP (q.1 + t) q.2 * f (pdp.flow (q.1 + t) q.2) := by
+                have h_split_integral_simplified : ∫ s in Set.Icc (q.1 : ℝ) ((q.1 + t) : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal q.2 * (pdp.jumpRate (pdp.flow s.toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((q.1 + t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal q.2))) = ∫ s in Set.Icc (0 : ℝ) (t : ℝ), pdpSurvivorFunction pdp.toPDP (s + q.1).toNNReal q.2 * (pdp.jumpRate (pdp.flow (s + q.1).toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP (t - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow (s + q.1).toNNReal q.2))) := by
+                  rw [ MeasureTheory.integral_Icc_eq_integral_Ioc, MeasureTheory.integral_Icc_eq_integral_Ioc ];
+                  rw [ ← intervalIntegral.integral_of_le ( by linarith [ show ( q.1 : ℝ ) ≥ 0 by positivity, show ( t : ℝ ) ≥ 0 by positivity ] ), ← intervalIntegral.integral_of_le ( by linarith [ show ( q.1 : ℝ ) ≥ 0 by positivity, show ( t : ℝ ) ≥ 0 by positivity ] ) ] ; convert intervalIntegral.integral_comp_sub_right _ ( q.1 : ℝ ) using 2 <;> norm_num ; ring;
+                have h_split_integral_simplified : ∫ s in Set.Icc (0 : ℝ) (t : ℝ), pdpSurvivorFunction pdp.toPDP (s + q.1).toNNReal q.2 * (pdp.jumpRate (pdp.flow (s + q.1).toNNReal q.2) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP (t - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow (s + q.1).toNNReal q.2))) = ∫ s in Set.Icc (0 : ℝ) (t : ℝ), pdpSurvivorFunction pdp.toPDP q.1 q.2 * pdpSurvivorFunction pdp.toPDP s.toNNReal (pdp.flow q.1 q.2) * (pdp.jumpRate (pdp.flow s.toNNReal (pdp.flow q.1 q.2)) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP (t - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal (pdp.flow q.1 q.2)))) := by
+                  refine' MeasureTheory.setIntegral_congr_fun measurableSet_Icc fun s hs => _;
+                  rw [ show ( s + q.1 : ℝ ).toNNReal = s.toNNReal + q.1 from ?_, pdpSurvivorFunction_mul ];
+                  · rw [ pdp.flow_add ];
+                    rw [ ← pdpSurvivorFunction_mul pdp.toPDP q.2 ( hcont q.2 ) q.1 s.toNNReal, ← pdpSurvivorFunction_mul pdp.toPDP q.2 ( hcont q.2 ) s.toNNReal q.1 ];
+                    rw [ add_comm ];
+                  · exact hcont q.2;
+                  · rw [ ← NNReal.coe_inj ] ; simp +decide [ hs.1, hs.2 ];
+                have h_split_integral_simplified : pdpSemigroup pdp.toPDP t f (pdp.flow q.1 q.2) = pdpSurvivorFunction pdp.toPDP t (pdp.flow q.1 q.2) * f (pdp.flow t (pdp.flow q.1 q.2)) + ∫ s in Set.Icc (0 : ℝ) (t : ℝ), pdpSurvivorFunction pdp.toPDP s.toNNReal (pdp.flow q.1 q.2) * (pdp.jumpRate (pdp.flow s.toNNReal (pdp.flow q.1 q.2)) : ℝ) * (∫ y, pdpSemigroup pdp.toPDP ((t : ℝ) - s).toNNReal f y ∂(pdp.transitionMeasure (pdp.flow s.toNNReal (pdp.flow q.1 q.2)))) := by
+                  apply pdpSemigroup_renewal_equation pdp f hf hf_bdd hflow c hrate hcont t (pdp.flow q.1 q.2);
+                have h_split_integral_simplified : pdpSurvivorFunction pdp.toPDP (q.1 + t) q.2 = pdpSurvivorFunction pdp.toPDP q.1 q.2 * pdpSurvivorFunction pdp.toPDP t (pdp.flow q.1 q.2) := by
+                  exact pdpSurvivorFunction_mul pdp.toPDP q.2 ( hcont q.2 ) q.1 t;
+                simp_all +decide [ mul_assoc, MeasureTheory.integral_const_mul ];
+                rw [ show pdp.flow ( q.1 + t ) q.2 = pdp.flow t ( pdp.flow q.1 q.2 ) from pdp.flow_add t q.1 q.2 ▸ by simp +decide [ add_comm ] ] ; ring;
+              unfold pdpSemigroupOp; simp +decide [ h_split, h_split_integral, h_split_integral_simplified ] ; ring;
+              rw [ add_comm ];
+              refine' congr rfl ( MeasureTheory.setIntegral_congr_fun measurableSet_Icc fun s hs => _ );
+              rw [ show ( q.1 + ( t - s ) : ℝ ) = t + ( q.1 - s ) by ring, Real.toNNReal_add ] <;> norm_num [ hs.1, hs.2 ]
+
+/-
+**(25.5 / 27.x) The semigroup (Chapman–Kolmogorov) property.** The PDP
+    transition semigroup satisfies `P_{s+t}f = P_s(P_t f)`. Both
+    `(s,x) ↦ P_{s+t}f(x)` (via `pdpSemigroup_renewal_equation_shift`) and
+    `(s,x) ↦ P_s(P_t f)(x)` (via `pdpSemigroup_renewal_equation`) are bounded,
+    jointly-measurable fixed points of the one-step renewal operator with
+    terminal function `g = P_t f`, so they coincide by
+    `pdpSemigroupOp_fixedpoint_unique`.
+-/
+theorem pdpSemigroup_semigroup_property {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ) (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (s t : ℝ≥0) (x : E) :
+    pdpSemigroup pdp.toPDP (s + t) f x
+      = pdpSemigroup pdp.toPDP s (fun y => pdpSemigroup pdp.toPDP t f y) x := by
+        obtain ⟨ C, hC ⟩ := hf_bdd;
+        -- Let `g := fun y => pdpSemigroup pdp.toPDP t f y`.
+        set g : E → ℝ := fun y => pdpSemigroup pdp.toPDP t f y;
+        -- By definition of $g$, we know that $g$ is measurable and bounded.
+        have hg_meas : Measurable g := by
+          exact ( pdp_semigroup_maps_bounded_measurable pdp t hf ⟨ C, hC ⟩ hflow c hrate hcont ).1
+        have hg_bdd : ∀ y, |g y| ≤ C := by
+          exact fun y => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( le_trans ( abs_nonneg _ ) ( hC y ) ) hC t y;
+        -- Apply the fixed point uniqueness result to conclude the proof.
+        apply Eq.symm; exact (by
+          have := pdpSemigroupOp_fixedpoint_unique pdp g C (by linarith [abs_le.mp (hC x)]) hflow c hrate hcont
+            (fun q => pdpSemigroup pdp.toPDP q.1 g q.2) (fun q => pdpSemigroup pdp.toPDP (q.1 + t) f q.2)
+            (by
+            exact fun q => pdpSemigroup_abs_le pdp g hg_meas hflow c hrate hcont C (by linarith [abs_le.mp (hC x), abs_le.mp (hg_bdd x)]) hg_bdd q.1 q.2) (by
+            exact fun q => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C (by linarith [abs_le.mp (hC x)]) hC (q.1 + t) q.2) (by
+            apply pdpSemigroup_measurable pdp g hg_meas ⟨ C, hg_bdd ⟩ hflow c hrate hcont) (by
+            convert pdpSemigroup_measurable pdp f hf ⟨ C, hC ⟩ hflow c hrate hcont |> Measurable.comp <| measurable_fst.add_const t |> Measurable.prodMk <| measurable_snd using 1) (by
+            intro q
+            apply Eq.symm; exact (by
+              have := pdpSemigroup_renewal_equation pdp g hg_meas ⟨C, hg_bdd⟩ hflow c hrate hcont q.1 q.2
+              convert this.symm using 1)) (by
+            exact fun q => pdpSemigroup_renewal_equation_shift pdp f hf ⟨ C, hC ⟩ hflow c hrate hcont t q)
+          exact this ⟨ s, x ⟩)
+
+/-
+**(27) Strong right-continuity of the transition semigroup in time.** For any
+    continuous bounded `f` and any `t₀`, `P_{t₀+h}f(x) → P_{t₀}f(x)` as `h ↓ 0`.
+
+    This is the time-regularity companion of `pdpSemigroup_tendsto_zero` (strong
+    continuity at `0`) upgraded to an arbitrary base time `t₀` via the semigroup
+    (Chapman–Kolmogorov) property.  Writing `g := P_{t₀}f`, the semigroup
+    property gives `P_{t₀+h}f = P_h g`, and `g` is continuous (Feller property
+    `pdp_feller_property`), measurable (`pdp_semigroup_maps_bounded_measurable`)
+    and bounded by `C` (`pdpSemigroup_abs_le`).  Strong continuity at `0`
+    (`pdpSemigroup_tendsto_zero`) applied to `g` then yields
+    `P_h g(x) → g(x) = P_{t₀}f(x)` as `h ↓ 0`.
+-/
+theorem pdpSemigroup_right_continuous_time
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ f : E → ℝ, Continuous f → (∃ C, ∀ x, |f x| ≤ C) →
+      Continuous (fun x => ∫ y, f y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C) (t₀ : ℝ≥0) (x : E) :
+    Filter.Tendsto (fun h : ℝ≥0 => pdpSemigroup pdp.toPDP (t₀ + h) f x)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (pdpSemigroup pdp.toPDP t₀ f x)) := by
+  -- Set g := fun y => pdpSemigroup pdp.toPDP t₀ f y (the function P_{t₀}f).
+  set g : E → ℝ := fun y => pdpSemigroup pdp.toPDP t₀ f y;
+  have hg : Measurable g ∧ Continuous g ∧ (∃ C', ∀ y, |g y| ≤ C') := by
+    refine' ⟨ _, _, _ ⟩;
+    · have := pdp_semigroup_maps_bounded_measurable pdp t₀ hf ⟨ C, hfC ⟩ hflow c hrate hcont;
+      exact this.1;
+    · apply pdp_feller_property pdp (by trivial) hrate_cont ⟨c, hrate⟩ hflow hflow_cont hQ_cont hf hf_cont ⟨C, hfC⟩ t₀;
+    · exact ⟨ C, fun y => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( le_trans ( abs_nonneg _ ) ( hfC y ) ) hfC t₀ y ⟩;
+  have := pdpSemigroup_tendsto_zero pdp hflow hflow_cont c hrate hcont ( f := g ) hg.1 hg.2.1 hg.2.2.choose hg.2.2.choose_spec x;
+  convert this using 2;
+  rw [ add_comm, pdpSemigroup_semigroup_property pdp f hf ⟨ C, hfC ⟩ hflow c hrate hcont ]
+
+/-
+**Right-limit criterion for measurability on `ℝ≥0`.** If `f : ℝ≥0 → ℝ` has, at
+    every base point `t₀`, the right limit `f(t₀ + h) → f(t₀)` as `h ↓ 0`, then `f`
+    is Borel-measurable. `f` is the pointwise limit of the dyadic
+    right-endpoint approximations `fₙ(t) = f((⌊t·2ⁿ⌋ + 1)/2ⁿ)`, each of which
+    factors through the measurable map `t ↦ ⌊t·2ⁿ⌋ : ℝ≥0 → ℕ` (every function out
+    of `ℕ` is measurable), and `(⌊t·2ⁿ⌋+1)/2ⁿ = t + hₙ(t)` with `hₙ(t) ↓ 0`,
+    `hₙ(t) > 0`, so the hypothesis gives `fₙ(t) → f(t)`.
+-/
+lemma measurable_of_tendsto_right_NNReal {f : ℝ≥0 → ℝ}
+    (hf : ∀ t₀ : ℝ≥0, Filter.Tendsto (fun h : ℝ≥0 => f (t₀ + h))
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (f t₀))) :
+    Measurable f := by
+  have h_approx : ∀ t : ℝ≥0, Filter.Tendsto (fun n : ℕ => f (((⌊(t : ℝ) * 2 ^ n⌋₊ + 1) / 2 ^ n : ℝ≥0))) Filter.atTop (nhds (f t)) := by
+    intro t
+    have h_tendsto_h : Filter.Tendsto (fun n : ℕ => ((⌊(t : ℝ) * 2^n⌋₊ + 1) / 2^n : ℝ≥0) - t) Filter.atTop (nhdsWithin 0 (Set.Ioi 0)) := by
+      refine' tendsto_nhdsWithin_iff.mpr ⟨ _, _ ⟩;
+      · rw [ ← NNReal.tendsto_coe ];
+        refine' squeeze_zero ( fun _ => by positivity ) ( fun n => _ ) ( tendsto_inv_atTop_nhds_zero_nat.comp ( tendsto_pow_atTop_atTop_of_one_lt one_lt_two ) );
+        rw [ NNReal.coe_sub ] ; norm_num;
+        · rw [ div_le_iff₀ ] <;> norm_num ; nlinarith [ Nat.floor_le ( show 0 ≤ ( t : ℝ ) * 2 ^ n by positivity ), Nat.lt_floor_add_one ( ( t : ℝ ) * 2 ^ n ), pow_pos ( zero_lt_two' ℝ ) n, mul_inv_cancel₀ ( show ( 2 : ℝ ) ^ n ≠ 0 by positivity ) ];
+        · rw [ le_div_iff₀ ( by positivity ) ] ; exact_mod_cast Nat.lt_floor_add_one _ |> le_of_lt;
+      · simp +zetaDelta at *;
+        exact ⟨ 1, fun n hn => by rw [ lt_div_iff₀ ( by positivity ) ] ; exact_mod_cast Nat.lt_floor_add_one _ ⟩;
+    convert hf t |> Filter.Tendsto.comp <| h_tendsto_h using 2;
+    rw [ Function.comp_apply, add_tsub_cancel_of_le ];
+    rw [ le_div_iff₀ ( by positivity ) ] ; exact_mod_cast Nat.lt_floor_add_one _ |> le_of_lt;
+  -- Define the sequence of functions $F_n$.
+  set F : ℕ → ℝ≥0 → ℝ := fun n t => f ((⌊(t : ℝ) * 2 ^ n⌋₊ + 1) / 2 ^ n : ℝ≥0);
+  convert measurable_of_tendsto_metrizable ( fun n => show Measurable ( F n ) from ?_ ) ( tendsto_pi_nhds.mpr h_approx ) using 1;
+  convert Measurable.comp ( show Measurable ( fun k : ℕ => f ( ( k + 1 : ℝ≥0 ) / 2 ^ n ) ) from ?_ ) ( show Measurable ( fun t : ℝ≥0 => ⌊ ( t : ℝ ) * 2 ^ n⌋₊ ) from ?_ ) using 1;
+  · exact Measurable.of_discrete;
+  · fun_prop
+
+/-
+**Measurability in time of the transition semigroup.** For continuous bounded
+    `f`, the map `t ↦ Pₜf(x)` is Borel-measurable: it is right-continuous by
+    `pdpSemigroup_right_continuous_time`, so `measurable_of_tendsto_right_NNReal`
+    applies. This is the analytic prerequisite for the resolvent
+    `Uᵅf = ∫₀^∞ e^{−αt} Pₜf dt` of the §27 right-process theory.
+-/
+theorem pdpSemigroup_measurable_time
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ f : E → ℝ, Continuous f → (∃ C, ∀ x, |f x| ≤ C) →
+      Continuous (fun x => ∫ y, f y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C) (x : E) :
+    Measurable (fun t : ℝ≥0 => pdpSemigroup pdp.toPDP t f x) := by
+  -- Let's choose any $t₀ : ℝ≥0$. We	want to show the right-limit property.
+  apply (measurable_of_tendsto_right_NNReal (fun t₀ => pdpSemigroup_right_continuous_time pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC t₀ x))
+
+/-!
+### The α-resolvent (α-potential) of the transition semigroup (27)
+
+With the transition operator `Pₜ` now known to be measurable in time
+(`pdpSemigroup_measurable_time`), we can define the **α-resolvent** (or
+α-potential kernel)
+`Uᵅf(x) = ∫₀^∞ e^{-αt} Pₜf(x) dt`, the Laplace transform of the semigroup.
+The integrand is measurable in `t` and dominated by `C·e^{-αt}`, so for `α > 0`
+the integral converges absolutely and satisfies the contraction bound
+`|Uᵅf| ≤ C/α`.
+-/
+
+/-- Value of the elementary exponential integral `∫₀^∞ e^{-a t} dt = a⁻¹`
+    for `a > 0`. -/
+lemma integral_exp_neg_mul_Ioi_zero {a : ℝ} (ha : 0 < a) :
+    ∫ t in Set.Ioi (0 : ℝ), Real.exp (-a * t) = a⁻¹ := by
+  have h := integral_comp_mul_left_Ioi (fun x => Real.exp (-x)) 0 ha
+  simp only [mul_zero, smul_eq_mul] at h
+  rw [integral_exp_neg_Ioi] at h
+  simp only [neg_zero, Real.exp_zero, mul_one] at h
+  rw [show (fun t => Real.exp (-(a * t))) = fun t => Real.exp (-a * t) by ext t; ring_nf] at h
+  rw [h]
+
+/-- The α-resolvent (α-potential kernel) of the PDP transition semigroup:
+    `Uᵅf(x) = ∫₀^∞ e^{-αt} Pₜf(x) dt`. -/
+noncomputable def pdpResolvent {E : Type*} [MeasurableSpace E]
+    (p : PDP E) (alpha : ℝ≥0) (f : E → ℝ) (x : E) : ℝ :=
+  ∫ t in Set.Ioi (0 : ℝ), Real.exp (-(alpha : ℝ) * t) * pdpSemigroup p t.toNNReal f x
+
+/-
+The resolvent integrand `t ↦ e^{-αt} Pₜf(x)` is integrable on `(0, ∞)`
+    for `α > 0`: it is measurable in `t` (via `pdpSemigroup_measurable_time`)
+    and dominated in absolute value by the integrable function `C·e^{-αt}`
+    (the semigroup contraction `pdpSemigroup_abs_le`).
+-/
+theorem pdpResolvent_integrand_integrableOn
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ f : E → ℝ, Continuous f → (∃ C, ∀ x, |f x| ≤ C) →
+      Continuous (fun x => ∫ y, f y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) (x : E) :
+    IntegrableOn
+      (fun t : ℝ => Real.exp (-(alpha : ℝ) * t) * pdpSemigroup pdp.toPDP t.toNNReal f x)
+      (Set.Ioi 0) volume := by
+        have h_integrable : MeasureTheory.IntegrableOn (fun t : ℝ => Real.exp (-(alpha : ℝ) * t) * C) (Set.Ioi 0) := by
+          exact MeasureTheory.Integrable.mul_const ( exp_neg_integrableOn_Ioi 0 halpha ) _;
+        refine' h_integrable.mono' _ _;
+        · refine' MeasureTheory.AEStronglyMeasurable.mul _ _;
+          · exact Continuous.aestronglyMeasurable ( by continuity );
+          · refine' Measurable.aestronglyMeasurable _;
+            convert pdpSemigroup_measurable_time pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC x using 1;
+            constructor <;> intro h;
+            · convert pdpSemigroup_measurable_time pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC x using 1;
+            · convert h.comp ( show Measurable fun t : ℝ => t.toNNReal from measurable_id'.real_toNNReal ) using 1;
+        · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Ioi ] with t ht using by rw [ Real.norm_eq_abs, abs_mul, abs_of_nonneg ( Real.exp_pos _ |> le_of_lt ) ] ; exact mul_le_mul_of_nonneg_left ( pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( le_trans ( abs_nonneg _ ) ( hfC x ) ) hfC _ _ ) ( Real.exp_pos _ |> le_of_lt ) ;
+
+/-
+**Contraction bound for the resolvent.** For `α > 0` and `|f| ≤ C`,
+    `|Uᵅf(x)| ≤ C/α`. Indeed `|Uᵅf(x)| ≤ ∫₀^∞ e^{-αt} |Pₜf(x)| dt`
+    `≤ ∫₀^∞ e^{-αt} C dt = C·α⁻¹`, using the semigroup contraction
+    `pdpSemigroup_abs_le` (`|Pₜf| ≤ C`) and `integral_exp_neg_mul_Ioi_zero`.
+-/
+theorem pdpResolvent_abs_le
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ f : E → ℝ, Continuous f → (∃ C, ∀ x, |f x| ≤ C) →
+      Continuous (fun x => ∫ y, f y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) (x : E) :
+    |pdpResolvent pdp.toPDP alpha f x| ≤ C / (alpha : ℝ) := by
+      convert MeasureTheory.norm_integral_le_integral_norm ( _ : ℝ → ℝ ) |> le_trans <| ?_ using 1;
+      refine' le_trans ( MeasureTheory.integral_mono_of_nonneg _ _ _ ) _;
+      refine' fun t => C * Real.exp ( - ( alpha : ℝ ) * t );
+      · exact Filter.Eventually.of_forall fun t => norm_nonneg _;
+      · exact MeasureTheory.Integrable.const_mul ( by simpa using ( exp_neg_integrableOn_Ioi 0 halpha ) ) _;
+      · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Ioi ] with t ht;
+        convert mul_le_mul_of_nonneg_left ( pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( le_trans ( abs_nonneg _ ) ( hfC x ) ) hfC t.toNNReal x ) ( Real.exp_pos ( - ( alpha : ℝ ) * t ) |> le_of_lt ) using 1 ; norm_num ; ring;
+      · rw [ MeasureTheory.integral_const_mul, integral_exp_neg_mul_Ioi_zero halpha ] ; ring_nf ; norm_num [ halpha.ne' ]
+
+/-- **Positivity of the resolvent.** For a nonnegative (bounded, measurable)
+    `f` and `α > 0`, `Uᵅf(x) ≥ 0`. The integrand `e^{-αt} Pₜf(x)` is nonnegative
+    (`pdpSemigroup_nonneg`), so its integral over `(0, ∞)` is nonnegative. -/
+theorem pdpResolvent_nonneg
+    {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (f : E → ℝ)
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ x, |f x| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hf_nonneg : ∀ y, 0 ≤ f y) (alpha : ℝ≥0) (x : E) :
+    0 ≤ pdpResolvent pdp.toPDP alpha f x := by
+  refine MeasureTheory.setIntegral_nonneg measurableSet_Ioi (fun t _ => ?_)
+  exact mul_nonneg (Real.exp_pos _).le
+    (pdpSemigroup_nonneg pdp f hf hf_bdd hflow c hrate hcont hf_nonneg t.toNNReal x)
+
+/-
+**Additivity of the resolvent.** `Uᵅ(f+g) = Uᵅf + Uᵅg` for bounded
+    continuous `f, g` and `α > 0`. Pointwise in `t`, `Pₜ(f+g) = Pₜf + Pₜg`
+    (`pdpSemigroup_add`); the integral then splits by `MeasureTheory.integral_add`,
+    both summand integrands being integrable
+    (`pdpResolvent_integrand_integrableOn`).
+-/
+theorem pdpResolvent_add
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ f : E → ℝ, Continuous f → (∃ C, ∀ x, |f x| ≤ C) →
+      Continuous (fun x => ∫ y, f y ∂(pdp.transitionMeasure x)))
+    {f g : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (Cf : ℝ) (hfC : ∀ y, |f y| ≤ Cf)
+    (hg : Measurable g) (hg_cont : Continuous g)
+    (Cg : ℝ) (hgC : ∀ y, |g y| ≤ Cg)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) (x : E) :
+    pdpResolvent pdp.toPDP alpha (fun y => f y + g y) x =
+      pdpResolvent pdp.toPDP alpha f x + pdpResolvent pdp.toPDP alpha g x := by
+        convert MeasureTheory.integral_add _ _ using 3;
+        · refine' MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun t ht => _;
+          rw [ ← mul_add, pdpSemigroup_add pdp f g hf ⟨ Cf, hfC ⟩ hg ⟨ Cg, hgC ⟩ hflow c hrate hcont t.toNNReal x ];
+        · apply_rules [ pdpResolvent_integrand_integrableOn ];
+        · exact pdpResolvent_integrand_integrableOn pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hg hg_cont Cg hgC alpha halpha x
+
+/-
+**Scalar homogeneity of the resolvent.** `Uᵅ(a·f) = a·Uᵅf`.
+-/
+theorem pdpResolvent_smul
+    {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) (a : ℝ) {f : E → ℝ}
+    (hf : Measurable f) (hf_bdd : ∃ C : ℝ, ∀ y, |f y| ≤ C)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (alpha : ℝ≥0) (x : E) :
+    pdpResolvent pdp.toPDP alpha (fun y => a * f y) x =
+      a * pdpResolvent pdp.toPDP alpha f x := by
+        convert MeasureTheory.integral_const_mul a _ using 1;
+        refine' MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun t ht => _;
+        rw [ mul_left_comm, pdpSemigroup_smul pdp _ _ hf hf_bdd hflow c hrate hcont ]
+
+/- **Monotonicity of the resolvent.** If `f ≤ g`, then `Uᵅf ≤ Uᵅg`. -/
+theorem pdpResolvent_mono
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f g : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (Cf : ℝ) (hfC : ∀ y, |f y| ≤ Cf)
+    (hg : Measurable g) (hg_cont : Continuous g)
+    (Cg : ℝ) (hgC : ∀ y, |g y| ≤ Cg)
+    (hfg : ∀ y, f y ≤ g y)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) (x : E) :
+    pdpResolvent pdp.toPDP alpha f x ≤ pdpResolvent pdp.toPDP alpha g x := by
+      apply_rules [ MeasureTheory.integral_mono_ae ];
+      · apply_rules [ pdpResolvent_integrand_integrableOn ];
+      · apply_rules [ pdpResolvent_integrand_integrableOn ];
+      · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Ioi ] with t ht using mul_le_mul_of_nonneg_left ( pdpSemigroup_mono pdp f g hf ⟨ Cf, hfC ⟩ hg ⟨ Cg, hgC ⟩ hflow c hrate hcont hfg t.toNNReal x ) ( Real.exp_pos _ |> le_of_lt )
+
+/-
+**Feller regularity of the resolvent.** For `α > 0`, the α-resolvent of a
+    bounded continuous function is continuous in the state variable. This is
+    dominated convergence applied to the continuous functions
+    `x ↦ e^{-αt} Pₜf(x)`, dominated by the integrable envelope
+    `C e^{-αt}`.
+-/
+theorem pdpResolvent_continuous
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) :
+    Continuous (fun x => pdpResolvent pdp.toPDP alpha f x) := by
+  refine' continuous_iff_continuousAt.2 fun x => _;
+  refine' MeasureTheory.tendsto_integral_filter_of_dominated_convergence _ _ _ _ _;
+  refine' fun t => Real.exp ( - ( alpha : ℝ ) * t ) * C;
+  · refine' Filter.Eventually.of_forall fun y => MeasureTheory.AEStronglyMeasurable.mul _ _;
+    · exact Continuous.aestronglyMeasurable ( by continuity );
+    · refine' Measurable.aestronglyMeasurable _;
+      convert pdpSemigroup_measurable_time pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC y using 1;
+      constructor <;> intro h;
+      · convert pdpSemigroup_measurable pdp f hf ⟨ C, hfC ⟩ hflow c hrate hcont using 1;
+        constructor <;> intro h;
+        · convert pdpSemigroup_measurable pdp f hf ⟨ C, hfC ⟩ hflow c hrate hcont using 1;
+        · exact h.comp ( measurable_id.prodMk measurable_const );
+      · convert h.comp ( measurable_id'.ennreal_toNNReal ) using 1;
+        constructor <;> intro h;
+        · expose_names
+          exact ENNReal.measurable_of_measurable_nnreal h_1
+        · fun_prop;
+  · refine' Filter.Eventually.of_forall fun y => Filter.Eventually.of_forall fun t => _;
+    rw [ Real.norm_eq_abs, abs_mul, abs_of_nonneg ( Real.exp_pos _ |> le_of_lt ) ];
+    gcongr;
+    apply_rules [ pdpSemigroup_abs_le ];
+    exact le_trans ( abs_nonneg _ ) ( hfC x );
+  · exact MeasureTheory.Integrable.mul_const (by simpa using exp_neg_integrableOn_Ioi 0 halpha) _;
+  · refine' Filter.eventually_of_mem ( MeasureTheory.ae_restrict_mem measurableSet_Ioi ) fun t ht => _;
+    exact Continuous.tendsto ( by exact Continuous.mul continuous_const ( pdp_feller_property pdp ( by trivial ) hrate_cont ⟨ c, hrate ⟩ hflow hflow_cont hQ_cont hf hf_cont ⟨ C, hfC ⟩ _ ) ) _
+
+/-
+The positive resolvent maps bounded continuous functions to bounded
+    continuous (hence Borel-measurable) functions, with sup-norm bound
+    `C / α`.
+-/
+theorem pdpResolvent_maps_bounded_continuous
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) :
+    Measurable (fun x => pdpResolvent pdp.toPDP alpha f x) ∧
+      Continuous (fun x => pdpResolvent pdp.toPDP alpha f x) ∧
+      ∀ x, |pdpResolvent pdp.toPDP alpha f x| ≤ C / (alpha : ℝ) := by
+  refine' ⟨ _, _, _ ⟩;
+  · convert pdpResolvent_continuous pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha |> Continuous.measurable using 1;
+  · convert pdpResolvent_continuous pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf ( hf_cont ) C hfC alpha halpha;
+  · apply_rules [ pdpResolvent_abs_le ]
+
+/-
+**Discounted semigroup continuity at zero for the resolvent.** If `f` is
+bounded and continuous and `α > 0`, then
+
+`e^{-αt} Pₜ(Uᵅf)(x) → Uᵅf(x)` as `t ↓ 0`.
+
+The preceding Feller mapping theorem makes `Uᵅf` continuous, measurable, and
+bounded by `C / α`. Strong continuity of the semigroup at zero applies to this
+resolvent function, while the exponential discount tends to one.
+-/
+theorem pdpResolvent_discounted_semigroup_tendsto_zero
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) (x : E) :
+    Filter.Tendsto
+      (fun t : ℝ≥0 => Real.exp (-(alpha : ℝ) * (t : ℝ)) *
+        pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x)
+      (nhdsWithin 0 (Set.Ioi 0))
+      (nhds (pdpResolvent pdp.toPDP alpha f x)) := by
+        have := pdpSemigroup_tendsto_zero pdp hflow hflow_cont c hrate hcont (show Measurable (pdpResolvent pdp.toPDP alpha f) from (by
+        exact ( pdpResolvent_maps_bounded_continuous pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha ) |>.1)) (show Continuous (pdpResolvent pdp.toPDP alpha f) from (by
+        exact pdpResolvent_continuous pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha)) (C / alpha) (fun y => (by
+        apply_rules [ pdpResolvent_abs_le ])) x;
+        simpa using Filter.Tendsto.mul ( Continuous.continuousWithinAt ( show Continuous fun t : ℝ≥0 => Real.exp ( - ( alpha : ℝ ) * t ) by continuity ) ) this
+
+/-
+The positivity and zero-time regularity components of α-excessiveness hold for
+the resolvent of every bounded, continuous, nonnegative function.  This
+isolates the remaining substantive component: the discounted semigroup
+inequality.
+-/
+theorem pdpResolvent_alphaExcessive_components
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ)) :
+    (∀ x, 0 ≤ pdpResolvent pdp.toPDP alpha f x) ∧
+      ∀ x, Filter.Tendsto
+        (fun t : ℝ≥0 => Real.exp (-(alpha : ℝ) * (t : ℝ)) *
+          pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x)
+        (nhdsWithin 0 (Set.Ioi 0))
+        (nhds (pdpResolvent pdp.toPDP alpha f x)) := by
+          refine' ⟨ _, _ ⟩;
+          · intros x
+            apply pdpResolvent_nonneg pdp f hf ⟨C, hfC⟩ hflow c hrate hcont hf_nonneg alpha x;
+          · convert pdpResolvent_discounted_semigroup_tendsto_zero pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha using 1
+
+/-
+**Translation of an improper tail integral.**  Translation invariance of
+Lebesgue measure identifies the integral of `H (u+s)` over `(0,∞)` with the
+integral of `H` over `(s,∞)`.  This elementary lemma is kept separate from the
+PDP argument because it is the analytic change of variables needed after the
+semigroup/Fubini step.
+-/
+theorem integral_Ioi_comp_add_eq_integral_Ioi (H : ℝ → ℝ) (s : ℝ) :
+    (∫ u in Set.Ioi 0, H (u + s)) = ∫ v in Set.Ioi s, H v := by
+  rw [ ← MeasureTheory.integral_indicator ( measurableSet_Ioi ), ← MeasureTheory.integral_indicator ( measurableSet_Ioi ) ];
+  simp +decide [ Set.indicator ];
+  rw [ ← MeasureTheory.integral_sub_right_eq_self _ s ] ; congr ; ext ; aesop
+
+/-
+**A nonnegative tail is dominated by the full positive-time integral.**
+This is the order-theoretic part of the resolvent inequality, isolated from
+all PDP-specific notation.
+-/
+theorem integral_Ioi_mono_lower_of_nonneg (H : ℝ → ℝ) (s : ℝ)
+    (hs : 0 ≤ s) (hH_int : IntegrableOn H (Set.Ioi 0) volume)
+    (hH_nonneg : ∀ u ∈ Set.Ioi 0, 0 ≤ H u) :
+    (∫ u in Set.Ioi s, H u) ≤ ∫ u in Set.Ioi 0, H u := by
+  apply_rules [ MeasureTheory.setIntegral_mono_set ];
+  · filter_upwards [ MeasureTheory.ae_restrict_mem measurableSet_Ioi ] with u hu using hH_nonneg u hu;
+  · exact MeasureTheory.ae_of_all _ fun x hx => lt_of_le_of_lt hs hx
+
+/-
+**Fubini over a positive-time set integral.** This small wrapper packages the
+orientation and restricted-measure bookkeeping used by the resolvent proof.
+-/
+theorem integral_integral_Ioi_swap
+    {A : Type*} [MeasurableSpace A] (mu : Measure A) [SFinite mu]
+    (h : ℝ → A → ℝ)
+    (hint : Integrable (Function.uncurry (fun a s => h s a))
+      (mu.prod (volume.restrict (Set.Ioi 0)))) :
+    (∫ a, (∫ s in Set.Ioi (0 : ℝ), h s a) ∂mu) =
+      ∫ s in Set.Ioi (0 : ℝ), (∫ a, h s a ∂mu) := by
+  exact MeasureTheory.integral_integral_swap hint
+
+/-
+**Semigroup--resolvent interchange from a transition-kernel representation.**
+For fixed `t` and `x`, suppose `Pₜ` is represented by a Markov kernel `K` at
+`x`. The discounted semigroup integrand is jointly measurable and dominated by
+`C exp (-alpha s)` under the probability measure `K x`; hence Fubini moves the
+kernel integral through the positive-time integral defining the resolvent.
+-/
+theorem pdpResolvent_semigroup_interchange_of_kernel
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ D, ∀ x, |h x| ≤ D) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ))
+    (t : ℝ≥0) (x : E) (K : Kernel E E) [IsMarkovKernel K]
+    (hrepr : ∀ (g : E → ℝ), Measurable g →
+      (∃ D : ℝ, ∀ y, |g y| ≤ D) →
+      pdpSemigroup pdp.toPDP t g x = ∫ y, g y ∂(K x)) :
+    pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x =
+      ∫ s in Set.Ioi (0 : ℝ), Real.exp (-(alpha : ℝ) * s) *
+        pdpSemigroup pdp.toPDP t
+          (fun y => pdpSemigroup pdp.toPDP s.toNNReal f y) x := by
+            have h_measurable : Measurable (fun q : ℝ≥0 × E => pdpSemigroup pdp.toPDP q.1 f q.2) := by
+              apply_rules [ pdpSemigroup_measurable ];
+              use C;
+            convert hrepr _ _ _;
+            · have h_fubini : ∫ y, ∫ s in Set.Ioi 0, Real.exp (-(alpha : ℝ) * s) * pdpSemigroup pdp.toPDP s.toNNReal f y ∂volume ∂K x = ∫ s in Set.Ioi 0, ∫ y, Real.exp (-(alpha : ℝ) * s) * pdpSemigroup pdp.toPDP s.toNNReal f y ∂K x ∂volume := by
+                rw [ MeasureTheory.integral_integral_swap ];
+                refine' MeasureTheory.Integrable.mono' _ _ _;
+                use fun p => Real.exp ( - ( alpha : ℝ ) * p.2 ) * C;
+                · rw [ MeasureTheory.integrable_prod_iff ];
+                  · simp +decide [ MeasureTheory.integrable_const_iff, halpha.ne' ];
+                    exact MeasureTheory.Integrable.mul_const
+                      (by simpa [mul_comm] using exp_neg_integrableOn_Ioi 0 halpha) _;
+                  · fun_prop;
+                · fun_prop;
+                · simp +decide [ Function.uncurry ];
+                  filter_upwards [ ] with a using mul_le_mul_of_nonneg_left ( pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( show 0 ≤ C by exact le_trans ( abs_nonneg _ ) ( hfC x ) ) hfC _ _ ) ( Real.exp_nonneg _ );
+              convert h_fubini.symm using 1;
+              refine' MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun s hs => _;
+              rw [ MeasureTheory.integral_const_mul, hrepr ];
+              · convert h_measurable.comp ( measurable_const.prodMk measurable_id' ) using 1;
+              · exact ⟨ C, fun y => pdpSemigroup_abs_le pdp f hf hflow c hrate hcont C ( by linarith [ abs_le.mp ( hfC y ) ] ) hfC _ _ ⟩;
+            · convert pdpResolvent_maps_bounded_continuous pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha |>.1 using 1;
+            · exact ⟨ C / alpha, fun y => pdpResolvent_abs_le pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha y ⟩
+
+/-
+**Discounted semigroup inequality after kernel/Fubini interchange.**
+The hypothesis `hinterchange` is precisely the remaining kernel theorem: it
+allows `Pₜ` to pass through the time integral defining the resolvent.  From
+there Chapman--Kolmogorov changes `PₜPₛf` to `Pₜ₊ₛf`, exponential factors
+combine, translation turns the result into the tail integral over `(t,∞)`,
+and nonnegativity compares that tail with the full resolvent.
+-/
+theorem pdpResolvent_discounted_semigroup_le_of_integral_interchange
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ))
+    (hinterchange : ∀ (t : ℝ≥0) (x : E),
+      pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x =
+        ∫ s in Set.Ioi (0 : ℝ), Real.exp (-(alpha : ℝ) * s) *
+          pdpSemigroup pdp.toPDP t
+            (fun y => pdpSemigroup pdp.toPDP s.toNNReal f y) x) :
+    ∀ (t : ℝ≥0) (x : E),
+      Real.exp (-(alpha : ℝ) * (t : ℝ)) *
+        pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x ≤
+          pdpResolvent pdp.toPDP alpha f x := by
+  intro t x; rw [ hinterchange t x ] ; simp +decide [ mul_assoc, MeasureTheory.integral_const_mul ] ;
+  convert integral_Ioi_mono_lower_of_nonneg _ _ _ _ _ using 1;
+  convert integral_Ioi_comp_add_eq_integral_Ioi ( fun u => Real.exp ( - ( alpha : ℝ ) * u ) * pdpSemigroup pdp.toPDP u.toNNReal f x ) ( t : ℝ ) using 1;
+  · rw [ ← MeasureTheory.integral_const_mul ] ; refine' MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun u hu => _ ; ring;
+    rw [ ← Real.exp_add ] ; ring;
+    rw [ ← pdpSemigroup_semigroup_property pdp f hf ⟨ C, hfC ⟩ hflow c hrate hcont ] ; norm_num [ hu.out.le ];
+  · positivity;
+  · apply_rules [ pdpResolvent_integrand_integrableOn ];
+  · exact fun u hu => mul_nonneg ( Real.exp_nonneg _ ) ( pdpSemigroup_nonneg pdp f hf ⟨ C, hfC ⟩ hflow c hrate hcont hf_nonneg _ _ )
+
+/-
+A packaging lemma for the final α-excessiveness result.  Once the discounted
+semigroup inequality is supplied, positivity and convergence are discharged by
+`pdpResolvent_alphaExcessive_components`.
+-/
+theorem pdpResolvent_isAlphaExcessive_of_discounted_semigroup_le
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ))
+    (hle : ∀ (t : ℝ≥0) (x : E),
+      Real.exp (-(alpha : ℝ) * (t : ℝ)) *
+        pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x ≤
+          pdpResolvent pdp.toPDP alpha f x) :
+    IsAlphaExcessive (pdpSemigroup pdp.toPDP) alpha
+      (pdpResolvent pdp.toPDP alpha f) := by
+        convert pdpResolvent_alphaExcessive_components pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont hf_nonneg C hfC alpha halpha using 1;
+        -- By definition of IsAlphaExcessive, we need to show that the resolvent satisfies the three conditions.
+        simp [IsAlphaExcessive];
+        intro h_nonneg; simp_all +decide [mul_assoc, mul_comm, mul_left_comm];
+        constructor <;> intro h x <;> specialize h x <;> rw [ Metric.tendsto_nhdsWithin_nhds ] at *;
+        · exact fun ε εpos => by rcases Metric.tendsto_nhds_nhds.mp h ε εpos with ⟨ δ, δpos, hδ ⟩ ; exact ⟨ δ, δpos, fun t ht ht' => hδ ht' ⟩ ;
+        · rw [ Metric.tendsto_nhds_nhds ];
+          intro ε hε; rcases h ε hε with ⟨ δ, hδ, H ⟩ ; use δ, hδ; intro t ht; cases eq_or_ne t 0 <;> simp_all +decide [ dist_eq_norm ] ;
+          · rw [ pdpSemigroup_zero ] ; simpa using hε;
+          · exact H ( pos_iff_ne_zero.mpr ‹_› ) ht
+
+/-
+**Resolvents are α-excessive once kernel/Fubini interchange is available.**
+This combines the preceding discounted inequality with positivity and the
+zero-time limit.  The sole explicit hypothesis left is the analytic
+semigroup--integral interchange theorem.
+-/
+theorem pdpResolvent_isAlphaExcessive_of_kernel
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ D, ∀ x, |h x| ≤ D) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ))
+    (K : ℝ≥0 → Kernel E E) (hK : ∀ t, IsMarkovKernel (K t))
+    (hrepr : ∀ (t : ℝ≥0) (x : E) (g : E → ℝ), Measurable g →
+      (∃ D : ℝ, ∀ y, |g y| ≤ D) →
+      pdpSemigroup pdp.toPDP t g x = ∫ y, g y ∂(K t x)) :
+    IsAlphaExcessive (pdpSemigroup pdp.toPDP) alpha
+      (pdpResolvent pdp.toPDP alpha f) := by
+        apply pdpResolvent_isAlphaExcessive_of_discounted_semigroup_le pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont hf_nonneg C hfC alpha halpha;
+        convert pdpResolvent_discounted_semigroup_le_of_integral_interchange pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont hf_nonneg C hfC alpha halpha _;
+        intro t x;
+        convert pdpResolvent_semigroup_interchange_of_kernel pdp hrate_cont c hrate hflow hflow_cont hcont hQ_cont hf hf_cont C hfC alpha halpha t x ( K t ) _ using 1;
+        exact hrepr t x
+
+/-
+**Resolvents are α-excessive once semigroup--integral interchange is available.**
+This lower-level variant retains the interchange identity as an explicit
+hypothesis; `pdpResolvent_isAlphaExcessive_of_kernel` derives it from a Markov
+transition-kernel representation and Fubini.
+-/
+theorem pdpResolvent_isAlphaExcessive_of_integral_interchange
+    {E : Type*} [MeasurableSpace E] [MetricSpace E] [BorelSpace E]
+    (pdp : PDPStandard E)
+    (hrate_cont : Continuous (fun x => (pdp.jumpRate x : ℝ)))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (hflow_cont : Continuous (fun q : ℝ≥0 × E => pdp.flow q.1 q.2))
+    (hcont : ∀ y, Continuous (fun s : ℝ =>
+      (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    (hQ_cont : ∀ h : E → ℝ, Continuous h → (∃ C, ∀ x, |h x| ≤ C) →
+      Continuous (fun x => ∫ y, h y ∂(pdp.transitionMeasure x)))
+    {f : E → ℝ} (hf : Measurable f) (hf_cont : Continuous f)
+    (hf_nonneg : ∀ y, 0 ≤ f y) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (alpha : ℝ≥0) (halpha : 0 < (alpha : ℝ))
+    (hinterchange : ∀ (t : ℝ≥0) (x : E),
+      pdpSemigroup pdp.toPDP t (pdpResolvent pdp.toPDP alpha f) x =
+        ∫ s in Set.Ioi (0 : ℝ), Real.exp (-(alpha : ℝ) * s) *
+          pdpSemigroup pdp.toPDP t
+            (fun y => pdpSemigroup pdp.toPDP s.toNNReal f y) x) :
+    IsAlphaExcessive (pdpSemigroup pdp.toPDP) alpha
+      (pdpResolvent pdp.toPDP alpha f) := by
+  apply_rules [ pdpResolvent_isAlphaExcessive_of_discounted_semigroup_le ];
+  apply_rules [ pdpResolvent_discounted_semigroup_le_of_integral_interchange ]
+
 end S27_FurtherProperties
 
 end Davis
