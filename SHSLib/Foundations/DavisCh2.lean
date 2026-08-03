@@ -1757,7 +1757,7 @@ theorem compensator_is_local_martingale
     ∃ (σ : ℕ → Omega → ℝ≥0),
       (∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞))) ∧
       (∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
-        Filter.atTop Filter.atTop) ∧
+        Filter.atTop (nhds ⊤)) ∧
       ∀ n, Martingale (fun t omega =>
         p_count (min t (σ n omega)) omega -
         ∫ u in Set.Icc (0 : ℝ) (min (t : ℝ) ↑(σ n omega)),
@@ -1784,7 +1784,7 @@ theorem pdp_martingale_representation
     (∃ (σ : ℕ → Omega → ℝ≥0),
       (∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞))) ∧
       (∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
-        Filter.atTop Filter.atTop) ∧
+        Filter.atTop (nhds ⊤)) ∧
       ∀ n, Martingale (fun t omega => M (min t (σ n omega)) omega) ℱ P) →
     ∃ (g : E → ℝ), Measurable g ∧
       ∀ᵐ omega ∂P, ∀ t : ℝ≥0,
@@ -1842,7 +1842,7 @@ theorem pdp_extended_generator_characterization
     ∃ (σ : ℕ → Omega → ℝ≥0),
       (∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞))) ∧
       (∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
-        Filter.atTop Filter.atTop) ∧
+        Filter.atTop (nhds ⊤)) ∧
       ∀ n, Martingale (fun t omega =>
         f (X (min t (σ n omega)) omega) - f (X 0 omega) -
         ∫ u in Set.Icc (0 : ℝ) (min (t : ℝ) ↑(σ n omega)),
@@ -1880,7 +1880,7 @@ theorem pdp_extended_generator_characterization
     (σ : ℕ → Omega → ℝ≥0)
     (hσ_st : ∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞)))
     (hσ_top : ∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
-        Filter.atTop Filter.atTop)
+        Filter.atTop (nhds ⊤))
     -- The compensated pure-jump process.
     (Jc : ℝ≥0 → Omega → ℝ)
     -- (A) Deterministic flow decomposition (§22.4–22.5): the flow part of the
@@ -1897,7 +1897,7 @@ theorem pdp_extended_generator_characterization
     ∃ (σ : ℕ → Omega → ℝ≥0),
       (∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞))) ∧
       (∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
-        Filter.atTop Filter.atTop) ∧
+        Filter.atTop (nhds ⊤)) ∧
       ∀ n, Martingale (fun t omega =>
         f (X (min t (σ n omega)) omega) - f (X 0 omega) -
         ∫ u in Set.Icc (0 : ℝ) (min (t : ℝ) ↑(σ n omega)),
@@ -1989,7 +1989,7 @@ theorem pdp_generator_bounded_true_martingale
     (σ : ℕ → Omega → ℝ≥0)
     (hσ_st : ∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞)))
     (hσ_top : ∀ᵐ omega ∂P,
-      Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞)) Filter.atTop Filter.atTop)
+      Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞)) Filter.atTop (nhds ⊤))
     (hloc : ∀ n, Martingale (fun t omega => M (min t (σ n omega)) omega) ℱ P)
     -- Uniform-integrability domination by an integrable envelope g (from `f` bounded).
     (g : Omega → ℝ) (hg_int : Integrable g P)
@@ -2009,13 +2009,21 @@ theorem pdp_generator_bounded_true_martingale
       have hfs_tendsto : ∀ᵐ omega ∂P, Filter.Tendsto (fun n => fs n omega) Filter.atTop (nhds (M t omega)) := by
         filter_upwards [ hσ_top ] with omega homega;
         refine' tendsto_const_nhds.congr' _;
-        filter_upwards [ homega.eventually_ge_atTop ( t : ℝ≥0∞ ) ] with n hn using by aesop;
+        have hev : ∀ᶠ n in Filter.atTop,
+            (t : ℝ≥0∞) ≤ (σ n omega : ℝ≥0∞) :=
+          homega.eventually (eventually_ge_nhds ENNReal.coe_lt_top)
+        filter_upwards [hev] with n hn
+        change M t omega = M (min t (σ n omega)) omega
+        rw [min_eq_left (ENNReal.coe_le_coe.mp hn)]
       have hgs_tendsto : ∀ᵐ omega ∂P, Filter.Tendsto (fun n => gs n omega) Filter.atTop (nhds (M s omega)) := by
         filter_upwards [ hσ_top ] with omega homega;
         refine' tendsto_const_nhds.congr' _;
-        filter_upwards [ homega.eventually_ge_atTop ( s : ℝ≥0∞ ) ] with n hn;
-        simp +zetaDelta at *;
-        rw [ min_eq_left hn ];
+        have hev : ∀ᶠ n in Filter.atTop,
+            (s : ℝ≥0∞) ≤ (σ n omega : ℝ≥0∞) :=
+          homega.eventually (eventually_ge_nhds ENNReal.coe_lt_top)
+        filter_upwards [hev] with n hn
+        change M s omega = M (min s (σ n omega)) omega
+        rw [min_eq_left (ENNReal.coe_le_coe.mp hn)]
       -- Apply the uniqueness of the conditional expectation.
       have h_unique : ∀ᵐ omega ∂P, (MeasureTheory.condExp (ℱ s) P (M t)) omega = (MeasureTheory.condExp (ℱ s) P (M s)) omega := by
         apply MeasureTheory.tendsto_condExp_unique fs gs (M t) (M s) (fun n => hfs_int n) (fun n => hgs_int n) hfs_tendsto hgs_tendsto g hg_int g hg_int (fun n => by

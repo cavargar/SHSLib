@@ -41,6 +41,246 @@ attribute [instance] DavisProcessRealization.mOmega
 attribute [instance] DavisProcessRealization.probability
 attribute [instance] DavisProcessRealization.sigmaFiniteFiltration
 
+/-- Package the assembled recursive jump path as a Davis process realization.
+The probability law and filtration remain parameters at this stage; sampling
+laws and adaptedness can subsequently be proved for a concrete noise model.
+Positive holding times give the initial-state field, while pathwise
+non-explosion gives a total process and the clock identity. -/
+def DavisProcessRealization.ofJumpNoise
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [hP : IsProbabilityMeasure P]
+    (filtration : Filtration ℝ≥0 mΩ)
+    [hfiltration : SigmaFiniteFiltration P filtration]
+    (ξ : DavisJumpNoise m Ω) (hne : ξ.NonExplosive)
+    (hpos : ξ.PositiveHoldingTimes) (initial : DavisState Q n) :
+    DavisProcessRealization S hflow hf hr hli hnePDP where
+  Omega := Ω
+  mOmega := mΩ
+  P := P
+  probability := hP
+  filtration := filtration
+  sigmaFiniteFiltration := hfiltration
+  process := davisJumpPath S hflow ξ hne initial
+  initial := initial
+  process_zero := Filter.Eventually.of_forall
+    (davisJumpPath_zero S hflow ξ hne hpos initial)
+  clock_eq := davisJumpPath_clock S hflow ξ hne initial
+
+/-- The realization constructed from jump noise uses the assembled recursive
+path definitionally. -/
+@[simp] theorem DavisProcessRealization.ofJumpNoise_process
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (filtration : Filtration ℝ≥0 mΩ)
+    [SigmaFiniteFiltration P filtration]
+    (ξ : DavisJumpNoise m Ω) (hne : ξ.NonExplosive)
+    (hpos : ξ.PositiveHoldingTimes) (initial : DavisState Q n)
+    (t : ℝ≥0) (ω : Ω) :
+    (DavisProcessRealization.ofJumpNoise S hflow hf hr hli hnePDP P
+      filtration ξ hne hpos initial).process t ω =
+      davisJumpPath S hflow ξ hne initial t ω := rfl
+
+/-! ## A canonical full-information filtration
+
+The natural filtration of the noise is the eventual target for the canonical
+construction.  The constant full measurable-space filtration is a useful first
+concrete realization: it is automatically sigma-finite under a probability
+measure, makes every measurable noise time a stopping time, and makes the
+assembled path adapted.  This removes the previously external filtration
+parameter without asserting the stronger natural-filtration result.
+-/
+
+/-- The constant filtration carrying all measurable information at every
+elapsed time. -/
+def DavisJumpNoise.fullFiltration {m : ℕ} {Ω : Type*}
+    [mΩ : MeasurableSpace Ω] (ξ : DavisJumpNoise m Ω) : Filtration ℝ≥0 mΩ :=
+  Filtration.const ℝ≥0 mΩ le_rfl
+
+/-- Every cumulative jump time is a stopping time for the full-information
+filtration. -/
+theorem DavisJumpNoise.MeasurableNoise.jumpTime_isStoppingTime_full
+    {m : ℕ} {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    {ξ : DavisJumpNoise m Ω} (hξ : ξ.MeasurableNoise) (k : ℕ) :
+    IsStoppingTime ξ.fullFiltration
+      (fun ω => ((ξ.jumpTime k ω : ℝ≥0) : ℝ≥0∞)) := by
+  intro t
+  change MeasurableSet[mΩ]
+    {ω | ((ξ.jumpTime k ω : ℝ≥0) : ℝ≥0∞) ≤ t}
+  exact measurableSet_Iic.preimage ((hξ.jumpTime k).coe_nnreal_ennreal)
+
+/-- The assembled recursive path is adapted to the full-information
+filtration. -/
+theorem DavisJumpNoise.MeasurableNoise.jumpPath_adapted_full
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {ξ : DavisJumpNoise m Ω}
+    (hξ : ξ.MeasurableNoise) (hne : ξ.NonExplosive)
+    (initial : DavisState Q n) :
+    Adapted ξ.fullFiltration (davisJumpPath S hflow ξ hne initial) := by
+  intro t
+  exact hξ.jumpPath S hflow hf hr hne initial t
+
+/-- Package measurable, non-explosive positive jump noise using its canonical
+full-information filtration.  Unlike `ofJumpNoise`, this constructor has no
+filtration argument. -/
+def DavisProcessRealization.ofJumpNoiseFullFiltration
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) :
+    DavisProcessRealization S hflow hf hr hli hnePDP :=
+  DavisProcessRealization.ofJumpNoise S hflow hf hr hli hnePDP P
+    ξ.fullFiltration ξ hne hpos initial
+
+/-- The full-filtration realization uses the assembled jump path. -/
+@[simp] theorem DavisProcessRealization.ofJumpNoiseFullFiltration_process
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) (t : ℝ≥0) (ω : Ω) :
+    (DavisProcessRealization.ofJumpNoiseFullFiltration S hflow hf hr hli
+      hnePDP P ξ hξ hne hpos initial).process t ω =
+      davisJumpPath S hflow ξ hne initial t ω := rfl
+
+/-- The full-filtration realization's assembled path is adapted. -/
+theorem DavisProcessRealization.ofJumpNoiseFullFiltration_adapted
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) :
+    Adapted
+      (DavisProcessRealization.ofJumpNoiseFullFiltration S hflow hf hr hli
+        hnePDP P ξ hξ hne hpos initial).filtration
+      (DavisProcessRealization.ofJumpNoiseFullFiltration S hflow hf hr hli
+        hnePDP P ξ hξ hne hpos initial).process := by
+  change Adapted ξ.fullFiltration (davisJumpPath S hflow ξ hne initial)
+  exact hξ.jumpPath_adapted_full S hflow hf hr hne initial
+
+/-! ## Natural filtration of the assembled path
+
+Unlike the full-information filtration, this filtration reveals only the
+assembled state path up to the current elapsed time.  It is defined directly
+as the supremum of the pullback measurable spaces of the coordinate maps, so
+it does not require an auxiliary topology on the augmented state space.
+-/
+
+/-- The natural filtration generated by the assembled Davis jump path. -/
+def DavisJumpNoise.naturalPathFiltration
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (ξ : DavisJumpNoise m Ω)
+    (hξ : ξ.MeasurableNoise) (hne : ξ.NonExplosive)
+    (initial : DavisState Q n) : Filtration ℝ≥0 mΩ where
+  seq i := ⨆ j ≤ i, MeasurableSpace.comap
+    (davisJumpPath S hflow ξ hne initial j) inferInstance
+  mono' i j hij := biSup_mono fun _ hki => hki.trans hij
+  le' i := by
+    refine iSup₂_le fun j _ => ?_
+    exact measurable_iff_comap_le.mp
+      (hξ.jumpPath S hflow hf hr hne initial j)
+
+/-- The assembled path is adapted to its natural path filtration. -/
+theorem DavisJumpNoise.MeasurableNoise.jumpPath_adapted_natural
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {ξ : DavisJumpNoise m Ω}
+    (hξ : ξ.MeasurableNoise) (hne : ξ.NonExplosive)
+    (initial : DavisState Q n) :
+    Adapted (ξ.naturalPathFiltration S hflow hf hr hξ hne initial)
+      (davisJumpPath S hflow ξ hne initial) := by
+  intro i
+  apply measurable_iff_comap_le.mpr
+  exact le_iSup₂_of_le i le_rfl le_rfl
+
+/-- The natural path filtration is contained in the full-information
+filtration. -/
+theorem DavisJumpNoise.naturalPathFiltration_le_fullFiltration
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (ξ : DavisJumpNoise m Ω)
+    (hξ : ξ.MeasurableNoise) (hne : ξ.NonExplosive)
+    (initial : DavisState Q n) :
+    ξ.naturalPathFiltration S hflow hf hr hξ hne initial ≤
+      ξ.fullFiltration := by
+  intro i
+  exact (ξ.naturalPathFiltration S hflow hf hr hξ hne initial).le i
+
+/-- Package measurable, non-explosive positive jump noise using the natural
+filtration generated by its assembled state path. -/
+def DavisProcessRealization.ofJumpNoiseNaturalFiltration
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) :
+    DavisProcessRealization S hflow hf hr hli hnePDP :=
+  DavisProcessRealization.ofJumpNoise S hflow hf hr hli hnePDP P
+    (ξ.naturalPathFiltration S hflow hf hr hξ hne initial)
+    ξ hne hpos initial
+
+/-- The natural-filtration realization uses the assembled jump path. -/
+@[simp] theorem DavisProcessRealization.ofJumpNoiseNaturalFiltration_process
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) (t : ℝ≥0) (ω : Ω) :
+    (DavisProcessRealization.ofJumpNoiseNaturalFiltration S hflow hf hr hli
+      hnePDP P ξ hξ hne hpos initial).process t ω =
+      davisJumpPath S hflow ξ hne initial t ω := rfl
+
+/-- The natural-filtration realization's assembled path is adapted. -/
+theorem DavisProcessRealization.ofJumpNoiseNaturalFiltration_adapted
+    (S : SHS Q n m) (hflow : S.HasGlobalFlow)
+    (hf : DavisFlowRegular S hflow) (hr : DavisResetRegular S)
+    [S.IntensitiesMeasurable] (hli : DavisLocallyIntegrable S hflow)
+    (hnePDP : DavisNonExplosive S hflow hf hr)
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (ξ : DavisJumpNoise m Ω) (hξ : ξ.MeasurableNoise)
+    (hne : ξ.NonExplosive) (hpos : ξ.PositiveHoldingTimes)
+    (initial : DavisState Q n) :
+    Adapted
+      (DavisProcessRealization.ofJumpNoiseNaturalFiltration S hflow hf hr hli
+        hnePDP P ξ hξ hne hpos initial).filtration
+      (DavisProcessRealization.ofJumpNoiseNaturalFiltration S hflow hf hr hli
+        hnePDP P ξ hξ hne hpos initial).process := by
+  change Adapted
+    (ξ.naturalPathFiltration S hflow hf hr hξ hne initial)
+    (davisJumpPath S hflow ξ hne initial)
+  exact hξ.jumpPath_adapted_natural S hflow hf hr hne initial
+
 /-- Regularity assumptions on a lifted test function needed to invoke the
 Davis extended-generator and localization theorems for a realization. -/
 structure DavisTestFunctionRegular
@@ -69,7 +309,7 @@ structure DavisCompensatorData
   sigma_stopping : ∀ k, IsStoppingTime R.filtration
     (fun ω => (sigma k ω : ℝ≥0∞))
   sigma_tendsto : ∀ᵐ ω ∂ R.P,
-    Filter.Tendsto (fun k => (sigma k ω : ℝ≥0∞)) Filter.atTop Filter.atTop
+    Filter.Tendsto (fun k => (sigma k ω : ℝ≥0∞)) Filter.atTop (nhds ⊤)
   jumpCompensated : ℝ≥0 → R.Omega → ℝ
   decomposition : ∀ (k : ℕ) (t : ℝ≥0) (ω : R.Omega),
     ψ.toDavisFunction (R.process (min t (sigma k ω)) ω) -
