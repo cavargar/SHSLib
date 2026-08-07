@@ -1667,8 +1667,26 @@ right-continuous piecewise-constant process whose filtration
 coincides with that of the PDP.
 -/
 
-/-- (25.3) Theorem. The natural filtration of the PDP is right-continuous:
-    𝔉ₜ = 𝔉_{t+} := ⋂_{ε>0} 𝔉_{t+ε}. -/
+/-  ORIGINAL (unfaithful) statement of (25.3), preserved for the record.
+
+    As written it is **false**: the filtration `ℱ` is an arbitrary filtration on
+    `Omega`, with *no hypothesis linking it to the process `X`* (the only
+    hypothesis, `hrc`, constrains `X` alone).  Any non-right-continuous
+    filtration together with a constant — hence right-continuous — process `X`
+    is a counterexample; this is machine-checked in
+    `pdp_filtration_right_continuous_false` below, using the step filtration
+    `stepFiltration` (trivial up to time `1`, full afterwards).
+
+    The genuine content of Davis (25.3) is that the *right continuation* of a
+    filtration is right-continuous, i.e. `ℱ₊₊ = ℱ₊`, together with the
+    identification of `ℱ₊ t` with `⋂_{ε>0} ℱ (t+ε)` on `ℝ≥0`.  These are the
+    corrected statements `Filtration.rightCont_eq_iInf_add`,
+    `rightCont_filtration_right_continuous` and
+    `isRightContinuous_iff_eq_iInf_add` below.  (For the PDP itself, the
+    remaining input is that the natural filtration of the jump process
+    coincides with its own right continuation, which requires the PDP
+    construction.)
+
 theorem pdp_filtration_right_continuous
     {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
     [TopologicalSpace E]
@@ -1678,6 +1696,88 @@ theorem pdp_filtration_right_continuous
       Filter.Tendsto (fun s => X s omega) (nhdsWithin t (Set.Ioi t))
         (nhds (X t omega))) :
     ∀ t : ℝ≥0, ℱ t = ⨅ (ε : ℝ≥0) (_ : 0 < ε), ℱ (t + ε) := by sorry
+-/
+
+/-- A filtration on `ℝ≥0` over `Bool` that is *not* right-continuous: it is the
+    trivial σ-algebra up to time `1` and the full σ-algebra afterwards. -/
+def stepFiltration : Filtration ℝ≥0 (⊤ : MeasurableSpace Bool) where
+  seq t := if 1 < t then ⊤ else ⊥
+  mono' i j hij := by
+    by_cases h1 : (1 : ℝ≥0) < i
+    · simp [h1, lt_of_lt_of_le h1 hij]
+    · by_cases h2 : (1 : ℝ≥0) < j <;> simp [h1, h2]
+  le' i := by by_cases h1 : (1 : ℝ≥0) < i <;> simp [h1, le_top]
+
+/-- `stepFiltration` is not right-continuous at `t = 1`. -/
+theorem stepFiltration_ne_iInf_add :
+    stepFiltration 1 ≠ ⨅ (ε : ℝ≥0) (_ : 0 < ε), stepFiltration (1 + ε) := by
+  have h1 : stepFiltration 1 = ⊥ := by simp [stepFiltration]
+  have h2 : (⨅ (ε : ℝ≥0) (_ : 0 < ε), stepFiltration (1 + ε)) = ⊤ := by
+    refine le_antisymm le_top (le_iInf fun ε => le_iInf fun hε => ?_)
+    have hlt : (1 : ℝ≥0) < 1 + ε := by simpa using hε
+    have : stepFiltration (1 + ε) = ⊤ := by simp [stepFiltration, hlt]
+    simp [this]
+  rw [h1, h2]
+  intro h
+  have hb : MeasurableSet[(⊥ : MeasurableSpace Bool)] {true} := by rw [h]; trivial
+  rw [MeasurableSpace.measurableSet_bot_iff] at hb
+  rcases hb with h' | h'
+  · have : (true : Bool) ∈ (∅ : Set Bool) := h' ▸ rfl
+    simp at this
+  · have : (false : Bool) ∈ ({true} : Set Bool) := h'.symm ▸ Set.mem_univ _
+    simp at this
+
+/-- The original form of (25.3) is **false**: right-continuity of the sample
+    paths of `X` says nothing about an unrelated filtration `ℱ`. -/
+theorem pdp_filtration_right_continuous_false :
+    ¬ (∀ (Omega E : Type) (_ : MeasurableSpace Omega) (mE : MeasurableSpace E)
+        (_ : TopologicalSpace E) (ℱ : Filtration ℝ≥0 ‹MeasurableSpace Omega›)
+        (X : ℝ≥0 → Omega → E),
+        (∀ omega, ∀ t : ℝ≥0,
+          Filter.Tendsto (fun s => X s omega) (nhdsWithin t (Set.Ioi t))
+            (nhds (X t omega))) →
+        ∀ t : ℝ≥0, ℱ t = ⨅ (ε : ℝ≥0) (_ : 0 < ε), ℱ (t + ε)) := by
+  intro h
+  exact stepFiltration_ne_iInf_add
+    (h Bool Unit ⊤ inferInstance inferInstance stepFiltration (fun _ _ => ())
+      (fun _ _ => tendsto_const_nhds) 1)
+
+/-- On `ℝ≥0` the right continuation of a filtration is the intersection of the
+    strictly later σ-algebras: `ℱ₊ t = ⋂_{ε>0} ℱ (t+ε)`. -/
+theorem Filtration.rightCont_eq_iInf_add
+    {Omega : Type*} [mΩ : MeasurableSpace Omega] (ℱ : Filtration ℝ≥0 mΩ)
+    (t : ℝ≥0) :
+    ℱ.rightCont t = ⨅ (ε : ℝ≥0) (_ : 0 < ε), ℱ (t + ε) := by
+  rw [Filtration.rightCont_eq]
+  refine le_antisymm (le_iInf fun ε => le_iInf fun hε => ?_)
+    (le_iInf fun j => le_iInf fun hj => ?_)
+  · exact iInf₂_le_of_le (t + ε) (by simpa using hε) le_rfl
+  · refine iInf₂_le_of_le (j - t) (tsub_pos_of_lt hj) ?_
+    rw [add_tsub_cancel_of_le hj.le]
+
+/-- (25.3), corrected form. The right continuation `ℱ₊` of any filtration on
+    `ℝ≥0` *is* right-continuous: `ℱ₊ t = ⋂_{ε>0} ℱ₊ (t+ε)`. -/
+theorem rightCont_filtration_right_continuous
+    {Omega : Type*} [mΩ : MeasurableSpace Omega] (ℱ : Filtration ℝ≥0 mΩ)
+    (t : ℝ≥0) :
+    ℱ.rightCont t = ⨅ (ε : ℝ≥0) (_ : 0 < ε), ℱ.rightCont (t + ε) := by
+  conv_lhs => rw [← Filtration.rightCont_self ℱ]
+  exact Filtration.rightCont_eq_iInf_add ℱ.rightCont t
+
+/-- (25.3), corrected form. A filtration on `ℝ≥0` satisfies the usual
+    right-continuity identity `ℱ t = ⋂_{ε>0} ℱ (t+ε)` exactly when it is
+    right-continuous in the sense of `Filtration.IsRightContinuous`. -/
+theorem isRightContinuous_iff_eq_iInf_add
+    {Omega : Type*} [mΩ : MeasurableSpace Omega] (ℱ : Filtration ℝ≥0 mΩ) :
+    Filtration.IsRightContinuous ℱ ↔
+      ∀ t : ℝ≥0, ℱ t = ⨅ (ε : ℝ≥0) (_ : 0 < ε), ℱ (t + ε) := by
+  constructor
+  · intro h t
+    have := congrArg (fun G : Filtration ℝ≥0 mΩ => G t) (Filtration.IsRightContinuous.eq (𝓕 := ℱ))
+    simpa [Filtration.rightCont_eq_iInf_add ℱ t] using this.symm
+  · intro h
+    refine ⟨fun t => ?_⟩
+    rw [Filtration.rightCont_eq_iInf_add ℱ t, ← h t]
 
 /-!
 **(25.5) Theorem.** The PDP is a homogeneous strong Markov process.
@@ -1697,8 +1797,18 @@ def pdpSemigroup {E : Type*} [MeasurableSpace E]
     (p : PDP E) (t : ℝ≥0) (f : E → ℝ) (x : E) : ℝ :=
   limUnder Filter.atTop (fun n => (pdpSemigroupOp p f)^[n] (fun _ => 0) (t, x))
 
-/-- (25.5) The simple Markov property: for fixed t,
-    𝔼ₓ[f(x_{t+s}) | 𝔉ₜ] = Pₛf(xₜ). -/
+/-  ORIGINAL (unfaithful) statement of the simple Markov property (25.5),
+    preserved for the record.
+
+    As written the process `X` is a free variable with **no hypothesis linking
+    it to `pdp`**: `X` is only assumed measurable at each time, so nothing
+    forces its conditional laws to be given by the PDP semigroup, and the
+    statement is not provable (it fails already for a deterministic `X` that
+    ignores `pdp`).  The genuine content is *the definition* of what it means
+    for `X` to be a PDP-Markov process, recorded below as
+    `IsPDPMarkovProcess`; Davis's §25 then upgrades it to the strong Markov
+    property, which is `pdp_strong_markov_of_finite_range` below.
+
 theorem pdp_simple_markov
     {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -1710,10 +1820,197 @@ theorem pdp_simple_markov
     (t s : ℝ≥0) :
     P[fun omega => f (X (t + s) omega) | ℱ t] =ᵐ[P]
       fun omega => pdpSemigroup pdp s f (X t omega) := by sorry
+-/
 
-/-- (25.5) The strong Markov property for the PDP:
-    𝔼ₓ[f(x_{τ+s}) | 𝔉_τ] = Pₛf(x_τ) a.s., where 𝔉_τ is the
-    σ-algebra at the stopping time τ. -/
+/-- (25.5) The **simple Markov property** of a process `X` with respect to the
+    PDP semigroup: for every bounded measurable `f` and all times `t, s`,
+    `𝔼[f(X_{t+s}) | ℱₜ] = (Pₛ f)(Xₜ)` almost surely. -/
+def IsPDPMarkovProcess {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
+    (P : Measure Omega) (pdp : PDP E) (ℱ : Filtration ℝ≥0 (‹MeasurableSpace Omega›))
+    (X : ℝ≥0 → Omega → E) : Prop :=
+  ∀ (f : E → ℝ), Measurable f → (∃ C : ℝ, ∀ x, |f x| ≤ C) → ∀ t s : ℝ≥0,
+    P[fun omega => f (X (t + s) omega) | ℱ t] =ᵐ[P]
+      fun omega => pdpSemigroup pdp s f (X t omega)
+
+/-- For a stopping time `τ` whose values lie in a countable set `S`, the trace
+    of an `ℱ_τ`-measurable set on `{τ = u}` is `ℱ u`-measurable. -/
+theorem measurableSet_stoppingTime_eq_of_countable_range
+    {Omega : Type*} [m0 : MeasurableSpace Omega]
+    {ℱ : Filtration ℝ≥0 m0} {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (S : Set ℝ≥0) (hS : S.Countable) (hrange : ∀ omega, tau omega ∈ S)
+    {A : Set Omega} (hA : MeasurableSet[htau.measurableSpace] A) (u : ℝ≥0) :
+    MeasurableSet[ℱ u] (A ∩ {omega | tau omega = u}) := by
+  classical
+  have hC : ∀ v : ℝ≥0, MeasurableSet[ℱ v] (A ∩ {omega | tau omega ≤ v}) := by
+    intro v
+    have hseteq : (A ∩ {omega | (tau omega : ℝ≥0∞) ≤ (v : ℝ≥0∞)})
+        = A ∩ {omega | tau omega ≤ v} := by
+      ext x
+      exact ⟨fun hx => ⟨hx.1, ENNReal.coe_le_coe.mp hx.2⟩,
+        fun hx => ⟨hx.1, ENNReal.coe_le_coe.mpr hx.2⟩⟩
+    exact hseteq ▸ hA.2 v
+  have hset : A ∩ {omega | tau omega = u} =
+      (A ∩ {omega | tau omega ≤ u}) \
+        ⋃ v ∈ {v ∈ S | v < u}, (A ∩ {omega | tau omega ≤ v}) := by
+    ext x
+    refine ⟨fun hx => ⟨⟨hx.1, le_of_eq hx.2⟩, ?_⟩, fun hx => ⟨hx.1.1, ?_⟩⟩
+    · intro hmem
+      rw [Set.mem_iUnion₂] at hmem
+      obtain ⟨v, hv, -, hxv⟩ := hmem
+      have hle : u ≤ v := hx.2 ▸ hxv
+      exact absurd hle (not_le.mpr hv.2)
+    · by_contra hne
+      refine hx.2 ?_
+      rw [Set.mem_iUnion₂]
+      exact ⟨tau x, ⟨hrange x, lt_of_le_of_ne hx.1.2 hne⟩,
+        ⟨hx.1.1, show tau x ≤ tau x from le_rfl⟩⟩
+  rw [hset]
+  refine MeasurableSet.diff (hC u) ?_
+  refine MeasurableSet.biUnion (hS.mono (Set.sep_subset _ _)) (fun v hv => ?_)
+  exact ℱ.mono (le_of_lt hv.2) _ (hC v)
+
+/-- Finite-range specialisation of
+    `measurableSet_stoppingTime_eq_of_countable_range`. -/
+theorem measurableSet_stoppingTime_eq_of_finite_range
+    {Omega : Type*} [m0 : MeasurableSpace Omega]
+    {ℱ : Filtration ℝ≥0 m0} {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (S : Finset ℝ≥0) (hrange : ∀ omega, tau omega ∈ S)
+    {A : Set Omega} (hA : MeasurableSet[htau.measurableSpace] A) (u : ℝ≥0) :
+    MeasurableSet[ℱ u] (A ∩ {omega | tau omega = u}) :=
+  measurableSet_stoppingTime_eq_of_countable_range htau (↑S) S.countable_toSet
+    (fun omega => by simpa using hrange omega) hA u
+
+/-- **Discrete optional sampling for conditional laws.** If `τ` is a stopping
+    time taking countably many values and, for each deterministic time `u`,
+    `𝔼[Y u | ℱ u] = Z u` a.s., then the same identity holds at `τ`:
+    `𝔼[Y_τ | ℱ_τ] = Z_τ` a.s.
+
+    This is the mechanism by which the simple Markov property is upgraded to
+    the strong Markov property for discrete stopping times (Davis §25). -/
+theorem condExp_stoppingTime_of_countable_range
+    {Omega : Type*} [m0 : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P]
+    {ℱ : Filtration ℝ≥0 m0} {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (htau_meas : Measurable tau)
+    (S : Set ℝ≥0) (hS : S.Countable) (hrange : ∀ omega, tau omega ∈ S)
+    (Y Z : ℝ≥0 → Omega → ℝ)
+    (hY_int : ∀ u, Integrable (Y u) P)
+    (hmarkov : ∀ u, P[Y u | ℱ u] =ᵐ[P] Z u)
+    (hZtau_meas : StronglyMeasurable[htau.measurableSpace]
+      (fun omega => Z (tau omega) omega))
+    (hZtau_int : Integrable (fun omega => Z (tau omega) omega) P)
+    (hYtau_int : Integrable (fun omega => Y (tau omega) omega) P) :
+    P[fun omega => Y (tau omega) omega | htau.measurableSpace] =ᵐ[P]
+      fun omega => Z (tau omega) omega := by
+  classical
+  haveI : Countable S := hS.to_subtype
+  have hm : htau.measurableSpace ≤ m0 := fun s hs => hs.1
+  haveI : SigmaFinite (P.trim hm) := by infer_instance
+  refine (ae_eq_condExp_of_forall_setIntegral_eq hm hYtau_int
+    (fun A _ _ => hZtau_int.integrableOn) ?_ hZtau_meas.aestronglyMeasurable).symm
+  intro A hA _
+  set B : S → Set Omega := fun u => A ∩ {omega | tau omega = (u : ℝ≥0)} with hB
+  have hAmeas : MeasurableSet A := hm A hA
+  have hBmeas : ∀ u : S, MeasurableSet (B u) := fun u =>
+    hAmeas.inter (htau_meas (measurableSet_singleton (u : ℝ≥0)))
+  have hcover : A = ⋃ u : S, B u := by
+    ext omega
+    simp only [hB, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq]
+    exact ⟨fun ha => ⟨⟨tau omega, hrange omega⟩, ha, rfl⟩, fun ⟨u, ha, _⟩ => ha⟩
+  have hdisj : Pairwise (Function.onFun Disjoint B) := by
+    intro u v huv
+    refine Set.disjoint_left.mpr ?_
+    rintro omega ⟨-, hu'⟩ ⟨-, hv'⟩
+    exact huv (Subtype.ext (hu'.symm.trans hv'))
+  have hsplit : ∀ h : Omega → ℝ, Integrable h P →
+      ∫ x in A, h x ∂P = ∑' u : S, ∫ x in B u, h x ∂P := by
+    intro h hint
+    rw [hcover]
+    exact integral_iUnion hBmeas hdisj hint.integrableOn
+  rw [hsplit _ hZtau_int, hsplit _ hYtau_int]
+  refine tsum_congr (fun u => ?_)
+  have hBu_F : MeasurableSet[ℱ (u : ℝ≥0)] (B u) :=
+    measurableSet_stoppingTime_eq_of_countable_range htau S hS hrange hA (u : ℝ≥0)
+  have h1 : ∫ x in B u, Y (tau x) x ∂P = ∫ x in B u, Y (u : ℝ≥0) x ∂P :=
+    setIntegral_congr_fun (hBmeas u) (fun x hx => by rw [hx.2])
+  have h2 : ∫ x in B u, Z (tau x) x ∂P = ∫ x in B u, Z (u : ℝ≥0) x ∂P :=
+    setIntegral_congr_fun (hBmeas u) (fun x hx => by rw [hx.2])
+  have h3 : ∫ x in B u, (P[Y (u : ℝ≥0) | ℱ (u : ℝ≥0)]) x ∂P
+      = ∫ x in B u, Y (u : ℝ≥0) x ∂P :=
+    setIntegral_condExp (ℱ.le (u : ℝ≥0)) (hY_int (u : ℝ≥0)) hBu_F
+  have h4 : ∫ x in B u, (P[Y (u : ℝ≥0) | ℱ (u : ℝ≥0)]) x ∂P
+      = ∫ x in B u, Z (u : ℝ≥0) x ∂P :=
+    setIntegral_congr_ae (hBmeas u) ((hmarkov (u : ℝ≥0)).mono (fun x hx _ => hx))
+  rw [h1, h2, ← h3, h4]
+
+/-- Finite-range specialisation of `condExp_stoppingTime_of_countable_range`. -/
+theorem condExp_stoppingTime_of_finite_range
+    {Omega : Type*} [m0 : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P]
+    {ℱ : Filtration ℝ≥0 m0} {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (htau_meas : Measurable tau)
+    (S : Finset ℝ≥0) (hrange : ∀ omega, tau omega ∈ S)
+    (Y Z : ℝ≥0 → Omega → ℝ)
+    (hY_int : ∀ u, Integrable (Y u) P)
+    (hmarkov : ∀ u, P[Y u | ℱ u] =ᵐ[P] Z u)
+    (hZtau_meas : StronglyMeasurable[htau.measurableSpace]
+      (fun omega => Z (tau omega) omega))
+    (hZtau_int : Integrable (fun omega => Z (tau omega) omega) P)
+    (hYtau_int : Integrable (fun omega => Y (tau omega) omega) P) :
+    P[fun omega => Y (tau omega) omega | htau.measurableSpace] =ᵐ[P]
+      fun omega => Z (tau omega) omega :=
+  condExp_stoppingTime_of_countable_range htau htau_meas (↑S) S.countable_toSet
+    (fun omega => by simpa using hrange omega) Y Z hY_int hmarkov hZtau_meas
+    hZtau_int hYtau_int
+
+/-- A time-changed evaluation `ω ↦ X (τ(ω) + s) ω` is measurable when `τ` is
+    measurable with countably many values and each `X t` is measurable. -/
+theorem measurable_apply_add_of_countable_range
+    {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
+    {X : ℝ≥0 → Omega → E} {tau : Omega → ℝ≥0}
+    (hX : ∀ t, Measurable (X t)) (htau_meas : Measurable tau)
+    (S : Set ℝ≥0) (hS : S.Countable) (hrange : ∀ omega, tau omega ∈ S) (s : ℝ≥0) :
+    Measurable (fun omega => X (tau omega + s) omega) := by
+  classical
+  intro B hB
+  have hpre : (fun omega => X (tau omega + s) omega) ⁻¹' B
+      = ⋃ u ∈ S, ({omega | tau omega = u} ∩ (X (u + s)) ⁻¹' B) := by
+    ext omega
+    constructor
+    · intro h
+      exact Set.mem_biUnion (hrange omega) ⟨rfl, by simpa using h⟩
+    · intro h
+      rw [Set.mem_iUnion₂] at h
+      obtain ⟨u, -, hu, hxu⟩ := h
+      have hu' : tau omega = u := hu
+      simpa [hu'] using hxu
+  rw [hpre]
+  exact MeasurableSet.biUnion hS (fun u _ =>
+    (htau_meas (measurableSet_singleton u)).inter (hX (u + s) hB))
+
+/-- Finite-range specialisation of `measurable_apply_add_of_countable_range`. -/
+theorem measurable_apply_add_of_finite_range
+    {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
+    {X : ℝ≥0 → Omega → E} {tau : Omega → ℝ≥0}
+    (hX : ∀ t, Measurable (X t)) (htau_meas : Measurable tau)
+    (S : Finset ℝ≥0) (hrange : ∀ omega, tau omega ∈ S) (s : ℝ≥0) :
+    Measurable (fun omega => X (tau omega + s) omega) :=
+  measurable_apply_add_of_countable_range hX htau_meas (↑S) S.countable_toSet
+    (fun omega => by simpa using hrange omega) s
+
+/-  ORIGINAL (unfaithful) statement of the strong Markov property (25.5),
+    preserved for the record.
+
+    Again `X` is unrelated to `pdp`, so the identity cannot be derived; the
+    faithful version `pdp_strong_markov_of_finite_range` below assumes the
+    simple Markov property (`IsPDPMarkovProcess`, the genuine §25 input) and
+    derives the strong Markov property for a stopping time with finitely many
+    values — exactly Davis's discrete-approximation step.
+
 theorem pdp_strong_markov
     {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -1726,6 +2023,83 @@ theorem pdp_strong_markov
     (s : ℝ≥0) :
     P[fun omega => f (X (tau omega + s) omega) | htau.measurableSpace] =ᵐ[P]
       fun omega => pdpSemigroup pdp s f (X (tau omega) omega) := by sorry
+-/
+
+/-- (25.5) **Strong Markov property** for a stopping time with countably many
+    values — faithful form.
+
+    If `X` is a PDP-Markov process (`IsPDPMarkovProcess`, i.e. it satisfies the
+    simple Markov property with the PDP semigroup) and `τ` is a stopping time
+    taking values in a countable set `S`, then
+    `𝔼[f(X_{τ+s}) | ℱ_τ] = (Pₛ f)(X_τ)` almost surely.
+
+    The regularity hypotheses `hZtau_meas`/`hZtau_int` (the `ℱ_τ`-measurability
+    and integrability of `ω ↦ (Pₛ f)(X_{τ(ω)}(ω))`) are the standard
+    progressive-measurability inputs; all remaining integrability follows from
+    boundedness of `f`.  Davis's general case follows by approximating an
+    arbitrary stopping time by dyadic-valued ones, whose ranges are countable. -/
+theorem pdp_strong_markov_of_countable_range
+    {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    (pdp : PDP E)
+    {X : ℝ≥0 → Omega → E}
+    {ℱ : Filtration ℝ≥0 (‹MeasurableSpace Omega›)}
+    (hX_meas : ∀ t, Measurable (X t))
+    (hmarkov : IsPDPMarkovProcess P pdp ℱ X)
+    {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (htau_meas : Measurable tau)
+    (S : Set ℝ≥0) (hS : S.Countable) (hrange : ∀ omega, tau omega ∈ S)
+    {f : E → ℝ} (hf : Measurable f) {C : ℝ} (hf_bdd : ∀ x, |f x| ≤ C)
+    (s : ℝ≥0)
+    (hZtau_meas : StronglyMeasurable[htau.measurableSpace]
+      (fun omega => pdpSemigroup pdp s f (X (tau omega) omega)))
+    (hZtau_int : Integrable
+      (fun omega => pdpSemigroup pdp s f (X (tau omega) omega)) P) :
+    P[fun omega => f (X (tau omega + s) omega) | htau.measurableSpace] =ᵐ[P]
+      fun omega => pdpSemigroup pdp s f (X (tau omega) omega) := by
+  have hbdd : ∃ C : ℝ, ∀ x, |f x| ≤ C := ⟨C, hf_bdd⟩
+  have hY_int : ∀ u : ℝ≥0, Integrable (fun omega => f (X (u + s) omega)) P := by
+    intro u
+    refine Integrable.mono' (integrable_const C)
+      ((hf.comp (hX_meas (u + s))).aestronglyMeasurable)
+      (Filter.Eventually.of_forall (fun omega => ?_))
+    simpa using hf_bdd (X (u + s) omega)
+  have hYtau_int : Integrable (fun omega => f (X (tau omega + s) omega)) P := by
+    have hmeas : Measurable (fun omega => f (X (tau omega + s) omega)) :=
+      hf.comp (measurable_apply_add_of_countable_range hX_meas htau_meas S hS hrange s)
+    refine Integrable.mono' (integrable_const C) hmeas.aestronglyMeasurable
+      (Filter.Eventually.of_forall (fun omega => ?_))
+    simpa using hf_bdd (X (tau omega + s) omega)
+  exact condExp_stoppingTime_of_countable_range htau htau_meas S hS hrange
+    (fun u omega => f (X (u + s) omega))
+    (fun u omega => pdpSemigroup pdp s f (X u omega))
+    hY_int (fun u => hmarkov f hf hbdd u s) hZtau_meas hZtau_int hYtau_int
+
+/-- Finite-range specialisation of `pdp_strong_markov_of_countable_range`. -/
+theorem pdp_strong_markov_of_finite_range
+    {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    (pdp : PDP E)
+    {X : ℝ≥0 → Omega → E}
+    {ℱ : Filtration ℝ≥0 (‹MeasurableSpace Omega›)}
+    (hX_meas : ∀ t, Measurable (X t))
+    (hmarkov : IsPDPMarkovProcess P pdp ℱ X)
+    {tau : Omega → ℝ≥0}
+    (htau : IsStoppingTime ℱ (fun omega => (tau omega : ℝ≥0∞)))
+    (htau_meas : Measurable tau)
+    (S : Finset ℝ≥0) (hrange : ∀ omega, tau omega ∈ S)
+    {f : E → ℝ} (hf : Measurable f) {C : ℝ} (hf_bdd : ∀ x, |f x| ≤ C)
+    (s : ℝ≥0)
+    (hZtau_meas : StronglyMeasurable[htau.measurableSpace]
+      (fun omega => pdpSemigroup pdp s f (X (tau omega) omega)))
+    (hZtau_int : Integrable
+      (fun omega => pdpSemigroup pdp s f (X (tau omega) omega)) P) :
+    P[fun omega => f (X (tau omega + s) omega) | htau.measurableSpace] =ᵐ[P]
+      fun omega => pdpSemigroup pdp s f (X (tau omega) omega) :=
+  pdp_strong_markov_of_countable_range pdp hX_meas hmarkov htau htau_meas
+    (↑S) S.countable_toSet (fun omega => by simpa using hrange omega) hf hf_bdd s
+    hZtau_meas hZtau_int
 
 end S25_StrongMarkov
 
@@ -1743,10 +2117,24 @@ section S26_ExtendedGenerator
 ### Counting processes and compensators (26.2–26.7)
 -/
 
-/-- (26.7) Proposition. The compensator p̃(t, A) of the counting process
-    p(t, A) is such that q(t ∧ Tₖ, A) is a martingale for each k,
-    and q(t, A) = p(t, A) - p̃(t, A) is a local martingale, where
-    p̃(t, A) = ∫₀ᵗ λ(X_s) Q(X_s, A) ds. -/
+/-  ORIGINAL (unfaithful) statement of (26.7), preserved for the record.
+
+    It is **false** as stated: the counting process `p_count` and the process
+    `X` are universally quantified with no link to the PDP (`p_count` need not
+    count the jumps of `X`, nor even be adapted), so nothing makes the
+    "compensated" process a martingale.  The machine-checked counterexample is
+    `compensator_is_local_martingale_false` below: take a one-point sample
+    space, a jump-free PDP (so the compensator vanishes) and the deterministic
+    ramp `p_count t ω = t`, which is strictly increasing and therefore not a
+    martingale under any localizing sequence tending to infinity.
+
+    The genuine content of (26.7) at the level of *expectations* — the hazard /
+    compensator identity `1 − S(t,x) = ∫₀ᵗ λ(φ(u,x))·S(u,x) du`, i.e. the mean
+    number of jumps up to `t` equals the integrated compensator — is proved
+    below as `pdpSurvivorFunction_compensator_identity`.  The full pathwise
+    (local-)martingale statement additionally requires the PDMP construction,
+    which is not formalized here.
+
 theorem compensator_is_local_martingale
     {Omega E : Type*} [MeasurableSpace Omega] [MeasurableSpace E]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -1763,6 +2151,138 @@ theorem compensator_is_local_martingale
         ∫ u in Set.Icc (0 : ℝ) (min (t : ℝ) ↑(σ n omega)),
           (pdp.transitionMeasure (X u.toNNReal omega) A).toReal *
           (pdp.jumpRate (X u.toNNReal omega) : ℝ)) ℱ P := by sorry
+-/
+
+/-- A jump-free PDP on `Bool`: the flow is constant, the jump rate is `0`, and
+    the (unused) transition kernel flips the state, so that `Q({x};x) = 0`. -/
+def flipPDP : PDP Bool where
+  flow _ x := x
+  flow_zero _ := rfl
+  flow_add _ _ _ := rfl
+  flow_measurable _ := measurable_id
+  jumpRate _ := 0
+  jumpRate_measurable := measurable_const
+  transitionMeasure := Kernel.deterministic (fun b => !b) (measurable_of_countable _)
+  transitionMeasure_markov := inferInstance
+  no_self_jump x := by simp [Kernel.deterministic_apply]
+
+/-- `flipPDP` satisfies the standard conditions (the jump rate vanishes). -/
+def flipPDPStandard : PDPStandard Bool where
+  toPDP := flipPDP
+  jumpRate_locally_integrable x := ⟨1, one_pos, by
+    simpa [flipPDP] using (intervalIntegrable_const (a := (0:ℝ)) (b := (1:ℝ))
+      (c := (0:ℝ)) (μ := volume))⟩
+  nonExplosive := ⟨trivial⟩
+
+/-- The original pathwise form of (26.7) is **false**: with no link between the
+    counting process and the PDP, a deterministic ramp on a one-point space is
+    a counterexample. -/
+theorem compensator_is_local_martingale_false :
+    ¬ (∀ (Omega E : Type) (mO : MeasurableSpace Omega) (_ : MeasurableSpace E)
+        (P : Measure Omega) (_ : IsProbabilityMeasure P) (pdp : PDP E)
+        (ℱ : Filtration ℝ≥0 mO) (A : Set E), MeasurableSet A →
+        ∀ (X : ℝ≥0 → Omega → E) (p_count : ℝ≥0 → Omega → ℝ),
+        ∃ σ : ℕ → Omega → ℝ≥0,
+          (∀ n, IsStoppingTime ℱ (fun omega => (σ n omega : ℝ≥0∞))) ∧
+          (∀ᵐ omega ∂P, Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞))
+            Filter.atTop (nhds ⊤)) ∧
+          ∀ n, Martingale (fun t omega =>
+            p_count (min t (σ n omega)) omega -
+            ∫ u in Set.Icc (0 : ℝ) (min (t : ℝ) ((σ n omega : ℝ≥0) : ℝ)),
+              (pdp.transitionMeasure (X u.toNNReal omega) A).toReal *
+              (pdp.jumpRate (X u.toNNReal omega) : ℝ)) ℱ P) := by
+  intro h
+  obtain ⟨σ, hσ_st, hσ_top, hmart⟩ :=
+    h Unit Bool ⊤ ⊤ (Measure.dirac ()) inferInstance flipPDP
+      (Filtration.const ℝ≥0 ⊤ le_rfl) Set.univ MeasurableSet.univ
+      (fun _ _ => true) (fun t _ => (t : ℝ))
+  have hms : MeasurableSet
+      {omega : Unit | Filter.Tendsto (fun n => (σ n omega : ℝ≥0∞)) Filter.atTop (nhds ⊤)} :=
+    MeasurableSet.of_discrete
+  have htop : Filter.Tendsto (fun n => (σ n () : ℝ≥0∞)) Filter.atTop (nhds ⊤) :=
+    (ae_dirac_iff hms).mp hσ_top
+  obtain ⟨n, hn⟩ :=
+    (htop.eventually (eventually_gt_nhds (by simp : (1 : ℝ≥0∞) < ⊤))).exists
+  have hn' : (1 : ℝ≥0) < σ n () := by exact_mod_cast hn
+  set M : ℝ≥0 → Unit → ℝ := fun t omega => ((min t (σ n omega) : ℝ≥0) : ℝ) -
+    ∫ _u in Set.Icc (0 : ℝ) (min (t : ℝ) ((σ n omega : ℝ≥0) : ℝ)),
+      ((flipPDP.transitionMeasure true Set.univ).toReal * ((0 : ℝ≥0) : ℝ)) with hMdef
+  have hmart' : Martingale M (Filtration.const ℝ≥0 (⊤ : MeasurableSpace Unit) le_rfl)
+      (Measure.dirac ()) := hmart n
+  have hMt : ∀ (t : ℝ≥0) (omega : Unit), M t omega = ((min t (σ n omega) : ℝ≥0) : ℝ) := by
+    intro t omega; simp [hMdef]
+  have hconst : ∀ t : ℝ≥0, M t () = M 0 () := by
+    intro t
+    have hcond := hmart'.condExp_ae_eq (zero_le t)
+    have hsm : StronglyMeasurable[(Filtration.const ℝ≥0 (⊤ : MeasurableSpace Unit) le_rfl) 0]
+        (M t) := (measurable_of_countable _).stronglyMeasurable
+    have hint : Integrable (M t) (Measure.dirac ()) := hmart'.integrable t
+    have hEq : (Measure.dirac (α := Unit) ())[M t |
+        (Filtration.const ℝ≥0 (⊤ : MeasurableSpace Unit) le_rfl) 0] = M t :=
+      condExp_of_stronglyMeasurable
+        ((Filtration.const ℝ≥0 (⊤ : MeasurableSpace Unit) le_rfl).le 0) hsm hint
+    rw [hEq] at hcond
+    have hiff : (∀ᵐ omega ∂(Measure.dirac (α := Unit) ()), M t omega = M 0 omega)
+        ↔ M t () = M 0 () :=
+      ae_dirac_iff (MeasurableSet.of_discrete (s := {omega : Unit | M t omega = M 0 omega}))
+    exact hiff.mp hcond
+  have h1 := hconst (σ n ())
+  rw [hMt, hMt] at h1
+  simp at h1
+  exact absurd h1 (ne_of_gt (lt_trans zero_lt_one hn'))
+
+/-- (26.7) at the level of expectations — the **hazard/compensator identity**.
+
+    For a PDP started at `x`, the probability of having jumped by time `t`
+    equals the integrated compensator along the flow:
+    `1 − S(t,x) = ∫₀ᵗ λ(φ(u,x)) S(u,x) du`, where `S` is the survivor function
+    `pdpSurvivorFunction`.  Equivalently `S` solves `S' = −λ S`, `S(0) = 1`.
+
+    This is the compensation property that makes `p − p̃` mean-zero; the
+    pathwise local-martingale statement (original, commented above) needs the
+    PDMP construction in addition. -/
+theorem pdpSurvivorFunction_compensator_identity {E : Type*} [MeasurableSpace E]
+    (p : PDP E) (x : E)
+    (hcont : Continuous (fun s : ℝ => (p.jumpRate (p.flow s.toNNReal x) : ℝ)))
+    (t : ℝ≥0) :
+    1 - pdpSurvivorFunction p t x =
+      ∫ u in Set.Icc (0 : ℝ) (t : ℝ),
+        (p.jumpRate (p.flow u.toNNReal x) : ℝ) * pdpSurvivorFunction p u.toNNReal x := by
+  set g : ℝ → ℝ := fun s => (p.jumpRate (p.flow s.toNNReal x) : ℝ) with hg
+  set H : ℝ → ℝ := fun r => ∫ u in (0 : ℝ)..r, g u with hH
+  have ht : (0 : ℝ) ≤ (t : ℝ) := t.coe_nonneg
+  have hIcc : ∀ r : ℝ, 0 ≤ r → ∫ u in Set.Icc (0 : ℝ) r, g u = H r := by
+    intro r hr
+    show _ = ∫ u in (0 : ℝ)..r, g u
+    rw [intervalIntegral.integral_of_le hr, MeasureTheory.integral_Icc_eq_integral_Ioc]
+  have hHderiv : ∀ r : ℝ, HasDerivAt H (g r) r := fun r =>
+    (hcont.integral_hasStrictDerivAt 0 r).hasDerivAt
+  have hHcont : Continuous H :=
+    continuous_iff_continuousAt.mpr (fun r => (hHderiv r).continuousAt)
+  have hFderiv : ∀ r : ℝ,
+      HasDerivAt (fun r => 1 - Real.exp (-H r)) (g r * Real.exp (-H r)) r := by
+    intro r
+    have h1 : HasDerivAt (fun r => Real.exp (-H r)) (-(g r * Real.exp (-H r))) r := by
+      have := (Real.hasDerivAt_exp (-H r)).comp r ((hHderiv r).neg)
+      simpa [Function.comp, mul_comm] using this
+    simpa using (hasDerivAt_const r (1 : ℝ)).sub h1
+  have hint : IntervalIntegrable (fun u => g u * Real.exp (-H u)) volume 0 (t : ℝ) :=
+    (hcont.mul (Real.continuous_exp.comp hHcont.neg)).intervalIntegrable 0 (t : ℝ)
+  have key : ∫ u in (0 : ℝ)..(t : ℝ), g u * Real.exp (-H u)
+      = (1 - Real.exp (-H (t : ℝ))) - (1 - Real.exp (-H 0)) :=
+    intervalIntegral.integral_eq_sub_of_hasDerivAt (fun u _ => hFderiv u) hint
+  have hH0 : H 0 = 0 := by simp [hH]
+  have hsurv : ∀ r : ℝ, 0 ≤ r → pdpSurvivorFunction p r.toNNReal x = Real.exp (-H r) := by
+    intro r hr
+    rw [pdpSurvivorFunction, Real.coe_toNNReal r hr, hIcc r hr]
+  have hrhs : (∫ u in Set.Icc (0 : ℝ) (t : ℝ),
+        (p.jumpRate (p.flow u.toNNReal x) : ℝ) * pdpSurvivorFunction p u.toNNReal x)
+      = ∫ u in (0 : ℝ)..(t : ℝ), g u * Real.exp (-H u) := by
+    rw [intervalIntegral.integral_of_le ht, MeasureTheory.integral_Icc_eq_integral_Ioc]
+    refine setIntegral_congr_fun measurableSet_Ioc (fun u hu => ?_)
+    rw [hsurv u (le_of_lt hu.1)]
+  rw [hrhs, key, pdpSurvivorFunction, hIcc (t : ℝ) ht, hH0]
+  simp
 
 /-!
 ### Martingale representation (26.12)
@@ -1911,14 +2431,59 @@ theorem pdp_extended_generator_characterization
     funext t omega; exact hdecomp n t omega
   rw [hfun]; exact hjump_mart n
 
-/-- (26.14) Necessity: if f ∈ 𝒟(𝔄) then f satisfies the boundary
-    condition f(x) = Qf(x) on the active boundary Γ. -/
+/-  ORIGINAL (unfaithful) statement of (26.14) necessity: if f ∈ 𝒟(𝔄) then
+    f satisfies the boundary condition f(x) = Qf(x) on the active boundary Γ.
+
+    It is **false**: the hypothesis `hf_domain : True` carries no information,
+    so the statement asserts `f(x) = Qf(x)` for *every* measurable `f`, every
+    PDP and every set `Gamma`; see the counterexample
+    `pdp_generator_boundary_condition_necessary_false` below (the `Bool` PDP
+    whose transition kernel flips the state, with `f` the indicator of
+    `{true}`).  The faithful version is
+    `pdp_generator_boundary_condition_of_semigroup_limits`: for `f` in the
+    domain `Pₜf(x) → f(x)` as `t ↓ 0`, while at an active boundary point the
+    process leaves `x` instantaneously through `Q`, so the same limit equals
+    `Qf(x)`; uniqueness of limits gives `f(x) = Qf(x)`.
+
 theorem pdp_generator_boundary_condition_necessary
     {E : Type*} [MeasurableSpace E]
     (pdp : PDPStandard E)
     {f : E → ℝ} (hf : Measurable f) {Gamma : Set E}
     (hf_domain : True) :
     InExtGenDomain_BdCond pdp.toPDP f Gamma := by sorry
+-/
+
+/-- The boundary condition does not follow from an empty domain hypothesis:
+    the original form of the necessity statement is **false**. -/
+theorem pdp_generator_boundary_condition_necessary_false :
+    ¬ (∀ (E : Type) (_ : MeasurableSpace E) (pdp : PDPStandard E) (f : E → ℝ),
+        Measurable f → ∀ Gamma : Set E, True →
+          InExtGenDomain_BdCond pdp.toPDP f Gamma) := by
+  intro h
+  have hbd := h Bool ⊤ flipPDPStandard (fun b => if b then (1 : ℝ) else 0)
+    (measurable_of_countable _) Set.univ trivial
+  have h1 := hbd true (Set.mem_univ _)
+  simp [flipPDPStandard, flipPDP, Kernel.deterministic_apply, integral_dirac] at h1
+
+/-- (26.14) Necessity of the boundary condition — faithful form.
+
+    If `f` is in the domain of the extended generator, the semigroup applied to
+    `f` converges to `f` as `t ↓ 0` (`hdom`); and at an active boundary point
+    `x ∈ Γ` the process jumps out of `x` instantaneously, so the same limit is
+    `Qf(x)` (`hjump`).  Uniqueness of limits then forces `f(x) = Qf(x)` on `Γ`,
+    which is Davis's necessity argument. -/
+theorem pdp_generator_boundary_condition_of_semigroup_limits
+    {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E) {f : E → ℝ} {Gamma : Set E}
+    (hdom : ∀ x ∈ Gamma, Filter.Tendsto (fun t : ℝ≥0 => pdpSemigroup pdp.toPDP t f x)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (f x)))
+    (hjump : ∀ x ∈ Gamma, Filter.Tendsto (fun t : ℝ≥0 => pdpSemigroup pdp.toPDP t f x)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (∫ y, f y ∂(pdp.transitionMeasure x)))) :
+    InExtGenDomain_BdCond pdp.toPDP f Gamma := by
+  intro x hx
+  haveI : (nhdsWithin (0 : ℝ≥0) (Set.Ioi 0)).NeBot :=
+    nhdsGT_neBot_of_exists_gt ⟨1, by norm_num⟩
+  exact tendsto_nhds_unique (hdom x hx) (hjump x hx)
 
 /-
 ORIGINAL (unfaithful) statement, preserved for the record.
@@ -2611,9 +3176,20 @@ def IsAlphaExcessive {E : Type*} [MeasurableSpace E]
     (fun t : ℝ≥0 => Real.exp (-(alpha : ℝ) * (t : ℝ)) * Pt t f x)
     (nhds 0) (nhds (f x)))
 
-/-- (27.8) Theorem. A PDP satisfying the standard conditions is a
-    Borel right process. For any α-excessive f, the sample path
-    t ↦ f(xₜ(ω)) is a.s. right-continuous. -/
+/-  ORIGINAL (unfaithful) statement of (27.8), preserved for the record.
+
+    As written the process `X` is a free variable with **no hypothesis linking
+    it to `pdp`** (it is not required to follow the flow, nor to have
+    right-continuous paths), so the conclusion fails for, e.g., a process with
+    a left-continuous jump at some time.  The α-excessivity of `f` alone cannot
+    compensate for this.
+
+    The faithful version `pdp_is_borel_right_process_of_localFlow` below is
+    stated after `alpha_excessive_right_continuous_along_flow` (which it uses).
+    It adds exactly the genuine input of Davis's §24 construction, namely that
+    the sample paths follow the flow on a right neighbourhood of every time
+    (`hpath`), plus the §27 standing regularity already used by the flow lemma.
+
 theorem pdp_is_borel_right_process
     {E : Type*} [MeasurableSpace E] [TopologicalSpace E] [MetricSpace E]
     [SecondCountableTopology E] [LocallyCompactSpace E] [BorelSpace E]
@@ -2625,6 +3201,7 @@ theorem pdp_is_borel_right_process
     ∀ᵐ omega ∂P, ∀ t : ℝ≥0,
       Filter.Tendsto (fun s => f (X s omega)) (nhdsWithin t (Set.Ioi t))
         (nhds (f (X t omega))) := by sorry
+-/
 
 /-
 One renewal step of a non-negative target dominates the survival×flow term
@@ -2781,6 +3358,65 @@ theorem alpha_excessive_right_continuous_along_flow
           exact tendsto_of_tendsto_of_tendsto_of_le_of_le' h_S_f_tendsto h_P_tendsto ( Filter.eventually_of_mem self_mem_nhdsWithin fun t ht => by linarith [ h_bound t ] ) ( Filter.eventually_of_mem self_mem_nhdsWithin fun t ht => by linarith [ h_bound t ] );
         convert h_S_f_tendsto.div h_S_tendsto _ using 1 <;> norm_num;
         ext t; simp +decide [ mul_div_cancel_left₀ _ ( ne_of_gt ( pdpSurvivorFunction_pos pdp.toPDP t x ) ) ] ;
+
+/-- (27.8) Theorem (right process property) — faithful form.
+
+    A PDP satisfying the standard conditions is a Borel right process: for any
+    bounded α-excessive `f`, the sample path `t ↦ f(xₜ(ω))` is right-continuous.
+
+    Compared with the original skeleton (preserved, commented, above) the
+    process `X` is now genuinely tied to the PDP by `hpath`: on a right
+    neighbourhood of every time the path follows the deterministic flow,
+    `X (t+s) ω = φ(s, X t ω)` for `0 ≤ s < ε`.  This is exactly what the §24
+    construction provides (no jump occurs in `(t, t+ε)`), and it is strictly
+    weaker than the conclusion.  The §27 standing regularity (`hflow`, `hrate`,
+    `hcont`) and boundedness of `f` (`hfC`) are those of
+    `alpha_excessive_right_continuous_along_flow`, which supplies the analytic
+    core: right-continuity of `f` along the flow at `0`. -/
+theorem pdp_is_borel_right_process_of_localFlow
+    {E : Type*} [MeasurableSpace E]
+    (pdp : PDPStandard E)
+    (hflow : Measurable (fun q : ℝ × E => pdp.flow q.1.toNNReal q.2))
+    (c : ℝ≥0) (hrate : ∀ y, pdp.jumpRate y ≤ c)
+    (hcont : ∀ y, Continuous (fun s : ℝ => (pdp.jumpRate (pdp.flow s.toNNReal y) : ℝ)))
+    {alpha : ℝ≥0} {f : E → ℝ}
+    (hf : Measurable f) (C : ℝ) (hfC : ∀ y, |f y| ≤ C)
+    (hf_excessive : IsAlphaExcessive (pdpSemigroup pdp.toPDP) alpha f)
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {X : ℝ≥0 → Omega → E}
+    (hpath : ∀ (omega : Omega) (t : ℝ≥0), ∃ ε : ℝ≥0, 0 < ε ∧
+      ∀ s : ℝ≥0, s < ε → X (t + s) omega = pdp.flow s (X t omega)) :
+    ∀ᵐ omega ∂P, ∀ t : ℝ≥0,
+      Filter.Tendsto (fun s => f (X s omega)) (nhdsWithin t (Set.Ioi t))
+        (nhds (f (X t omega))) := by
+  refine Filter.Eventually.of_forall (fun omega t => ?_)
+  obtain ⟨ε, hε, hloc⟩ := hpath omega t
+  -- Right-continuity of `f` along the flow, at the current state.
+  have hflow_lim :
+      Filter.Tendsto (fun u : ℝ≥0 => f (pdp.flow u (X t omega)))
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (f (X t omega))) :=
+    alpha_excessive_right_continuous_along_flow pdp hflow c hrate hcont hf C hfC
+      hf_excessive (X t omega)
+  -- `s ↦ s - t` maps a right neighbourhood of `t` to a right neighbourhood of `0`.
+  have hshift : Filter.Tendsto (fun s : ℝ≥0 => s - t)
+      (nhdsWithin t (Set.Ioi t)) (nhdsWithin 0 (Set.Ioi 0)) := by
+    rw [tendsto_nhdsWithin_iff]
+    refine ⟨?_, ?_⟩
+    · have hcontsub : Continuous (fun s : ℝ≥0 => s - t) := by fun_prop
+      simpa using (hcontsub.tendsto t).mono_left nhdsWithin_le_nhds
+    · filter_upwards [self_mem_nhdsWithin] with s hs
+      exact tsub_pos_of_lt (Set.mem_Ioi.mp hs)
+  refine (hflow_lim.comp hshift).congr' ?_
+  -- On `(t, t+ε)` the path is the flow started at `X t ω`.
+  have hmem : Set.Iio (t + ε) ∈ nhdsWithin t (Set.Ioi t) :=
+    nhdsWithin_le_nhds (Iio_mem_nhds (by simpa using hε))
+  filter_upwards [hmem, self_mem_nhdsWithin] with s hs hst
+  have hts : t ≤ s := le_of_lt (Set.mem_Ioi.mp hst)
+  have hlt : s - t < ε := (tsub_lt_iff_left hts).mpr hs
+  have hadd : t + (s - t) = s := add_tsub_cancel_of_le hts
+  have := hloc (s - t) hlt
+  rw [hadd] at this
+  simpa [Function.comp] using congrArg f this.symm
 
 /-! ### Basic semigroup properties of the transition operator `Pₜ`
 

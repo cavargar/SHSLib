@@ -1,3 +1,73 @@
+# SHSLib v2.0.0 — Sorry-free core, PDMP process extensions, special functions
+
+The library is now **194 modules and entirely free of `sorry`**: every theorem
+depends only on `propext`, `Classical.choice` and `Quot.sound`.
+
+**This release is breaking.** Six declarations were removed from
+`Foundations.DavisCh2` — see *Removed* below.
+
+## Added
+
+- **Davis PDMP process extensions (75 modules).** Elapsed-occupation martingales
+  with their minimal, path and current-state filtrations; observability and
+  full-observability criteria; marked-jump processes (filtration, bounded
+  intensity, step laws, generator martingale); two-channel characteristics and
+  test functions; segment-level conditionals and hazard Riemann sums; and
+  concrete age, age-counter, ramped, refractory and Poisson clock models.
+- **Special functions (51 modules).** Stirling's formula with Binet's first,
+  second and third integrals, Wallis, Gautschi, central-binomial and Catalan
+  asymptotics; the Beta distribution, measure, quantile function and
+  inverse-transform sampling; the digamma / trigamma / tetragamma / polygamma
+  family with reflection formulae and sharp bounds; Clopper–Pearson exact
+  binomial intervals with coverage and monotonicity; uniform order statistics.
+- **`Core.GronwallGrowthBound`.** Grönwall's inequality in integral form with a
+  *time-varying* nonnegative rate — Mathlib's `gronwallBound` covers only the
+  constant case — together with the growth envelope, its restart property, and
+  the resulting sample-path bounds: `SHS.lemma1_linear_growth_bound_varying_rate`
+  for a flow segment and `SHS.hybrid_path_growth_bound` for an entire hybrid
+  path across resets. Also `SHS.flow_eq_of_lipschitz`, forward uniqueness of the
+  flow.
+- **`Foundations.DavisCh2StrongMarkov`.** The strong Markov property without the
+  countable-range restriction on the stopping time, by dyadic discretisation.
+
+## Removed
+
+`Foundations.DavisCh2` previously carried six results as `sorry`. They stated
+what the source text asserts, but three of them are **false as literally
+formalized** and the other three are not provable in the generality claimed.
+Rather than leave them as open placeholders, they were retired:
+
+| Removed | Replaced by |
+|---------|-------------|
+| `pdp_filtration_right_continuous` | `pdp_filtration_right_continuous_false` (counterexample) |
+| `compensator_is_local_martingale` | `compensator_is_local_martingale_false` (counterexample) |
+| `pdp_generator_boundary_condition_necessary` | `pdp_generator_boundary_condition_necessary_false` (counterexample), plus `pdp_generator_boundary_condition_of_semigroup_limits` |
+| `pdp_simple_markov`, `pdp_strong_markov` | `pdp_strong_markov_of_countable_range`, `pdp_strong_markov_of_finite_range`, and `Foundations.DavisCh2StrongMarkov` for general stopping times |
+| `pdp_is_borel_right_process` | `pdp_is_borel_right_process_of_localFlow` |
+
+Every original statement is preserved verbatim in a comment block beside its
+replacement. Nothing that was ever *proved* was removed.
+
+## Fixed
+
+- Hespanha's Eq. (35) is still certified false as literally stated
+  (`lemma1_linear_growth_bound_false`), but the gap noted in v0.1.0 is now
+  largely closed by `Core.GronwallGrowthBound`. The paper's *quotient* form,
+  with its `c_f / γ_f(t₀)` term valid only when `γ_f` is bounded away from zero,
+  remains unformalized.
+
+## Build
+
+- Lean: `leanprover/lean4:v4.28.0`
+- Mathlib: `8f9d9cff6bd728b17a24e163c9402775d9e6a365`
+
+```bash
+lake exe cache get   # fetch Mathlib cache
+lake build
+```
+
+---
+
 # SHSLib v0.1.0 — Core SHS theory & Davis foundations
 
 First public release of **SHSLib** — a Lean 4 / Mathlib formalization of

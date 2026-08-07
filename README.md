@@ -28,14 +28,32 @@ $$
 
 These identities (`SHS.eq10_differential_generator_formula` and `SHS.theorem1_generator_formula` in `SHSLib/Core/Generator.lean`) are the basis for deriving moment ODEs and the Fokker–Planck equation for the state density.
 
+## A note on faithfulness
+
+Formalizing a paper sometimes shows a stated result to be false as literally
+written. Where that happened, this library keeps the original statement in a
+comment, proves a **counterexample certificate** next to it, and then proves a
+corrected form. Hespanha's Eq. (35) (`SHS.lemma1_linear_growth_bound_false`,
+with the corrected `..._varying_rate` in `Core.GronwallGrowthBound`) and three
+PDMP results in `Foundations.DavisCh2` are handled this way. Nothing is quietly
+weakened.
+
 ## Structure
 
-| Module | Contents |
-|--------|----------|
-| `SHSLib.Core.Basic` | SHS structure, assumptions, flow |
-| `SHSLib.Core.Generator` | Extended generator $L$, moment evolution, Fokker–Planck equation |
-| `SHSLib.Foundations.DavisCh1` | Measure theory, probability, and stochastic-process foundations |
-| `SHSLib.Foundations.DavisCh2` | Piecewise-Deterministic Markov Process (PDMP) theory |
+194 modules, entirely free of `sorry` — every theorem depends only on
+`propext`, `Classical.choice` and `Quot.sound`.
+
+| Module group | Modules | Contents |
+|--------------|--------:|----------|
+| `SHSLib.Core.Basic`, `.Generator`, `.GeneratorDefs` | 3 | SHS structure and flow; extended generator $L$, moment evolution, Fokker–Planck |
+| `SHSLib.Core.GronwallGrowthBound` | 1 | Grönwall's inequality with a time-varying rate; sample-path growth bounds for flow segments and whole hybrid paths (Hespanha Lemma 1 / Eq. 35) |
+| `SHSLib.Core.Davis{Bridge,Construction,Martingale}` | 3 | SHS ↦ Davis PDP; the PDP generator **equals** the extended generator; Hespanha Theorem 2 |
+| `SHSLib.Core.Davis*` — reset compensation | 55 | Compensator of the reset part: counter augmentation, conditional holding-time and channel laws, reset-occupation densities, occupation centering |
+| `SHSLib.Core.Davis*` — process extensions | 75 | Elapsed-occupation martingales and filtrations, marked-jump processes, two-channel characteristics, age/ramped/refractory/Poisson clock models |
+| `SHSLib.Foundations.DavisCh1` | 1 | Measure theory, probability, martingales, Dynkin |
+| `SHSLib.Foundations.DavisCh2`, `.DavisCh2StrongMarkov` | 2 | PDMP theory: ODE flows, Grönwall, inverse-transform sampling, the PDP semigroup, and the strong Markov property |
+| `SHSLib.Foundations.DavisCh2Finite*` | 3 | Finite-state renewal kernel, semigroup laws, strong Markov property |
+| `SHSLib.Foundations.{Stirling,Beta,Digamma,Trigamma,Tetragamma,Polygamma,ClopperPearson,UniformOrderStatistic}*` | 51 | Special-functions groundwork: Stirling/Binet asymptotics, the Beta distribution and its quantiles, the polygamma family, exact binomial intervals, uniform order statistics |
 
 ## Building
 

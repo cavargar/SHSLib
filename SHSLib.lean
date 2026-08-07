@@ -1,19 +1,21 @@
--- SHSLib v2: Formal library for Stochastic Hybrid Systems (Core)
-import SHSLib.Core.Basic       -- SHS structure, assumptions, flow
-import SHSLib.Core.Generator   -- Extended generator and Fokker–Planck equation
-import SHSLib.Foundations.DavisCh1  -- Analysis, Probability, Stochastic Processes
-import SHSLib.Foundations.DavisCh2  -- Piecewise-Deterministic Markov Processes
-import SHSLib.Foundations.DavisCh2FiniteKernel          -- Finite-state PDP transition kernel
-import SHSLib.Foundations.DavisCh2FiniteKernelSemigroup -- Finite-state kernel semigroup laws
-import SHSLib.Foundations.DavisCh2FiniteProcess         -- Finite-state (strong) Markov property
+-- SHSLib v2: Formal library for Stochastic Hybrid Systems (Core + Foundations)
+--
+-- Public mirror of the research repository: the Core/ and Foundations/ layers only.
+-- Their import closure never reaches an Examples/, Applications/, MomentAnalysis/,
+-- Bujorianu/ or Tactics/ module, which is what makes this subset self-contained.
 
--- Davis-to-SHS generator bridge (connects Davis PDMP foundations to the Hespanha Core)
-import SHSLib.Core.GeneratorDefs      -- Shared TestFunction / extendedGenerator defs
-import SHSLib.Core.DavisBridge        -- SHS ↦ Davis PDP: PDP generator = extended generator
-import SHSLib.Core.DavisConstruction  -- Concrete time-augmented Davis PDP of an SHS
-import SHSLib.Core.DavisMartingale    -- Compensated-generator martingale; Hespanha Theorem 2
-
--- Davis reset-compensation / occupation-martingale development
+import SHSLib.Core.Basic       -- SHS structure, assumptions, flow (Section 2)
+import SHSLib.Core.Generator   -- Extended generator, Theorems 1–2, Lemmas 1–2,
+import SHSLib.Core.GronwallGrowthBound -- Grönwall with time-varying rate; Lemma 1 / Eq. (35)
+import SHSLib.Foundations.DavisCh1  -- Ch1: Analysis, Probability, Stochastic Processes
+import SHSLib.Foundations.DavisCh2  -- Ch2: Piecewise-Deterministic Markov Processes
+import SHSLib.Foundations.DavisCh2FiniteKernel          -- Finite-kernel PDP transition operator
+import SHSLib.Foundations.DavisCh2FiniteKernelSemigroup -- Finite-kernel semigroup properties
+import SHSLib.Foundations.DavisCh2FiniteProcess         -- Finite-activity PDP process construction
+import SHSLib.Core.GeneratorDefs      -- Shared TestFunction / extendedGenerator defs (breaks import cycle)
+import SHSLib.Core.DavisBridge        -- Bridge: SHS instance ↦ Davis PDP
+import SHSLib.Core.DavisConstruction  -- Concrete Davis process construction for an SHS
+import SHSLib.Core.DavisMartingale    -- Compensated-generator martingale for the constructed process
 import SHSLib.Core.DavisNaturalStopping -- Observable jump-time localization
 import SHSLib.Core.DavisObservableCounter -- Mode-level observable jump counters
 import SHSLib.Core.DavisCounterAugmentation -- Canonical counter-augmented models
@@ -69,3 +71,130 @@ import SHSLib.Core.DavisElapsedOccupationEnvelopeMeasurable -- Measurability of 
 import SHSLib.Core.DavisElapsedOccupationEventCentering -- Event-localized elapsed occupation centering
 import SHSLib.Core.DavisElapsedOccupationIncrement -- Fixed-time increments of elapsed occupation centering
 import SHSLib.Core.DavisElapsedOccupationIncrementCentering -- Event-centered fixed-time increments
+import SHSLib.Core.DavisAgeClockModel -- Age-dependent clocks
+import SHSLib.Core.DavisAgeClockTestFunction -- Test functions of the age for an age clock
+import SHSLib.Core.DavisAgeCounterAgeTest -- Test functions of the age on the multi-channel age–counter clock
+import SHSLib.Core.DavisAgeCounterJointTest -- Joint test functions of the age and the counter
+import SHSLib.Core.DavisAgeCounterMixedTest -- Test functions of the age and the counter together
+import SHSLib.Core.DavisAgeCounterModel -- An age clock with several reset channels
+import SHSLib.Core.DavisBoundedHazardVacuity -- A uniformly bounded accumulated hazard forces the zero measure
+import SHSLib.Core.DavisConditionalChannelWeighted -- The weighted channel identity and the conditional mean of a reset
+import SHSLib.Core.DavisConditionalHoldingDensity -- The density form of the conditional holding-time law
+import SHSLib.Core.DavisConditionalHoldingDensityRandomWindow -- The density law at a history-measurable window length
+import SHSLib.Core.DavisConditionalHoldingRandomThreshold -- The conditional holding-time law at a history-measurable threshold
+import SHSLib.Core.DavisConditionalHoldingWeighted -- The weighted survivor identity
+import SHSLib.Core.DavisConditionalHoldingWindow -- The window law of the holding time
+import SHSLib.Core.DavisCoordinateNoise -- Independent holding times from the coordinates of a product measure
+import SHSLib.Core.DavisElapsedAccumulatedHazardMeasurable -- Measurability of the accumulated hazard
+import SHSLib.Core.DavisElapsedBoundedRegime -- The bounded regime: uniform envelopes with no extra probabilistic input
+import SHSLib.Core.DavisElapsedGeneratorMartingale -- Generator bridge for the elapsed occupation martingale
+import SHSLib.Core.DavisElapsedOccupationCappedMartingale -- The deterministic-cap increment law as a capped martingale property
+import SHSLib.Core.DavisElapsedOccupationConditionalIncrement -- Conditional cap removal for elapsed occupation increments
+import SHSLib.Core.DavisElapsedOccupationCurrentStateInstances -- Instances of current-state observability
+import SHSLib.Core.DavisElapsedOccupationEnvelopeCriterion -- Envelope integrability from bounded tests, and fully concrete martingales
+import SHSLib.Core.DavisElapsedOccupationFullObservability -- Discharging observability for the full-information filtration
+import SHSLib.Core.DavisElapsedOccupationMartingale -- Martingale packaging for the elapsed occupation-centered reset process
+import SHSLib.Core.DavisElapsedOccupationMinimalFiltration -- The minimal observability filtration
+import SHSLib.Core.DavisElapsedOccupationObservability -- Filtration-level observability of elapsed reset occupation
+import SHSLib.Core.DavisElapsedOccupationPathFiltration -- Observability for the natural state-path filtration
+import SHSLib.Core.DavisElapsedOccupationProcessIntegrable -- Integrability constructors for the elapsed occupation process
+import SHSLib.Core.DavisElapsedOccupationProcessMeasurable -- Measurability and full-filtration adaptedness
+import SHSLib.Core.DavisElapsedOccupationSegmentwise -- Segmentwise decomposition of the capped martingale property
+import SHSLib.Core.DavisElapsedPathwiseProducts -- Discharging the product hypotheses of the path-level regime
+import SHSLib.Core.DavisElapsedPathwiseSquareIntegrability -- Square integrability of the path-level quantities
+import SHSLib.Core.DavisElapsedPathwiseTestBound -- Path-level bounds on the test function
+import SHSLib.Core.DavisElapsedRelaxedRegime -- The relaxed regime: random path-level envelopes
+import SHSLib.Core.DavisElapsedSquareIntegrableInstances -- Model classes satisfying the square-integrability conditions
+import SHSLib.Core.DavisHoldingDensityHorizon -- The density form of the holding-time law below an age horizon
+import SHSLib.Core.DavisMarkedCoordinateNoise -- Independent holding times *and* marks from the coordinates of a product
+import SHSLib.Core.DavisMarkedJumpAdapted -- Observability of a segment contribution, and the step law in full
+import SHSLib.Core.DavisMarkedJumpBoundedIntensity -- The model-level statements under a bounded intensity
+import SHSLib.Core.DavisMarkedJumpFiltration -- The observation filtration of the marked jump history
+import SHSLib.Core.DavisMarkedJumpGeneratorMartingale -- The generator martingale for the marked jump filtration
+import SHSLib.Core.DavisMarkedJumpHorizonStepLaw -- The conditional step law under a horizon-dependent profile bound
+import SHSLib.Core.DavisMarkedJumpObservable -- Observability of the elapsed occupation for the marked jump filtration
+import SHSLib.Core.DavisMarkedJumpRelaxedRegime -- The model-level statements with a random lower bound on the holding times
+import SHSLib.Core.DavisMarkedJumpSegmentMartingale -- The conditional step law, the one-segment martingale, and the increment
+import SHSLib.Core.DavisMarkedJumpStepLaw -- The conditional step law for the marked jump filtration
+import SHSLib.Core.DavisNoiseBlockMeasurable -- Histories are measurable for any σ-algebra carrying the noise used so far
+import SHSLib.Core.DavisNonExplosiveLowerBound -- Non-explosion from a deterministic dead time
+import SHSLib.Core.DavisOccupationRegularCriterion -- A criterion for the regularity of the reset occupation
+import SHSLib.Core.DavisOneSegmentConditionalStep -- The conditional step of the one-segment martingale
+import SHSLib.Core.DavisOneSegmentTruncatedCompensation -- Truncated one-segment reset compensation
+import SHSLib.Core.DavisPoissonClockModel -- A concrete Davis model: the constant-rate clock
+import SHSLib.Core.DavisPoissonClockNoise -- A concrete noise satisfying the conditional laws
+import SHSLib.Core.DavisProfileLinearGrowth -- Linear growth of the centered reset profile in the age
+import SHSLib.Core.DavisProfileTruncation -- Truncating a profile at an age horizon
+import SHSLib.Core.DavisProfileTruncationCore -- Truncating a profile at an age horizon: the core transfer
+import SHSLib.Core.DavisRampedClockMartingale -- The Dynkin identity and the martingale property on a concrete model
+import SHSLib.Core.DavisRampedClockModel -- The ramped refractory clock
+import SHSLib.Core.DavisRampedClockNoise -- The noise of the ramped refractory clock
+import SHSLib.Core.DavisRefractoryClockModel -- A concrete refractory Davis model
+import SHSLib.Core.DavisRefractoryClockNoise -- A refractory instance with holding times bounded below
+import SHSLib.Core.DavisRefractoryHazard -- What a lower bound on the holding times costs
+import SHSLib.Core.DavisSegmentActiveConditional -- The conditional law of the active part
+import SHSLib.Core.DavisSegmentCompletedConditional -- The conditional law of the completed part
+import SHSLib.Core.DavisSegmentConditionalRandomWindow -- The two segment laws at a history-measurable start age
+import SHSLib.Core.DavisSegmentFreshCentering -- Centering of a segment observed from its start
+import SHSLib.Core.DavisSegmentHazardRiemann -- Riemann approximation of a hazard average over an age window
+import SHSLib.Core.DavisSegmentProfileRegularity -- Instances of the centered reset profile regularity
+import SHSLib.Core.DavisStoppedElapsedOccupationIncrement -- Deterministic-cap increments of elapsed reset occupation
+import SHSLib.Core.DavisStoppedElapsedOccupationIncrementLaw -- Conditional law interface for stopped elapsed occupation increments
+import SHSLib.Core.DavisTwoChannelAgeTest -- An age test function on the two-channel refractory clock
+import SHSLib.Core.DavisTwoChannelCharacteristic -- The characteristic family on the two-channel refractory clock
+import SHSLib.Core.DavisTwoChannelClock -- A two-channel refractory clock, and its Dynkin identity
+import SHSLib.Core.DavisTwoChannelJointCharacteristic -- The joint characteristic family on the two-channel refractory clock
+import SHSLib.Core.DavisTwoChannelJointTest -- A joint test function on the two-channel refractory clock
+import SHSLib.Core.DavisTwoChannelMixedTest -- A mixed test function on the two-channel refractory clock
+import SHSLib.Foundations.BetaBinomial -- The `i`-th term of the binomial upper tail, with `n = j+m+1`
+import SHSLib.Foundations.BetaBinomialMeasure -- The upper-tail event `{i ≥ j+1}` among the `n+1` possible counts of successes in `n` Bernoulli 
+import SHSLib.Foundations.BetaConcentration -- The deviation set of the Beta law is measurable
+import SHSLib.Foundations.BetaDistribution -- The **Beta density** with shape parameters `a, b`: `betaPDF a b t = t^{a−1}(1−t)^{b−1}/B(a,b)`.
+import SHSLib.Foundations.BetaExpectation -- The real-valued form of the Beta density: the truncation of `betaPDF` to `(0,1)`
+import SHSLib.Foundations.BetaInverseTransform -- Outside `[0,1]` the quantile takes its junk value `0`
+import SHSLib.Foundations.BetaMeasure -- The Beta density as an `ℝ≥0∞`-valued function, supported on `(0,1)`
+import SHSLib.Foundations.BetaPowerLaw -- The distribution function of `Beta(a,1)` and `Beta(1,b)`
+import SHSLib.Foundations.BetaQuantile -- The Euler integrand is continuous at every interior point of `(0,1)`
+import SHSLib.Foundations.BetaQuantileContinuity -- **The Beta quantile is continuous on `[0,1]`.** The CDF is a continuous bijection from the comp
+import SHSLib.Foundations.BetaQuantileFunction -- The **Beta quantile function**: the inverse of the Beta CDF. For `p ∈ [0,1]` and `a, b > 0` it 
+import SHSLib.Foundations.BetaRecurrence -- The antiderivative `F(t) = t^a (1−t)^b` used in the recurrence
+import SHSLib.Foundations.BetaVariance -- The Beta law gives no mass to the complement of `(0,1)`
+import SHSLib.Foundations.ClopperPearson -- Monotonicity of the Beta CDF in its parameters
+import SHSLib.Foundations.ClopperPearsonCoverage -- The mirror of the quantile/CDF adjunction
+import SHSLib.Foundations.ClopperPearsonMonotone -- **Moving one unit from the second parameter to the first increases the quantile.** Equivalently
+import SHSLib.Foundations.Digamma -- Termwise differentiation of the digamma series
+import SHSLib.Foundations.DigammaAsymptotics -- The mean value estimate
+import SHSLib.Foundations.DigammaEuler -- The value `ψ(1) = −γ`
+import SHSLib.Foundations.DigammaReflection -- The reflection formula for `ψ`
+import SHSLib.Foundations.DigammaSharpBound -- An elementary logarithmic inequality
+import SHSLib.Foundations.IncompleteBeta -- The Euler integrand `t^{a−1}(1−t)^{b−1}` of the Beta integral
+import SHSLib.Foundations.OrderStatisticTransform -- Sorting commutes with a monotone map
+import SHSLib.Foundations.Polygamma -- Summability of the shifted `m`-th power series
+import SHSLib.Foundations.PolygammaAsymptotics -- Bracketing the trigamma function
+import SHSLib.Foundations.StirlingBeta -- The real Beta function `B(x,y) = Γ(x)Γ(y)/Γ(x+y)`
+import SHSLib.Foundations.StirlingBetaAsymptotics -- The Stirling main term for `log B(x,y)`
+import SHSLib.Foundations.StirlingBetaIntegral -- Mathlib's complex Beta integral at real arguments is the coercion of the real interval integral
+import SHSLib.Foundations.StirlingBetaReflection -- **Euler's reflection formula in Beta form**: `B(x, 1−x) = π/sin(πx)`
+import SHSLib.Foundations.StirlingBinet -- The Binet auxiliary function
+import SHSLib.Foundations.StirlingBinetSecond -- The second-order Binet auxiliary function
+import SHSLib.Foundations.StirlingBinetThird -- The third-order Binet auxiliary function
+import SHSLib.Foundations.StirlingBounds -- The two-sided bound on the Stirling defect
+import SHSLib.Foundations.StirlingCatalan -- Catalan numbers
+import SHSLib.Foundations.StirlingCentralBinom -- The logarithm of the central binomial coefficient
+import SHSLib.Foundations.StirlingConstant -- **Stirling's formula for `log Γ`**: the Stirling defect tends to `½ log (2π)`
+import SHSLib.Foundations.StirlingGautschi -- **Gautschi's inequality**: `x^{1−s} ≤ Γ(x+1)/Γ(x+s) ≤ (x+s)^{1−s}` for `x > 0` and `0 < s < 1`
+import SHSLib.Foundations.StirlingHalfInteger -- The closed form at half-integers
+import SHSLib.Foundations.StirlingLogGamma -- A quadratic lower bound for the logarithm
+import SHSLib.Foundations.StirlingPi -- **Explicit two-sided approximation of `π`** by the central binomial coefficient: for `n ≥ 1`, `
+import SHSLib.Foundations.StirlingShift -- The exact decomposition of the shifted log-Gamma difference
+import SHSLib.Foundations.StirlingShiftRatio -- The logarithm of the shifted Gamma ratio is exactly the quantity bounded in batch 165
+import SHSLib.Foundations.StirlingWallis -- The central binomial bracket to fifth order
+import SHSLib.Foundations.Tetragamma -- The tetragamma function `ψ'' = (log Γ)'''
+import SHSLib.Foundations.TetragammaReflection -- **Reflection formula at third order**: for `x ∈ (0,1)`, `ψ''(x) − ψ''(1−x) = −2π³ cos(π x)/sin(
+import SHSLib.Foundations.Trigamma -- Smoothness of `Γ` and of `log Γ` on the positive half-line
+import SHSLib.Foundations.TrigammaSeries -- Regularity, the recurrence and the duplication formula, restated
+import SHSLib.Foundations.TrigammaSharpBracket -- The two limits
+import SHSLib.Foundations.UniformOrderStatistic -- The uniform law and its product
+import SHSLib.Foundations.UniformOrderStatisticLaw -- One-dimensional marginals of the product measure
+import SHSLib.Foundations.UniformOrderStatisticMoments -- The `(j+1)`-st order statistic of a sample of `n = j+m+1` uniforms, as a random variable on the
+import SHSLib.Foundations.DavisCh2StrongMarkov -- Strong Markov property under countable-range stopping times
