@@ -1,8 +1,10 @@
--- SHSLib v2: Formal library for Stochastic Hybrid Systems (Core + Foundations)
+-- SHSLib v2: Formal library for Stochastic Hybrid Systems
 --
--- Public mirror of the research repository: the Core/ and Foundations/ layers only.
--- Their import closure never reaches an Examples/, Applications/, MomentAnalysis/,
--- Bujorianu/ or Tactics/ module, which is what makes this subset self-contained.
+-- Public mirror of the research repository: the general stochastic-modeling theory
+-- layers only -- Core/, Foundations/, Gardiner/, Ullah/, FPK/ and Bujorianu2006/.
+-- Their import closure never reaches an Examples/, Applications/, MomentAnalysis/
+-- or Tactics/ module, which is what makes this subset self-contained; the
+-- domain-specific models and the tactic front-end stay in the research repository.
 
 import SHSLib.Core.Basic       -- SHS structure, assumptions, flow (Section 2)
 import SHSLib.Core.Generator   -- Extended generator, Theorems 1–2, Lemmas 1–2,
@@ -198,3 +200,90 @@ import SHSLib.Foundations.UniformOrderStatistic -- The uniform law and its produ
 import SHSLib.Foundations.UniformOrderStatisticLaw -- One-dimensional marginals of the product measure
 import SHSLib.Foundations.UniformOrderStatisticMoments -- The `(j+1)`-st order statistic of a sample of `n = j+m+1` uniforms, as a random variable on the
 import SHSLib.Foundations.DavisCh2StrongMarkov -- Strong Markov property under countable-range stopping times
+
+-- Flow existence and regularity; Beta order statistics
+import SHSLib.Core.DavisModeBlind -- Theorem 1 for systems whose resets only move the discrete mode
+import SHSLib.Core.DavisTransitionFree -- The transition-free SHS as a Davis process: Theorem 1 without assumptions
+import SHSLib.Core.EnvelopeIntensityBounds -- Discharging the hypotheses of Lemma 2 from a growth envelope
+import SHSLib.Core.EnvelopeSharpness -- Sharpness of the linear-growth envelope
+import SHSLib.Core.ExplicitFlows -- Explicit flows for the two simplest drifts
+import SHSLib.Core.FlowDynkin -- The deterministic Dynkin identity along the SHS flow
+import SHSLib.Core.FlowInitialStateDependence -- Dependence of the flow on the initial state
+import SHSLib.Core.FlowRegularity -- Regularity of the flow of an SHS with a Lipschitz drift
+import SHSLib.Core.FlowRegularityLinearGrowth -- Regularity of the flow for drifts that are only locally Lipschitz
+import SHSLib.Core.GlobalFlowExistence -- Global existence of the flow of an SHS with a Lipschitz drift
+import SHSLib.Core.GlobalFlowLinearGrowth -- Global existence of the flow under local Lipschitz continuity and linear growth
+import SHSLib.Core.GlobalFlowVaryingGrowth -- Global flow under a linear growth condition with time-varying coefficients
+import SHSLib.Core.LinearGrowthCriteria -- Convenient criteria for the hypotheses of the linear-growth existence theorem
+import SHSLib.Foundations.BetaOrderStatisticConcentration -- Concentration of an order statistic of a Beta sample
+import SHSLib.Foundations.BetaOrderStatisticGeneralLipschitz -- The variance of an order statistic under a Lipschitz parent quantile
+import SHSLib.Foundations.BetaOrderStatisticInteger -- Order statistics of a sample of powers of uniforms
+import SHSLib.Foundations.BetaOrderStatisticLipschitz -- A variance bound and localization for the sample quantile of powers of uniforms
+import SHSLib.Foundations.BetaOrderStatisticMoments -- Moments of an order statistic of a Beta sample
+import SHSLib.Foundations.BetaOrderStatisticMomentsPower -- Moments of an order statistic of a power-law (`Beta(a,1)`) sample
+import SHSLib.Foundations.DavisCh2ProcessLinks -- Process-level links for Davis Chapter 2
+
+-- Gardiner, Handbook of Stochastic Methods: the differential Chapman-Kolmogorov equation
+import SHSLib.Gardiner.Backward -- Backward differential Chapman-Kolmogorov equation
+import SHSLib.Gardiner.Basic -- State space R^n, partial derivatives, Taylor remainder, conditions (i)-(iii)
+import SHSLib.Gardiner.HigherMoments -- Vanishing of third and higher conditional moments
+import SHSLib.Gardiner.Special -- Master equation, Fokker-Planck, Liouville; Gaussian solution
+import SHSLib.Gardiner.Strong -- Integration by parts (3.4.19) and the strong form (3.4.22)
+import SHSLib.Gardiner.Taylor -- Uniform second-order Taylor estimate (3.4.11)
+import SHSLib.Gardiner.WeakForm -- Weak form of the dCKE (3.4.16) against test functions
+import SHSLib.Gardiner -- Index + (3.4.x)/(3.5.x) correspondence table
+
+-- Ullah & Wolkenhauer, Stochastic Approaches for Systems Biology, section 8.2
+import SHSLib.Ullah.Basic -- Time difference quotient (8.4), gain-loss flux (8.5), splitting (8.6)
+import SHSLib.Ullah.DCKE -- The dCKE (8.13), derived from the density without integration by parts
+import SHSLib.Ullah.Limits -- Limits (8.11) and (8.12) of the near and far regions
+import SHSLib.Ullah.Near -- Near region: change of variables (8.7), Taylor expansion, conditional moments
+import SHSLib.Ullah -- Index + (8.x) correspondence table
+
+-- Bect (2010): the unifying Fokker-Planck-Kolmogorov equation for general SHS
+import SHSLib.FPK.AdjointUniqueness -- Eq. (15) and Definition 7(d) of Bect (2010): the adjoint `L*μ` and the FPK equation
+import SHSLib.FPK.AppendixB42 -- Appendix B of Bect (2010): Eqs. (42) and (43)
+import SHSLib.FPK.AppendixC1 -- Appendix C.1 of Bect (2010): Eqs. (46) and (47), the computation of `L*μ_t`
+import SHSLib.FPK.AppendixC1Box -- Appendix C.1 of Bect (2010) on a box: Eq. (46) proved from the divergence theorem
+import SHSLib.FPK.AppendixC1BoxExample -- A worked instance of Eq. (46) on a box
+import SHSLib.FPK.AppendixE -- Appendix E of Bect (2010): proof of Theorem 13
+import SHSLib.FPK.BoundaryGeometry -- Section 5.1 of Bect (2010): the surface measure and the boundary conditions (19)
+import SHSLib.FPK.DensityEvolution -- Section 5.3 and Appendix D of Bect (2010): from measures to densities
+import SHSLib.FPK.DiffusionGenerator -- Eq. (4) and Eq. (16) of Bect (2010): the differential generator and the probability
+import SHSLib.FPK.DivergenceTheorem -- Appendix A of Bect (2010): the divergence theorem
+import SHSLib.FPK.DualKernelMeasure -- Eq. (24) of Bect (2010): Assumption 14 as an equality of measures on `E × E`
+import SHSLib.FPK.DynkinFormula -- From the generalized Itô formula to the generalized Dynkin formula (Section 4.1)
+import SHSLib.FPK.ForcedJumps -- Section 6.2 of Bect (2010): a class of models with forced jumps
+import SHSLib.FPK.GeneralizedFPK -- The generalized Fokker–Planck–Kolmogorov equation (Section 4 of Bect, 2010)
+import SHSLib.FPK.HespanhaBridge -- The Hespanha SHS as a GSHS with spontaneous jumps (Example 18 of Bect, 2010)
+import SHSLib.FPK.HespanhaDynkin -- Eq. (12) for a concrete stochastic hybrid system
+import SHSLib.FPK.HespanhaFPK -- Example 18 of Bect (2010): Hespanha's generalized FPK equation, Eq. (33)
+import SHSLib.FPK.HespanhaResetJacobian -- Example 18 of Bect (2010): deterministic reset maps and their Jacobians
+import SHSLib.FPK.HespanhaResetKernel -- The reset kernel of a Hespanha SHS as a Markov kernel
+import SHSLib.FPK.HybridStateSpace -- Section 2.1 and Appendix A of Bect (2010): the hybrid state space
+import SHSLib.FPK.JumpDiscontinuity -- Section 6.2 of Bect (2010): the jump discontinuity of the density across `H`
+import SHSLib.FPK.LevySystemIntensity -- Eq. (8) from the Lévy system: the mean jump intensity of spontaneous jumps
+import SHSLib.FPK.LevySystemProcess -- Eqs. (6) and (7) of Bect (2010): the Lévy-system process `H` and the jump measure `R`
+import SHSLib.FPK.MarkovChain -- Purely discrete modes: the forward Kolmogorov equation
+import SHSLib.FPK.MasterEquation -- Example 16 of Bect (2010): the master equation
+import SHSLib.FPK.MeanJumpIntensity -- Mean jump intensity of a general stochastic hybrid system
+import SHSLib.FPK.PathwiseIto -- Eq. (3) of Bect (2010): the pathwise content of the generalized Itô formula
+import SHSLib.FPK.ProbabilityCurrent -- Section 4.2 and Appendix C of Bect (2010): the probability current
+import SHSLib.FPK.ProbabilityFlow -- Section 4.2 of Bect (2010): the "physical" interpretation of the jump term
+import SHSLib.FPK.SawtoothExample -- Section 3.2 of Bect (2010): where the initial law comes into play
+import SHSLib.FPK.SawtoothSolution -- The sawtooth process with uniform initial law solves the generalized FPK equation
+import SHSLib.FPK.SpontaneousJumps -- Section 6.1 of Bect (2010): models with spontaneous jumps only
+import SHSLib.FPK.SwitchingDiffusions -- Example 17 of Bect (2010): switching diffusions
+import SHSLib.FPK.TotalVariationBounds -- Appendix B of Bect (2010): the total-variation bounds (39) and (41)
+import SHSLib.FPK.TwoStateChain -- A concrete solution of the generalized FPK equation: the symmetric two-state chain
+import SHSLib.FPK -- Index + Bect equation/definition correspondence table
+
+-- Bujorianu & Lygeros (2006): general stochastic hybrid systems
+import SHSLib.Bujorianu2006.GSHSProperties -- Properties of GSHS: executions, sojourn times and the renewal kernel
+import SHSLib.Bujorianu2006.Generator -- The extended generator of a General Stochastic Hybrid System
+import SHSLib.Bujorianu2006.HybridSpace -- The hybrid state space of a General Stochastic Hybrid System
+import SHSLib.Bujorianu2006.JumpMeasure -- The jump counting measures `p`, `p*` of a Markov string
+import SHSLib.Bujorianu2006.MarkovString -- Markov strings: jump times, translations, càdlàg paths, Markov property
+import SHSLib.Bujorianu2006.Martingale -- The strong generator and Dynkin's formula
+import SHSLib.Bujorianu2006.Resolvent -- Semigroup, resolvent and `p`-excessive functions
+import SHSLib.Bujorianu2006.TerminalTimes -- Additive and multiplicative functionals, terminal times

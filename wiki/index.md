@@ -1,11 +1,12 @@
 # SHSLib Wiki — Index
 
-Documentation for the public **SHSLib** distribution: the foundational theory of Stochastic Hybrid Systems (SHS) formalized in Lean 4 / Mathlib. This public repository contains the core framework only; worked examples and applications live in a separate research library.
+Documentation for the public **SHSLib** distribution: the general theory of Stochastic Hybrid Systems (SHS) formalized in Lean 4 / Mathlib. This public repository contains the theory layers only — `Core/`, `Foundations/`, `FPK/`, `Gardiner/`, `Ullah/` and `Bujorianu2006/`; worked examples, agricultural applications and the tactic front-end live in a separate research library.
 
 **Status key:** ✅ Complete (0 sorries) · ⚠️ Has sorries
 
-As of 2026-08-07 the public library is **194 modules and entirely free of `sorry`**;
-every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`.
+As of 2026-08-12 the public library is **271 modules and entirely free of `sorry`**;
+every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`, and
+there are no `axiom` declarations.
 
 ## Core
 
@@ -20,6 +21,7 @@ every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`.
 | [Core.DavisResetCompensation](modules/Core.DavisResetCompensation.md) | ✅ | 55-module chain: reset compensator, conditional one-step laws, occupation centering |
 | [Core.DavisProcessExtensions](modules/Core.DavisProcessExtensions.md) | ✅ | 75-module group: elapsed-occupation martingales and filtrations, marked-jump processes, two-channel and clock models |
 | [Core.GronwallGrowthBound](modules/Core.GronwallGrowthBound.md) | ✅ | Grönwall with a time-varying rate; Hespanha Lemma 1 / Eq. (35) for flow segments and whole hybrid paths |
+| [Core.FlowExistence](modules/Core.FlowExistence.md) | ✅ | 13-module group: global existence and uniqueness of the flow (Lipschitz, and locally Lipschitz + linear growth), flow regularity, growth envelopes and their sharpness, the deterministic Dynkin identity, and Theorem 1 for transition-free and mode-blind systems |
 
 ## Foundations
 
@@ -32,10 +34,40 @@ every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`.
 | [Foundations.DavisCh2FiniteKernel](modules/Foundations.DavisCh2FiniteKernel.md) | ✅ | Finite-state Markov kernel from `pdpSemigroup`; α-excessive resolvent |
 | [Foundations.DavisCh2FiniteKernelSemigroup](modules/Foundations.DavisCh2FiniteKernelSemigroup.md) | ✅ | Finite-state kernel semigroup laws (identity + time-addition) |
 | [Foundations.DavisCh2FiniteProcess](modules/Foundations.DavisCh2FiniteProcess.md) | ✅ | Finite-state (strong) Markov property from the kernel |
+| [Foundations.DavisCh2ProcessLinks](modules/Foundations.DavisCh2ProcessLinks.md) | ✅ | Process-level links for Davis Ch. 2: simple/strong Markov under countable-range and right-continuous hypotheses, dyadic approximation, stopped compensators |
+| [Foundations.BetaOrderStatistics](modules/Foundations.BetaOrderStatistics.md) | ✅ | 6-module group: moments of order statistics of a Beta sample — fractional and integer moments, Chebyshev concentration, variance bounds from a Lipschitz parent quantile |
+
+## FPK — Bect (2010)
+
+| Module | Status | Summary |
+|--------|--------|---------|
+| [FPK](modules/FPK.md) | ✅ | 36-module group: the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems. Hybrid state space, Lévy systems, the generalized Dynkin formula (12)/(13), Definition 7 and adjoint uniqueness, probability current, boundary conditions, densities, total-variation bounds, Theorem 13, and worked solutions for the two-state chain (Example 16) and the sawtooth process |
+
+## Gardiner — the differential Chapman–Kolmogorov equation
+
+| Module | Status | Summary |
+|--------|--------|---------|
+| [Gardiner](modules/Gardiner.md) | ✅ | 8-module group: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE |
+
+## Ullah — dCKE via region splitting
+
+| Module | Status | Summary |
+|--------|--------|---------|
+| [Ullah](modules/Ullah.md) | ✅ | 5-module group: the same dCKE (8.13) derived from the density by near/far region splitting, without integration by parts |
+
+## Bujorianu2006 — general stochastic hybrid systems
+
+| Module | Status | Summary |
+|--------|--------|---------|
+| [Bujorianu2006](modules/Bujorianu2006.md) | ✅ | 8-module group: hybrid state space, Markov strings with jump times and translations, jump counting measures, semigroup/resolvent and $p$-excessive functions, additive and multiplicative functionals with terminal times, the strong generator and Dynkin's formula, and the extended generator |
 
 ## References
 
 - M. H. A. Davis, *Markov Models and Optimization*, Chapman & Hall, 1993.
 - J. P. Hespanha, "A model for stochastic hybrid systems with application to communication networks," *Nonlinear Analysis*, 2005.
+- J. Bect, "A unifying formulation of the Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems," *Nonlinear Analysis: Hybrid Systems* 4 (2010) 357–370.
+- C. W. Gardiner, *Handbook of Stochastic Methods for Physics, Chemistry and the Natural Sciences*, Springer.
+- M. Ullah and O. Wolkenhauer, *Stochastic Approaches for Systems Biology*, Springer, 2011.
+- M. L. Bujorianu and J. Lygeros, "Toward a general theory of stochastic hybrid systems," in *Stochastic Hybrid Systems*, LNCIS 337, Springer, 2006.
 
 Proofs in this library were developed with [Aristotle](https://aristotle.harmonic.fun) (Harmonic).
