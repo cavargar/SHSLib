@@ -30,6 +30,56 @@ $$
 
 These identities (`SHS.eq10_differential_generator_formula` and `SHS.theorem1_generator_formula` in `SHSLib/Core/Generator.lean`) are the basis for deriving moment ODEs and the Fokker–Planck equation for the state density.
 
+## Forward equations
+
+Three further layers formalize the *forward* (density- or measure-level) evolution. They are stated here exactly as they appear in Lean, with the declaration that proves each one.
+
+### The differential Chapman–Kolmogorov equation (Gardiner §3.4)
+
+For a Markov process on $\mathbb{R}^n$ with drift $A_i$, diffusion $B_{ij}$ and jump rate $W(z \mid x)$, the transition density $p(z,t \mid y,t')$ satisfies
+
+$$
+\frac{\partial p}{\partial t}(z)
+\;=\; -\sum_i \frac{\partial}{\partial z_i}\Big[A_i(z)\,p(z)\Big]
+\;+\; \frac{1}{2}\sum_{i,j} \frac{\partial^2}{\partial z_i \partial z_j}\Big[B_{ij}(z)\,p(z)\Big]
+\;+\; \int \Big( W(z \mid x)\,p(x) - W(x \mid z)\,p(z) \Big)\,dx .
+$$
+
+This is Gardiner (3.4.22), proved as `Gardiner.differentialCK` (right-hand side `Gardiner.ckRHS`) from the weak form (3.4.16) `Gardiner.differentialCK_weak` by integration by parts (3.4.19). Dropping the jump term gives the **Fokker–Planck** equation (3.5.6), dropping the second-order term gives the **Master** equation (3.5.2), and keeping only the drift gives **Liouville's** equation (3.5.13) — all three in `Gardiner.Special`. The third and all higher conditional moments are proved to vanish (`Gardiner.CondThird.eq_zero`, `Gardiner.CondHigher.eq_zero`), which is what makes the truncation legitimate rather than an approximation.
+
+### The same equation, derived without integration by parts (Ullah §8.2)
+
+`Ullah.differentialCK` reaches the identical right-hand side — `Ullah.fpTerm` for the drift/diffusion part and `Ullah.jumpTerm` $= \int (W(y \mid y')p(y') - W(y' \mid y)p(y))\,dy'$ for the jump part — by splitting the gain–loss flux into a near region $\lVert q \rVert < \varepsilon$ and a far region and taking the two limits (8.11), (8.12) separately.
+
+The two derivations are formally connected, not merely parallel: `Ullah.condDrift_iff_mom` and `Ullah.condDiffusion_iff_mom` prove that that text's conditions (8.8), (8.9) are Gardiner's conditions (ii), (iii).
+
+### The generalized FPK equation for hybrid systems (Bect 2010)
+
+On a hybrid state space the density may not exist, so the equation is stated for the **law $\mu_t$ as a measure**. Writing $\langle \mu, \varphi\rangle = \int \varphi \, d\mu$, a family $(\mu_t)$ is a solution when $t \mapsto \langle \mu_t, \varphi\rangle$ is differentiable with
+
+$$
+\frac{d}{dt}\,\langle \mu_t, \varphi \rangle
+\;=\; \underbrace{\langle \mu_t,\, L\varphi \rangle}_{\text{flow and diffusion}}
+\;+\; \underbrace{\big\langle r_t,\, (K - I)\varphi \big\rangle}_{\text{jumps}},
+\qquad
+\big\langle r_t, (K-I)\varphi \big\rangle = \int \Big( \int \varphi\,dK(x,\cdot) - \varphi(x) \Big) dr_t(x),
+$$
+
+where $L$ is the generator, $K$ the reset kernel and $r_t$ the mean jump intensity. This is Definition 7 / Eq. (14), `GSHS.FPKData.IsWeakFPKSolution`; its integrated form is the generalized Dynkin formula (13), `GSHS.FPKData.WeakDynkin`:
+
+$$
+\langle \mu_t, \varphi\rangle - \langle \mu_0, \varphi\rangle \;=\; \int_0^t \langle \mu_s, L\varphi\rangle\,ds \;+\; \int_0^t \big\langle r_s, (K-I)\varphi \big\rangle\,ds .
+$$
+
+For a diffusion in each mode with drift $f_0$ and noise fields $f_1,\dots,f_r$, the generator is Eq. (16), `GSHS.generatorL`:
+
+$$
+(L\varphi)(x) \;=\; \sum_i f_0^i(x)\,\partial_i \varphi(x) \;+\; \frac{1}{2}\sum_{i,j} a^{ij}(x)\,\partial^2_{ij}\varphi(x),
+\qquad a^{ij} = \sum_{l} f_l^i f_l^j .
+$$
+
+The point of the formulation is that a single equation covers diffusions, Markov chains, spontaneous jumps and **forced jumps at the boundary**, with the classical density-level equations recovered under extra regularity. Bect's Example 18 specializes it back to the Hespanha SHS above, recovering Eq. (33) (`SHSLib/FPK/HespanhaFPK.lean`).
+
 ## A note on faithfulness
 
 Formalizing a paper sometimes shows a stated result to be false as literally
