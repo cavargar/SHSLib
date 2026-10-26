@@ -48,6 +48,11 @@ there are no `axiom` declarations.
 | Module | Status | Summary |
 |--------|--------|---------|
 | [Gardiner](modules/Gardiner.md) | ✅ | 104-module group. Ch. 3: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE. v2.2.0: approximation methods (Ch. 6–7), adiabatic elimination, escape problems, SDE numerics (Ch. 10) and the Itô calculus (Ch. 4) |
+| [Gardiner.Approx](modules/Gardiner.Approx.md) | ✅ | Ch. 6–7: small-noise expansion, Kramers–Moyal, system-size expansion and linear noise approximation with explicit `O(Ω^{-1/2})` generator bounds, chemical Fokker–Planck equation, Lyapunov covariance |
+| [Gardiner.Adiabatic](modules/Gardiner.Adiabatic.md) | ✅ | §6.4–6.6: adiabatic elimination — Kramers → Smoluchowski, white-noise limit, chemical intermediates, Haken's model — with explicit error bounds |
+| [Gardiner.Escape](modules/Gardiner.Escape.md) | ✅ | §5.2.7–5.2.8, §7.4, Ch. 9: first-passage times, splitting probabilities, Kramers escape rate as a limit `|T/T_K − 1| ≤ C√D` |
+| [Gardiner.SDE](modules/Gardiner.SDE.md) | ✅ | §6.2, Ch. 10: pathwise small-noise expansion and Euler convergence for additive noise, numerical schemes with `O(τ)` weak error, stability, consistency |
+| [Gardiner.Ito](modules/Gardiner.Ito.md) | ✅ | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), quadratic variation, simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), Ornstein–Uhlenbeck and geometric Brownian motion |
 
 ## Ullah — dCKE via region splitting
 
