@@ -1,6 +1,6 @@
-# Module group: Gardiner — the differential Chapman–Kolmogorov equation
+# Module group: Gardiner — *Handbook of Stochastic Methods*
 
-**Files:** 7 modules under `SHSLib/Gardiner/` + the `SHSLib/Gardiner.lean` index
+**Files:** 7 Ch. 3 modules under `SHSLib/Gardiner/` + the `SHSLib/Gardiner.lean` index, and five further layers (96 modules, v2.2.0) listed below
 **Layer:** Gardiner
 **Status:** ✅ 0 sorries (all standard axioms)
 **Origin:** Aristotle project `9bb78578`
@@ -24,6 +24,20 @@ the surface terms of (3.4.19) are absent.
 
 `SHSLib/Gardiner.lean` carries the full (3.4.x)/(3.5.x) equation → Lean-name
 correspondence table in its docstring.
+
+## Further layers (v2.2.0)
+
+| Layer | Modules | Contents |
+|-------|--------:|----------|
+| `Gardiner.Approx` | 15 | Ch. 6–7: small-noise expansion, Kramers–Moyal, system-size expansion / linear noise approximation with explicit generator bounds, chemical Fokker–Planck equation |
+| `Gardiner.Adiabatic` | 12 | §6.4–6.6: adiabatic elimination with explicit error bounds |
+| `Gardiner.Escape` | 12 | §5.2.7–5.2.8, §7.4, Ch. 9: first-passage times, splitting probabilities, Kramers escape rate as a limit |
+| `Gardiner.SDE` | 13 | §6.2, Ch. 10: pathwise small-noise expansion, numerical schemes with weak-error bounds, stability, consistency |
+| `Gardiner.Ito` | 44 | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), Ornstein–Uhlenbeck and geometric Brownian motion; `Ito.Calculus` and `Ito.CalculusBridge` |
+
+Each layer's index module (`SHSLib/Gardiner/{Approx,Adiabatic,Escape,SDE,Ito}.lean`) carries its
+equation → Lean correspondence table and errata. The Itô layer depends on the pinned
+`brownian-motion` package; see the README.
 
 ## Related
 

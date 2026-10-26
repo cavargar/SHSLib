@@ -92,7 +92,7 @@ weakened.
 
 ## Structure
 
-271 modules, entirely free of `sorry` — every theorem depends only on
+367 modules, entirely free of `sorry` — every theorem depends only on
 `propext`, `Classical.choice` and `Quot.sound`. There are no `axiom`
 declarations anywhere in the library.
 
@@ -110,7 +110,12 @@ declarations anywhere in the library.
 | `SHSLib.Foundations.{Stirling,Beta,Digamma,Trigamma,Tetragamma,Polygamma,ClopperPearson,UniformOrderStatistic}*` | 51 | Special-functions groundwork: Stirling/Binet asymptotics, the Beta distribution and its quantiles, the polygamma family, exact binomial intervals, uniform order statistics |
 | `SHSLib.Foundations.BetaOrderStatistic*` | 6 | Moments of order statistics of a Beta sample: reflected and direct fractional moments, mean/variance of the $(j{+}1)$-st order statistic, Chebyshev concentration, the integer-exponent product form, and variance bounds from a Lipschitz parent quantile |
 | `SHSLib.FPK.*` | 36 | Bect (2010): the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems — hybrid state space, Lévy systems, the generalized Dynkin formula, probability current, boundary conditions, densities, and worked solutions (two-state chain, sawtooth) |
-| `SHSLib.Gardiner.*` | 8 | Gardiner, *Handbook of Stochastic Methods* §3.4–3.6: derivation of the differential Chapman–Kolmogorov equation in weak and strong form, and its Master / Fokker–Planck / Liouville special cases |
+| `SHSLib.Gardiner` (Ch. 3) | 8 | Gardiner, *Handbook of Stochastic Methods* §3.4–3.6: derivation of the differential Chapman–Kolmogorov equation in weak and strong form, and its Master / Fokker–Planck / Liouville special cases |
+| `SHSLib.Gardiner.Approx.*` | 15 | Gardiner Ch. 6–7: small-noise expansion, Kramers–Moyal expansion with truncation error, van Kampen's system-size expansion and the linear noise approximation with explicit `O(Ω^{-1/2})` generator bounds, the chemical Fokker–Planck equation and Lyapunov covariance |
+| `SHSLib.Gardiner.Adiabatic.*` | 12 | Gardiner §6.4–6.6: adiabatic elimination — Kramers → Smoluchowski, the white-noise limit of coloured noise, chemical intermediates, Haken's model, with explicit error bounds |
+| `SHSLib.Gardiner.Escape.*` | 12 | Gardiner §5.2.7–5.2.8, §7.4, Ch. 9: mean first-passage times, exit and splitting probabilities, a quantitative Laplace method, and the Kramers escape rate as a genuine limit `|T/T_K − 1| ≤ C√D` |
+| `SHSLib.Gardiner.SDE.*` | 13 | Gardiner §6.2 and Ch. 10 §10.1–10.5: pathwise small-noise expansion and Euler convergence for additive noise; Euler, Milstein and semi-implicit schemes with exact moments and `O(τ)` weak error on linear SDEs; stability and consistency |
+| `SHSLib.Gardiner.Ito.*` | 44 | Gardiner Ch. 4: a standard Wiener process (via the `brownian-motion` dependency) with its natural filtration; quadratic variation; the Itô integral for simple, deterministic (Wiener) and general L² nonanticipating integrands with isometry and martingale property; Itô's formula (4.3.14); the Ornstein–Uhlenbeck process and geometric Brownian motion; the law of the linearised process and the multiple integrals of Ch. 10 |
 | `SHSLib.Ullah.*` | 5 | Ullah & Wolkenhauer, *Stochastic Approaches for Systems Biology* §8.2: the same dCKE derived by near/far region splitting, without integration by parts |
 | `SHSLib.Bujorianu2006.*` | 8 | Bujorianu & Lygeros (2006): general stochastic hybrid systems — hybrid state space, Markov strings, jump measures, resolvent and $p$-excessive functions, terminal times, the strong generator and Dynkin's formula |
 
@@ -122,6 +127,8 @@ lake build
 
 Requires [Lean 4](https://leanprover.github.io/) and [Mathlib](https://github.com/leanprover-community/mathlib4) (pinned via `lakefile.toml`).
 
+The Itô layer also depends on [brownian-motion](https://github.com/RemyDegenne/brownian-motion) (Degenne, Ledvinka, Marion, Pfaffelhuber; Apache-2.0), pinned at commit `4fa8fc01`, the commit that uses the same Lean `v4.28.0` and Mathlib as this library. SHSLib imports only its module `BrownianMotion.Gaussian.BrownianMotion`, which is sorry-free; other modules of that package are not imported.
+
 ## Documentation
 
 Per-module notes are in [`wiki/index.md`](./wiki/index.md) — what each module proves, its key theorems and definitions, and remaining gaps.
@@ -132,6 +139,7 @@ Per-module notes are in [`wiki/index.md`](./wiki/index.md) — what each module 
 - J. P. Hespanha, "A model for stochastic hybrid systems with application to communication networks," *Nonlinear Analysis*, 2005.
 - J. Bect, "A unifying formulation of the Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems," *Nonlinear Analysis: Hybrid Systems* 4 (2010) 357–370.
 - C. W. Gardiner, *Handbook of Stochastic Methods for Physics, Chemistry and the Natural Sciences*, Springer.
+- R. Degenne, D. Ledvinka, E. Marion, P. Pfaffelhuber, *Formalization of Brownian motion in Lean*, arXiv:2511.20118 (2025); [brownian-motion](https://github.com/RemyDegenne/brownian-motion).
 - M. Ullah and O. Wolkenhauer, *Stochastic Approaches for Systems Biology*, Springer, 2011.
 - M. L. Bujorianu and J. Lygeros, "Toward a general theory of stochastic hybrid systems," in *Stochastic Hybrid Systems*, LNCIS 337, Springer, 2006.
 

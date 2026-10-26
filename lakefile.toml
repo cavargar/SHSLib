@@ -1,5 +1,5 @@
 name = "SHSLib"
-version = "2.1.0"
+version = "2.2.0"
 keywords = ["math", "stochastic-hybrid-systems", "formalization"]
 defaultTargets = ["SHSLib"]
 
@@ -11,3 +11,8 @@ rev = "v4.28.0"
 [[lean_lib]]
 name = "SHSLib"
 globs = ["SHSLib.+"]
+
+[[require]]
+name = "BrownianMotion"
+git = "https://github.com/RemyDegenne/brownian-motion"
+rev = "4fa8fc01e59d6ee3fb0cce4897b48005d7d00f18"

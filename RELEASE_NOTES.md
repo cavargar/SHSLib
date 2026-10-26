@@ -1,3 +1,51 @@
+# SHSLib v2.2.0 — Gardiner's approximation methods, SDE numerics and the Itô calculus
+
+The public library grows from **271 to 367 modules** and remains **entirely free of
+`sorry`**: every theorem depends only on `propext`, `Classical.choice` and
+`Quot.sound`, and there are no `axiom` declarations. This release is additive —
+nothing previously public was removed or changed.
+
+**New dependency.** The Itô layer uses
+[brownian-motion](https://github.com/RemyDegenne/brownian-motion) (Apache-2.0),
+pinned at commit `4fa8fc01` (same Lean `v4.28.0` and Mathlib as SHSLib). Only its
+sorry-free module `BrownianMotion.Gaussian.BrownianMotion` is imported.
+
+## Added (all under `SHSLib/Gardiner/`, 96 modules)
+
+- **Approximation methods, Ch. 6–7 (`Approx`, 15 modules).** The small-noise expansion as a
+  power-series hierarchy; the Kramers–Moyal expansion with its truncation error; van Kampen's
+  system-size expansion and the linear noise approximation, with explicit `O(Ω^{-1/2})` bounds
+  between the fluctuation generator and the LNA generator (one- and multi-dimensional); exact
+  linear-noise results for affine propensities; the chemical Fokker–Planck equation and the
+  Lyapunov equation for the stationary covariance.
+- **Adiabatic elimination, §6.4–6.6 (`Adiabatic`, 12 modules).** Kramers → Smoluchowski with
+  `O(γ⁻³)` generator bounds, the white-noise limit of coloured noise, chemical intermediates,
+  projector/Laplace-transform elimination with explicit bounds, Haken's model.
+- **Escape problems, §5.2.7–5.2.8, §7.4, Ch. 9 (`Escape`, 12 modules).** Exact mean
+  first-passage times, exit and splitting probabilities via backward equations; a quantitative
+  Laplace method; the Kramers/Arrhenius escape rate as a genuine limit,
+  `|T/T_K − 1| ≤ C√D`, with a quartic double-well instance.
+- **SDE expansions and numerics, §6.2 and Ch. 10 (`SDE`, 13 modules).** The pathwise
+  small-noise expansion for additive noise with explicit remainder; pathwise Euler convergence;
+  Euler, Milstein and semi-implicit schemes driven by Gaussian increments with exact moments and
+  `O(τ)` weak error on the Ornstein–Uhlenbeck and linear multiplicative-noise SDEs; stability
+  regions, mean-square stability and consistency; the vector formulae of §10.5.
+- **The Itô calculus, Ch. 4 (`Ito`, 44 modules).** `IsWiener`, a standard Wiener process on real
+  time with its natural filtration and martingale property, realised by `stdWiener` from the
+  brownian-motion dependency; independent Gaussian increments, quadratic variation and the Itô sum
+  (4.2.14)–(4.2.20) in mean square; Brownian scaling (6.2.40); the Itô integral of simple
+  integrands with the isometry (4.2.42) and martingale property; the Wiener integral of
+  deterministic functions; the law of the linearised process (6.2.14); the joint law of the
+  multiple integrals of (10.1.10)–(10.1.12); the Ornstein–Uhlenbeck process (4.4.22)–(4.4.31).
+  `Ito.Calculus` adds the general L² Itô integral for nonanticipating integrands (density of
+  simple integrands, isometry, martingale property, Riemann-sum limits), (4.2.37), Itô's formula
+  (4.3.14) along Itô processes, geometric Brownian motion (4.4.3)–(4.4.13), and the GBM/OU moment
+  equations derived from Itô's formula. `Ito.CalculusBridge` connects the two, so every result
+  applies to `stdWiener`.
+
+Every layer carries a Gardiner-equation ↔ Lean correspondence table in its index module and
+records the printed equations it found to be in error, with corrected statements.
+
 # SHSLib v2.1.0 — Bect's FPK equation, Bujorianu GSHS, Gardiner and Ullah
 
 The public library grows from **194 to 271 modules** and remains **entirely free of

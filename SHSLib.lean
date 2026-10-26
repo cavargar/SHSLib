@@ -287,3 +287,76 @@ import SHSLib.Bujorianu2006.MarkovString -- Markov strings: jump times, translat
 import SHSLib.Bujorianu2006.Martingale -- The strong generator and Dynkin's formula
 import SHSLib.Bujorianu2006.Resolvent -- Semigroup, resolvent and `p`-excessive functions
 import SHSLib.Bujorianu2006.TerminalTimes -- Additive and multiplicative functionals, terminal times
+
+-- Gardiner approximation methods (Ch. 5–7, 9), SDE and numerics (§6.2, Ch. 10), and the Itô layer
+-- (Ch. 4: Wiener process, simple/Wiener/L² Itô integrals, Itô's formula, OU and GBM). The Itô modules
+-- use the pinned brownian-motion dependency (only BrownianMotion.Gaussian.BrownianMotion is imported).
+import SHSLib.Gardiner.Approx.Calculus -- Taylor bounds for derivative towers; integration by parts against powers
+import SHSLib.Gardiner.Approx.SmallNoise -- §6.1, (6.3.1)-(6.3.14): scaled FPE, perturbation hierarchy, O(ε) generator bound
+import SHSLib.Gardiner.Approx.SmallNoiseMoments -- (6.3.16)-(6.3.35): moment and autocorrelation hierarchies
+import SHSLib.Gardiner.Approx.SmallNoiseExample -- §6.3.2, (6.3.36)-(6.3.51): worked example with explicit error
+import SHSLib.Gardiner.Approx.SmallNoiseStationary -- §6.3.3, (6.3.52)-(6.3.56): asymptotic stationary distribution
+import SHSLib.Gardiner.Approx.ReactionXA -- §7.1.2: exact solution of X ⇌ A
+import SHSLib.Gardiner.Approx.KramersMoyal -- §7.2.1-7.2.2: jump approximation of a diffusion, KM truncation error
+import SHSLib.Gardiner.Approx.JumpStationary -- (7.2.19)-(7.2.21): stationary limit with O(δ) rate
+import SHSLib.Gardiner.Approx.SystemSize -- §7.2.3: van Kampen expansion, O(Ω^{-1/2}) LNA generator bound
+import SHSLib.Gardiner.Approx.ReactionXAvk -- (7.2.41)-(7.2.58): system size expansion of X ⇌ A
+import SHSLib.Gardiner.Approx.Critical -- §7.2.4-7.2.5: Kurtz deduction, critical fluctuations
+import SHSLib.Gardiner.Approx.Chemical -- §7.5: combinatorial kinetics, CME, chemical FPE
+import SHSLib.Gardiner.Approx.ChemicalKM -- (7.5.30)-(7.5.31): multivariate KM truncation error
+import SHSLib.Gardiner.Approx.ChemicalLNA -- multivariate LNA, Lyapunov equation, exactness for linear propensities
+import SHSLib.Gardiner.Approx -- Index + Ch. 6/7 correspondence table
+import SHSLib.Gardiner.Adiabatic.Projector -- Projection-operator algebra (6.4.19)-(6.4.101), (6.5.67)-(6.5.70), (6.6.88)-(6.6.105)
+import SHSLib.Gardiner.Adiabatic.ProjectorBound -- Laplace-domain elimination with explicit O(1/γ) / O(1/γ²) errors
+import SHSLib.Gardiner.Adiabatic.Telegraph -- Telegraph-noise / persistent-random-walk instances of the projector method
+import SHSLib.Gardiner.Adiabatic.Brownian -- (6.4.1)-(6.4.18): Kramers vs Smoluchowski moments with uniform-in-time rates
+import SHSLib.Gardiner.Adiabatic.KramersGenerator -- (6.4.54)-(6.4.66), (6.4.100)-(6.4.108): O(γ⁻³)/O(γ⁻⁴) generator bounds
+import SHSLib.Gardiner.Adiabatic.WhiteNoise -- §6.5: white noise as a limit of non-white noise, generator bound
+import SHSLib.Gardiner.Adiabatic.Chemical -- §6.6.1: short-lived chemical intermediate, O(1/γ) mean rate
+import SHSLib.Gardiner.Adiabatic.Nonlinear -- §6.6.2-6.6.4: Haken's model, nonlinear case, arbitrary coupling
+import SHSLib.Gardiner.Adiabatic.ShortTime -- §6.4.3: memory equation and corrected (6.4.80)
+import SHSLib.Gardiner.Adiabatic.Boundary -- §6.4.4, (6.4.109)-(6.4.113): boundary conditions and initial layer
+import SHSLib.Gardiner.Adiabatic.Examples -- Concrete instances of the main theorems
+import SHSLib.Gardiner.Adiabatic -- Index + §6.4-6.6 correspondence table
+import SHSLib.Gardiner.Escape.Laplace -- Quantitative Laplace method with explicit O(√D) / O(D) errors
+import SHSLib.Gardiner.Escape.FirstPassage -- §5.2.7-5.2.8, (5.2.139)-(5.2.190): exact MFPTs and exit probabilities
+import SHSLib.Gardiner.Escape.Kramers -- (5.2.162)-(5.2.176), (9.1.9): exact MFPT vs Kramers/Arrhenius, |T/T_K - 1| ≤ C√D
+import SHSLib.Gardiner.Escape.DoubleWell -- §9.1.2-9.1.4: normalisation (9.1.6), populations, barrier integral (9.1.13)
+import SHSLib.Gardiner.Escape.Splitting -- (9.1.10)-(9.1.21): splitting probabilities with error terms
+import SHSLib.Gardiner.Escape.AsymWell -- Concrete asymmetric quartic double well U = x⁴/4 - x³/3 - x²
+import SHSLib.Gardiner.Escape.Decay -- §9.1.5, (9.1.22)-(9.1.32): decay from an unstable state
+import SHSLib.Gardiner.Escape.BirthDeath -- §7.4, §9.2.3: birth-death MFPTs, §7.4.2 Fokker-Planck comparison
+import SHSLib.Gardiner.Escape.Populations -- §9.2: equilibration of populations, three-state model, chymotrypsinogen
+import SHSLib.Gardiner.Escape.ExitPoints -- §9.3.1-9.3.3: exit points, mean exit time, multidimensional Kramers
+import SHSLib.Gardiner.Escape.BrownianSaddle -- §9.3.4: Brownian motion in a double potential and its comparisons
+import SHSLib.Gardiner.Escape -- Index + §5.2.7-5.2.8 / §7.4 / Ch. 9 correspondence table
+import SHSLib.Gardiner.SDE.GaussianMoments -- Gaussian moments, (10.1.21) i)-iii)
+import SHSLib.Gardiner.SDE.Expansion -- (6.2.3)-(6.2.7): expansion algebra with explicit remainder
+import SHSLib.Gardiner.SDE.Pathwise -- (6.2.1)-(6.2.25), additive noise: pathwise expansion, uniform O(ε^{N+1})
+import SHSLib.Gardiner.SDE.EulerPathwise -- Pathwise Euler convergence vs the path's modulus of continuity
+import SHSLib.Gardiner.SDE.Cubic -- (6.2.33)-(6.2.47): cubic process, finite-time validity, stationary failure
+import SHSLib.Gardiner.SDE.Statistics -- (6.2.14), (6.2.26)-(6.2.32): variance/correlation ODEs, stationarity
+import SHSLib.Gardiner.SDE.SchemeMoments -- Linear schemes driven by iid N(0,τ) increments: exact moments
+import SHSLib.Gardiner.SDE.WeakError -- Weak error O(τ): Euler/Milstein/semi-implicit on OU and linear noise
+import SHSLib.Gardiner.SDE.Stability -- §10.3: stability regions, A-stability, mean-square stability
+import SHSLib.Gardiner.SDE.Schemes -- §10.1, §10.3.1, §10.4: Milstein, error recursions, implicit schemes, consistency
+import SHSLib.Gardiner.SDE.Vector -- §10.5: vector notation, double integrals, vector Milstein, semi-implicit
+import SHSLib.Gardiner.SDE.Examples -- Concrete instances of the main theorems
+import SHSLib.Gardiner.SDE -- Index + §6.2 / Ch. 10 correspondence table
+import SHSLib.Gardiner.Ito.Wiener -- Interface: IsWiener on real time t ≥ 0, natural filtration, martingale property
+import SHSLib.Gardiner.Ito.Brownian -- Adapter: standard Wiener process from BrownianMotion.Gaussian.BrownianMotion
+import SHSLib.Gardiner.Ito.Increments -- (4.2.12)-(4.2.20): independent N(0,Δt) increments, QV and ∫W dW in mean square
+import SHSLib.Gardiner.Ito.Scaling -- (6.2.39)-(6.2.44): Brownian scaling as a law-level statement
+import SHSLib.Gardiner.Ito.Pathwise -- Pathwise SDE results (existence, Euler, expansion) a.s. for Brownian paths
+import SHSLib.Gardiner.Ito.Schemes -- Ch. 10 schemes driven by Brownian grid increments
+import SHSLib.Gardiner.Ito.Simple -- (4.2.40)-(4.2.44): Itô integral of simple nonanticipating integrands, isometry, martingale
+import SHSLib.Gardiner.Ito.MSLimit -- Mean-square limits in L², uniqueness, Gaussian limits
+import SHSLib.Gardiner.Ito.WienerIntegral -- Wiener integral ∫ f dW of deterministic f: Gaussian, covariance, integration by parts
+import SHSLib.Gardiner.Ito.WienerStep -- Wiener integral of step functions = simple integral
+import SHSLib.Gardiner.Ito.WienerInstances -- stdWiener instances of the simple and Wiener integrals
+import SHSLib.Gardiner.Ito.Linearised -- (6.2.14), (6.2.31)-(6.2.32): law of the linearised process, IsLinearisedLaw discharged
+import SHSLib.Gardiner.Ito.OU -- §4.4.4 (4.4.22)-(4.4.31): Ornstein-Uhlenbeck process, moments, Gaussian law, stationary limit
+import SHSLib.Gardiner.Ito.Multiple -- (10.1.9)-(10.1.12): (ΔW, ΔZ) jointly Gaussian, ξ/η representation
+import SHSLib.Gardiner.Ito.Calculus -- Index of SHSLib.Gardiner.Ito.Calculus.* (IsFWiener, itoInt, Itô formula, GBM, moments)
+import SHSLib.Gardiner.Ito.CalculusBridge -- IsWiener → IsFWiener bridge; stdWiener instances; itoInt = wienerInt; GBM = gbmMean/gbmSecond
+import SHSLib.Gardiner.Ito -- Index + Gardiner ↔ Lean correspondence table

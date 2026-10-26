@@ -43,11 +43,11 @@ there are no `axiom` declarations.
 |--------|--------|---------|
 | [FPK](modules/FPK.md) | ✅ | 36-module group: the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems. Hybrid state space, Lévy systems, the generalized Dynkin formula (12)/(13), Definition 7 and adjoint uniqueness, probability current, boundary conditions, densities, total-variation bounds, Theorem 13, and worked solutions for the two-state chain (Example 16) and the sawtooth process |
 
-## Gardiner — the differential Chapman–Kolmogorov equation
+## Gardiner — *Handbook of Stochastic Methods*
 
 | Module | Status | Summary |
 |--------|--------|---------|
-| [Gardiner](modules/Gardiner.md) | ✅ | 8-module group: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE |
+| [Gardiner](modules/Gardiner.md) | ✅ | 104-module group. Ch. 3: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE. v2.2.0: approximation methods (Ch. 6–7), adiabatic elimination, escape problems, SDE numerics (Ch. 10) and the Itô calculus (Ch. 4) |
 
 ## Ullah — dCKE via region splitting
 
