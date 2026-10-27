@@ -92,7 +92,7 @@ weakened.
 
 ## Structure
 
-367 modules, entirely free of `sorry` — every theorem depends only on
+393 modules, entirely free of `sorry` — every theorem depends only on
 `propext`, `Classical.choice` and `Quot.sound`. There are no `axiom`
 declarations anywhere in the library.
 
@@ -109,13 +109,13 @@ declarations anywhere in the library.
 | `SHSLib.Foundations.DavisCh2Finite*` | 3 | Finite-state renewal kernel, semigroup laws, strong Markov property |
 | `SHSLib.Foundations.{Stirling,Beta,Digamma,Trigamma,Tetragamma,Polygamma,ClopperPearson,UniformOrderStatistic}*` | 51 | Special-functions groundwork: Stirling/Binet asymptotics, the Beta distribution and its quantiles, the polygamma family, exact binomial intervals, uniform order statistics |
 | `SHSLib.Foundations.BetaOrderStatistic*` | 6 | Moments of order statistics of a Beta sample: reflected and direct fractional moments, mean/variance of the $(j{+}1)$-st order statistic, Chebyshev concentration, the integer-exponent product form, and variance bounds from a Lipschitz parent quantile |
-| `SHSLib.FPK.*` | 36 | Bect (2010): the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems — hybrid state space, Lévy systems, the generalized Dynkin formula, probability current, boundary conditions, densities, and worked solutions (two-state chain, sawtooth) |
+| `SHSLib.FPK.*` | 37 | Bect (2010): the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems — hybrid state space, Lévy systems, the generalized Dynkin formula, probability current, boundary conditions, densities, and worked solutions (two-state chain, sawtooth); one-dimensional Itô diffusions as jump-free FPK data, satisfying the generalized Dynkin formula (13) |
 | `SHSLib.Gardiner` (Ch. 3) | 8 | Gardiner, *Handbook of Stochastic Methods* §3.4–3.6: derivation of the differential Chapman–Kolmogorov equation in weak and strong form, and its Master / Fokker–Planck / Liouville special cases |
 | `SHSLib.Gardiner.Approx.*` | 15 | Gardiner Ch. 6–7: small-noise expansion, Kramers–Moyal expansion with truncation error, van Kampen's system-size expansion and the linear noise approximation with explicit `O(Ω^{-1/2})` generator bounds, the chemical Fokker–Planck equation and Lyapunov covariance |
 | `SHSLib.Gardiner.Adiabatic.*` | 12 | Gardiner §6.4–6.6: adiabatic elimination — Kramers → Smoluchowski, the white-noise limit of coloured noise, chemical intermediates, Haken's model, with explicit error bounds |
 | `SHSLib.Gardiner.Escape.*` | 12 | Gardiner §5.2.7–5.2.8, §7.4, Ch. 9: mean first-passage times, exit and splitting probabilities, a quantitative Laplace method, and the Kramers escape rate as a genuine limit `|T/T_K − 1| ≤ C√D` |
 | `SHSLib.Gardiner.SDE.*` | 13 | Gardiner §6.2 and Ch. 10 §10.1–10.5: pathwise small-noise expansion and Euler convergence for additive noise; Euler, Milstein and semi-implicit schemes with exact moments and `O(τ)` weak error on linear SDEs; stability and consistency |
-| `SHSLib.Gardiner.Ito.*` | 44 | Gardiner Ch. 4: a standard Wiener process (via the `brownian-motion` dependency) with its natural filtration; quadratic variation; the Itô integral for simple, deterministic (Wiener) and general L² nonanticipating integrands with isometry and martingale property; Itô's formula (4.3.14); the Ornstein–Uhlenbeck process and geometric Brownian motion; the law of the linearised process and the multiple integrals of Ch. 10 |
+| `SHSLib.Gardiner.Ito.*` | 69 | Gardiner Ch. 4: a standard Wiener process (via the `brownian-motion` dependency) with its natural filtration; quadratic variation; the Itô integral for simple, deterministic (Wiener) and general L² nonanticipating integrands with isometry and martingale property; Itô's formula (4.3.14); the Ornstein–Uhlenbeck process and geometric Brownian motion; **stochastic differential equations** under Gardiner's Lipschitz and growth conditions (4.3.10)–(4.3.11) — existence and uniqueness on every horizon, moment bounds, Doob's L² inequality, Euler–Maruyama strong order ½ (10.1.26); the **generator**, Dynkin's formula, the martingale problem and the **Fokker–Planck equation** (4.3.18)–(4.3.20) for SDE solutions; the law of the linearised process and the multiple integrals of Ch. 10 |
 | `SHSLib.Ullah.*` | 5 | Ullah & Wolkenhauer, *Stochastic Approaches for Systems Biology* §8.2: the same dCKE derived by near/far region splitting, without integration by parts |
 | `SHSLib.Bujorianu2006.*` | 8 | Bujorianu & Lygeros (2006): general stochastic hybrid systems — hybrid state space, Markov strings, jump measures, resolvent and $p$-excessive functions, terminal times, the strong generator and Dynkin's formula |
 

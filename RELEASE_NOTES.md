@@ -1,3 +1,37 @@
+# SHSLib v2.3.0 — stochastic differential equations and their Fokker–Planck equation
+
+The public library grows from **367 to 393 modules** and remains **entirely free of
+`sorry`**: every theorem depends only on `propext`, `Classical.choice` and
+`Quot.sound`, and there are no `axiom` declarations. This release is additive —
+nothing previously public was removed or changed, and there are no new dependencies.
+
+## Added (26 modules)
+
+- **Stochastic differential equations, Gardiner §4.3.1–4.3.2 and §10.1 (`Gardiner.Ito.StochDE`,
+  14 modules).** Under the Lipschitz and growth conditions (4.3.10)–(4.3.11), the Itô SDE
+  (4.3.4) has a continuous adapted solution on every horizon `[t₀, T]`, unique up to
+  indistinguishability (`existsUnique_sdeSol`, Picard iteration), with the moment bound
+  `E sup|x|² ≤ C(1 + E|x₀|²)` and mean-square continuous dependence on the initial value. Doob's
+  L² maximal inequality in discrete and continuous time and for the Itô integral. The
+  Euler–Maruyama scheme converges with **strong order ½** (10.1.26) and an explicit constant
+  (`euler_strong_order_half`), so Gardiner's Cauchy–Euler construction converges to the solution.
+  Geometric Brownian motion and the Ornstein–Uhlenbeck process are the unique solutions of their
+  SDEs; `dx = −sin x dt + σ dW` is a nonlinear instance.
+- **Generator, Dynkin's formula, martingale problem and Fokker–Planck equation, Gardiner §4.3.4
+  (`Gardiner.Ito.Generator`, 10 modules).** The generator `a f′ + ½ b² f″`; Dynkin's formula and
+  the martingale problem for Itô diffusions and SDE solutions; the weak Fokker–Planck equation
+  (4.3.18)–(4.3.19) for the law of the solution, and the strong form (4.3.20) under explicit
+  regularity hypotheses on the density, fully discharged for the heat kernel. The Ornstein–Uhlenbeck
+  Gaussian and stationary densities solve the Fokker–Planck equation; Dynkin's formula and the weak
+  equation for OU, geometric Brownian motion and the `sin` SDE; the Markov property for the Wiener
+  process and geometric Brownian motion.
+- **Bridges (`Gardiner.Ito.SDEBridge`, `FPK.ItoDiffusion`).** The SDE results instantiated with the
+  standard Wiener process; the Euler–Maruyama step is the one-step map of the numerics layer
+  (`Gardiner.SDE.eulerStep`) driven by Brownian grid increments; the Fokker–Planck right-hand side
+  equals Gardiner's `fpRHS` (3.5.6) in dimension one; a one-dimensional diffusion as jump-free
+  `GSHS.FPKData` satisfying Bect's generalized Dynkin formula (13), with the Wiener process
+  (weak heat equation) as instance.
+
 # SHSLib v2.2.0 — Gardiner's approximation methods, SDE numerics and the Itô calculus
 
 The public library grows from **271 to 367 modules** and remains **entirely free of

@@ -1,6 +1,6 @@
 # Module group: Gardiner — *Handbook of Stochastic Methods*
 
-**Files:** 7 Ch. 3 modules under `SHSLib/Gardiner/` + the `SHSLib/Gardiner.lean` index, and five further layers (96 modules, v2.2.0) listed below
+**Files:** 7 Ch. 3 modules under `SHSLib/Gardiner/` + the `SHSLib/Gardiner.lean` index, and five further layers (96 modules in v2.2.0, 122 in v2.3.0) listed below
 **Layer:** Gardiner
 **Status:** ✅ 0 sorries (all standard axioms)
 **Origin:** Aristotle project `9bb78578`
@@ -33,7 +33,7 @@ correspondence table in its docstring.
 | [[Gardiner.Adiabatic]] | 12 | §6.4–6.6: adiabatic elimination with explicit error bounds |
 | [[Gardiner.Escape]] | 12 | §5.2.7–5.2.8, §7.4, Ch. 9: first-passage times, splitting probabilities, Kramers escape rate as a limit |
 | [[Gardiner.SDE]] | 13 | §6.2, Ch. 10: pathwise small-noise expansion, numerical schemes with weak-error bounds, stability, consistency |
-| [[Gardiner.Ito]] | 44 | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), Ornstein–Uhlenbeck and geometric Brownian motion; `Ito.Calculus` and `Ito.CalculusBridge` |
+| [[Gardiner.Ito]] | 69 | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), Ornstein–Uhlenbeck and geometric Brownian motion; Lipschitz SDEs and Euler–Maruyama (`Ito.StochDE`); generator, Dynkin, martingale problem and Fokker–Planck equation (`Ito.Generator`); bridges `Ito.CalculusBridge`, `Ito.SDEBridge` |
 
 Each layer's index module (`SHSLib/Gardiner/{Approx,Adiabatic,Escape,SDE,Ito}.lean`) carries its
 equation → Lean correspondence table and errata. The Itô layer depends on the pinned

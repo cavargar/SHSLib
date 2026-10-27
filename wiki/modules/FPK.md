@@ -53,3 +53,7 @@ total jump rate.
 ## Related
 
 `Core.Generator` · `Core.DavisBridge` · `Bujorianu2006` · `Gardiner`
+
+## Itô diffusions (v2.3.0)
+
+`SHSLib/FPK/ItoDiffusion.lean` builds `GSHS.ItoDiffusion.fpkData a b P x`, the jump-free `FPKData ℝ C2cTest` of a one-dimensional diffusion `dx = a(x) dt + b(x) dW` (laws `P ∘ x(t)⁻¹`, generator `a φ′ + ½ b² φ″`, mean jump intensity `r = 0`), and proves Bect's generalized Dynkin formula (13), `WeakDynkin`, for SDE solutions that exist on every horizon (`weakDynkin_of_isSDESol`). Instance: the standard Wiener process (`weakDynkin_stdWiener`), whose weak Dynkin formula is the weak heat equation. See [[Gardiner.Ito]].

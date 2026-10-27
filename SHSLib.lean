@@ -360,3 +360,10 @@ import SHSLib.Gardiner.Ito.Multiple -- (10.1.9)-(10.1.12): (ΔW, ΔZ) jointly Ga
 import SHSLib.Gardiner.Ito.Calculus -- Index of SHSLib.Gardiner.Ito.Calculus.* (IsFWiener, itoInt, Itô formula, GBM, moments)
 import SHSLib.Gardiner.Ito.CalculusBridge -- IsWiener → IsFWiener bridge; stdWiener instances; itoInt = wienerInt; GBM = gbmMean/gbmSecond
 import SHSLib.Gardiner.Ito -- Index + Gardiner ↔ Lean correspondence table
+
+-- v2.3.0: stochastic differential equations (Gardiner §4.3, §10.1) and their generator / Fokker–Planck
+-- equation (§4.3.4), with bridges to the rest of the library.
+import SHSLib.Gardiner.Ito.StochDE -- Index: existence/uniqueness, moment bounds, Doob L², Euler strong order ½, GBM/OU/sin examples
+import SHSLib.Gardiner.Ito.Generator -- Index: itoGen, Dynkin, martingale problem, weak/strong FPE, OU/GBM/sin examples, Markov (Wiener, GBM)
+import SHSLib.Gardiner.Ito.SDEBridge -- stdWiener instances, job-D eulerStep/gridInc, itoFPRHS = Gardiner.fpRHS (n = 1)
+import SHSLib.FPK.ItoDiffusion -- 1-D Itô diffusion as Bect FPKData; WeakDynkin (13) for global SDE solutions

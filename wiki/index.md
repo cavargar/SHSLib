@@ -41,18 +41,18 @@ there are no `axiom` declarations.
 
 | Module | Status | Summary |
 |--------|--------|---------|
-| [FPK](modules/FPK.md) | ✅ | 36-module group: the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems. Hybrid state space, Lévy systems, the generalized Dynkin formula (12)/(13), Definition 7 and adjoint uniqueness, probability current, boundary conditions, densities, total-variation bounds, Theorem 13, and worked solutions for the two-state chain (Example 16) and the sawtooth process |
+| [FPK](modules/FPK.md) | ✅ | 37-module group (v2.3.0 adds one-dimensional Itô diffusions as jump-free FPK data): the generalized Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems. Hybrid state space, Lévy systems, the generalized Dynkin formula (12)/(13), Definition 7 and adjoint uniqueness, probability current, boundary conditions, densities, total-variation bounds, Theorem 13, and worked solutions for the two-state chain (Example 16) and the sawtooth process |
 
 ## Gardiner — *Handbook of Stochastic Methods*
 
 | Module | Status | Summary |
 |--------|--------|---------|
-| [Gardiner](modules/Gardiner.md) | ✅ | 104-module group. Ch. 3: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE. v2.2.0: approximation methods (Ch. 6–7), adiabatic elimination, escape problems, SDE numerics (Ch. 10) and the Itô calculus (Ch. 4) |
+| [Gardiner](modules/Gardiner.md) | ✅ | 130-module group. Ch. 3: derivation of the dCKE (3.4.16) in weak form and (3.4.22) in strong form, vanishing higher conditional moments, the Master / Fokker–Planck / Liouville special cases, and the backward dCKE. v2.2.0: approximation methods (Ch. 6–7), adiabatic elimination, escape problems, SDE numerics (Ch. 10) and the Itô calculus (Ch. 4) |
 | [Gardiner.Approx](modules/Gardiner.Approx.md) | ✅ | Ch. 6–7: small-noise expansion, Kramers–Moyal, system-size expansion and linear noise approximation with explicit `O(Ω^{-1/2})` generator bounds, chemical Fokker–Planck equation, Lyapunov covariance |
 | [Gardiner.Adiabatic](modules/Gardiner.Adiabatic.md) | ✅ | §6.4–6.6: adiabatic elimination — Kramers → Smoluchowski, white-noise limit, chemical intermediates, Haken's model — with explicit error bounds |
 | [Gardiner.Escape](modules/Gardiner.Escape.md) | ✅ | §5.2.7–5.2.8, §7.4, Ch. 9: first-passage times, splitting probabilities, Kramers escape rate as a limit `|T/T_K − 1| ≤ C√D` |
 | [Gardiner.SDE](modules/Gardiner.SDE.md) | ✅ | §6.2, Ch. 10: pathwise small-noise expansion and Euler convergence for additive noise, numerical schemes with `O(τ)` weak error, stability, consistency |
-| [Gardiner.Ito](modules/Gardiner.Ito.md) | ✅ | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), quadratic variation, simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), Ornstein–Uhlenbeck and geometric Brownian motion |
+| [Gardiner.Ito](modules/Gardiner.Ito.md) | ✅ | Ch. 4: Wiener process (`IsWiener`, `stdWiener`), quadratic variation, simple / Wiener / L² Itô integrals, Itô's formula (4.3.14), OU and geometric Brownian motion; Lipschitz SDEs (existence, uniqueness, moment bounds) and Euler–Maruyama strong order ½; generator, Dynkin's formula, martingale problem and Fokker–Planck equation (4.3.18)–(4.3.20) |
 
 ## Ullah — dCKE via region splitting
 
