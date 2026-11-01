@@ -4,6 +4,8 @@ A Lean 4 / Mathlib formalization of **Stochastic Hybrid Systems (SHS)** — disc
 
 Alongside the Hespanha/Davis core, the library formalizes three further treatments of the same circle of ideas: Bect's (2010) unifying Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems, Bujorianu & Lygeros's (2006) general theory of stochastic hybrid systems, and the textbook derivations of the differential Chapman–Kolmogorov equation from Gardiner and from Ullah & Wolkenhauer.
 
+A further layer, `SHSLib.Category`, relates these frameworks through one category of *generator presentations*. Each framework enters as objects and morphisms, and Dynkin's formula, the forward equation and the martingale problem transfer along every morphism. Composing morphisms gives cross-framework results, for example Bect's generalized Dynkin formula for a Bujorianu–Lygeros system that satisfies Dynkin's formula.
+
 ## The extended generator
 
 An SHS evolves in mode $q \in Q$ and continuous state $x \in \mathbb{R}^n$, flowing according to $\dot{x} = f(q, x, t)$ between jumps, and jumping to mode $\varphi_q^\ell(q,x,t)$ / state $\varphi_x^\ell(q,x,t)$ with intensity $\lambda_\ell(q,x,t)$, for $\ell = 1, \dots, m$.
@@ -92,7 +94,7 @@ weakened.
 
 ## Structure
 
-393 modules, entirely free of `sorry` — every theorem depends only on
+404 modules, entirely free of `sorry` — every theorem depends only on
 `propext`, `Classical.choice` and `Quot.sound`. There are no `axiom`
 declarations anywhere in the library.
 
@@ -118,6 +120,7 @@ declarations anywhere in the library.
 | `SHSLib.Gardiner.Ito.*` | 69 | Gardiner Ch. 4: a standard Wiener process (via the `brownian-motion` dependency) with its natural filtration; quadratic variation; the Itô integral for simple, deterministic (Wiener) and general L² nonanticipating integrands with isometry and martingale property; Itô's formula (4.3.14); the Ornstein–Uhlenbeck process and geometric Brownian motion; **stochastic differential equations** under Gardiner's Lipschitz and growth conditions (4.3.10)–(4.3.11) — existence and uniqueness on every horizon, moment bounds, Doob's L² inequality, Euler–Maruyama strong order ½ (10.1.26); the **generator**, Dynkin's formula, the martingale problem and the **Fokker–Planck equation** (4.3.18)–(4.3.20) for SDE solutions; the law of the linearised process and the multiple integrals of Ch. 10 |
 | `SHSLib.Ullah.*` | 5 | Ullah & Wolkenhauer, *Stochastic Approaches for Systems Biology* §8.2: the same dCKE derived by near/far region splitting, without integration by parts |
 | `SHSLib.Bujorianu2006.*` | 8 | Bujorianu & Lygeros (2006): general stochastic hybrid systems — hybrid state space, Markov strings, jump measures, resolvent and $p$-excessive functions, terminal times, the strong generator and Dynkin's formula |
+| `SHSLib.Category.*` | 11 | Cross-framework organization: the category `SHSCat.GenPres` of generator presentations (state space, test functions, evaluation, generator) and intertwiners. Dynkin's formula, the forward equation and the martingale problem transfer along every morphism and are invariant under isomorphism. Transition semigroups and Davis PDPs map in through functors; Hespanha's SHS and the Bujorianu–Lygeros GSHS are each isomorphic to Bect's Lévy-system form; a compatible Davis PDP maps to its SHS; Gardiner/Ullah kernel semigroups map to the dCKE presentation. Composite arrows turn Dynkin's formula for a GSHS or a compatible Davis PDP into Bect's generalized Dynkin formula (13). One-dimensional Itô diffusions, with the martingale problem and Dynkin's formula up to a horizon $T$ |
 
 ## Building
 

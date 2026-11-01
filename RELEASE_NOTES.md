@@ -1,3 +1,53 @@
+# SHSLib v2.4.0 — one category for the frameworks of the library
+
+The public library grows from **393 to 404 modules** and remains **entirely free of
+`sorry`**: every theorem depends only on `propext`, `Classical.choice` and
+`Quot.sound`, and there are no `axiom` declarations. This release is additive —
+nothing previously public was removed or changed, and there are no new dependencies.
+
+**Scope.** The public distribution now also carries `Category/`, the layer that relates
+its frameworks to one another. Its imports stay within the public layers.
+
+## Added (11 modules, `SHSLib.Category`)
+
+- **The hub category (`Category.GenPres`).** The objects of `SHSCat.GenPres` are *generator
+  presentations* — a state type, a type of test functions, an evaluation map and a generator.
+  Its morphisms are *intertwiners*: a state map with a pull-back of test functions that commutes
+  with both (a Chu-space morphism over `ℝ × ℝ`). Dynkin's formula in expectation
+  (`SatisfiesDynkin`), the forward equation in right-derivative form (`SatisfiesForward`) and the
+  martingale problem (`SolvesMartingaleProblem`) transfer along every morphism
+  (`SatisfiesDynkin.map` and its companions) and are invariant under isomorphism
+  (`satisfiesDynkin_iso_iff` and its companions).
+- **The frameworks as objects and arrows.** Transition semigroups (Bujorianu §3.2) map in through
+  the strong-generator functor (`Category.Semigroup`), and Davis PDPs through a functor on PDP
+  conjugacies, with a finite Davis PDP as a semigroup object (`Category.Davis`). Hespanha's SHS
+  and the Bujorianu–Lygeros GSHS are each isomorphic to Bect's Lévy-system form (`SHS.levyIso`,
+  Bect Example 18; `Bujorianu2006.GSHS.levyIso`), and a compatible Davis PDP maps to its SHS
+  (`SHS.DavisCompatible.hom`). The strong generator of a kernel semigroup meeting Gardiner's
+  conditions is the dCKE operator, and Ullah's conditions give the same bridge
+  (`Gardiner.GardinerKernel.hom`, `Gardiner.GardinerKernel.ofUllah`). Classical C¹ test functions
+  lie in the SHS generator domain, given right-continuity of the drift (`Category.HespanhaRegular`).
+- **Cross-framework results.** Dynkin's formula for a Lévy-form presentation gives Bect's
+  generalized Dynkin formula (13), the hypothesis of his Theorem 8
+  (`SHSCat.LevyData.weakDynkin_of_satisfiesDynkin`). Composing arrows, Dynkin's formula for a GSHS
+  or for a compatible Davis PDP gives (13) (`Bujorianu2006.GSHS.weakDynkin_of_satisfiesDynkin`,
+  `SHS.DavisCompatible.weakDynkin`), and Hespanha's Theorem 2 gives Dynkin's formula for a Davis
+  realization of an SHS (`SHS.realization_satisfiesDynkin`).
+- **Itô diffusions (`Category.ItoDiffusion`).** Horizon-`T` versions of the martingale problem and
+  of Dynkin's formula; the generator presentation of `dx = a(x) dt + b(x) dW`; and the v2.3.0
+  martingale problem and Dynkin formula for Lipschitz SDE solutions, transferred to it. Instances:
+  the standard Wiener process and `dx = −sin x dt + σ dW`. `Gardiner.Ito.SDEBridge` already
+  pointed to this file in v2.3.0, which did not ship it.
+
+## Caveats
+
+- Most cross-framework transfers take Dynkin's formula for the source process as a hypothesis.
+  The library does not yet prove it for a general GSHS, a compatible Davis PDP or a kernel
+  semigroup.
+- `SatisfiesDynkin` and `SatisfiesForward` use the Bochner integral with no integrability
+  hypothesis. A non-integrable expectation evaluates to 0 in Lean, so the two properties are
+  weaker than the textbook statements when the expectations do not exist.
+
 # SHSLib v2.3.0 — stochastic differential equations and their Fokker–Planck equation
 
 The public library grows from **367 to 393 modules** and remains **entirely free of

@@ -1,10 +1,10 @@
 # SHSLib Wiki — Index
 
-Documentation for the public **SHSLib** distribution: the general theory of Stochastic Hybrid Systems (SHS) formalized in Lean 4 / Mathlib. This public repository contains the theory layers only — `Core/`, `Foundations/`, `FPK/`, `Gardiner/`, `Ullah/` and `Bujorianu2006/`; worked examples, agricultural applications and the tactic front-end live in a separate research library.
+Documentation for the public **SHSLib** distribution: the general theory of Stochastic Hybrid Systems (SHS) formalized in Lean 4 / Mathlib. This public repository contains the theory layers only — `Core/`, `Foundations/`, `FPK/`, `Gardiner/`, `Ullah/` and `Bujorianu2006/`, plus `Category/`, which relates them; worked examples, agricultural applications and the tactic front-end live in a separate research library.
 
 **Status key:** ✅ Complete (0 sorries) · ⚠️ Has sorries
 
-As of 2026-08-12 the public library is **271 modules and entirely free of `sorry`**;
+As of v2.4.0 (2026-10-31) the public library is **404 modules and entirely free of `sorry`**;
 every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`, and
 there are no `axiom` declarations.
 
@@ -65,6 +65,12 @@ there are no `axiom` declarations.
 | Module | Status | Summary |
 |--------|--------|---------|
 | [Bujorianu2006](modules/Bujorianu2006.md) | ✅ | 8-module group: hybrid state space, Markov strings with jump times and translations, jump counting measures, semigroup/resolvent and $p$-excessive functions, additive and multiplicative functionals with terminal times, the strong generator and Dynkin's formula, and the extended generator |
+
+## Category — cross-framework organization
+
+| Module | Status | Summary |
+|--------|--------|---------|
+| [Category](modules/Category.md) | ✅ | 11-module layer: the category `SHSCat.GenPres` of generator presentations and intertwiners. Dynkin's formula, the forward equation and the martingale problem transfer along its morphisms; semigroups, Davis PDPs, Hespanha's SHS, GSHS, Bect's Lévy form and the Gardiner/Ullah dCKE enter as objects and arrows; composite transfers give Bect's (13) for a GSHS and for a compatible Davis PDP; Itô diffusions up to a horizon `T` |
 
 ## References
 

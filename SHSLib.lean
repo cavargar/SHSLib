@@ -1,7 +1,8 @@
 -- SHSLib v2: Formal library for Stochastic Hybrid Systems
 --
 -- Public mirror of the research repository: the general stochastic-modeling theory
--- layers only -- Core/, Foundations/, Gardiner/, Ullah/, FPK/ and Bujorianu2006/.
+-- layers only -- Core/, Foundations/, Gardiner/, Ullah/, FPK/ and Bujorianu2006/, plus
+-- Category/, which relates them through one category of generator presentations.
 -- Their import closure never reaches an Examples/, Applications/, MomentAnalysis/
 -- or Tactics/ module, which is what makes this subset self-contained; the
 -- domain-specific models and the tactic front-end stay in the research repository.
@@ -367,3 +368,17 @@ import SHSLib.Gardiner.Ito.StochDE -- Index: existence/uniqueness, moment bounds
 import SHSLib.Gardiner.Ito.Generator -- Index: itoGen, Dynkin, martingale problem, weak/strong FPE, OU/GBM/sin examples, Markov (Wiener, GBM)
 import SHSLib.Gardiner.Ito.SDEBridge -- stdWiener instances, job-D eulerStep/gridInc, itoFPRHS = Gardiner.fpRHS (n = 1)
 import SHSLib.FPK.ItoDiffusion -- 1-D Itô diffusion as Bect FPKData; WeakDynkin (13) for global SDE solutions
+
+-- v2.4.0: the category-theoretic organization of the frameworks -- generator presentations,
+-- intertwiners, and the transfer of Dynkin / forward-equation / martingale-problem results.
+import SHSLib.Category.GenPres    -- Hub category `GenPres`; Dynkin/forward/martingale-problem transfer
+import SHSLib.Category.Semigroup  -- Category of transition semigroups; strong-generator functor
+import SHSLib.Category.Levy       -- Lévy-system presentations; bridge to Bect's WeakDynkin (13)
+import SHSLib.Category.Davis      -- Davis PDP presentation, PDP conjugacy category, finite semigroup object
+import SHSLib.Category.Hespanha   -- SHS presentation, Lévy iso (Example 18), Davis bridge morphism, Thm 2
+import SHSLib.Category.HespanhaRegular -- Classical C¹ tests lie in the SHS generator domain
+import SHSLib.Category.Bujorianu  -- GSHS presentation and its Lévy iso
+import SHSLib.Category.DCKE       -- dCKE presentation; Gardiner/Ullah kernel semigroup bridge
+import SHSLib.Category.Diagram    -- Composite paths and cross-framework transfer theorems
+import SHSLib.Category            -- Index + framework/bridge correspondence table
+import SHSLib.Category.ItoDiffusion -- GenPres of a 1-D diffusion; martingale problem / Dynkin up to horizon T
