@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DensityEvolution
+import SHSLib.FPK.ProbabilityCurrent
 
+/-!
 # Appendix E of Bect (2010): proof of Theorem 13
 
 Under the assumptions of Theorem 13 the region `U` on which Eq. (48) is available is
@@ -28,8 +32,6 @@ Formalized here:
 * `GSHS.eq53_eq54_lebesgue_split` — Eqs. (53) and (54), by uniqueness of the
   Lebesgue decomposition.
 -/
-import SHSLib.FPK.DensityEvolution
-import SHSLib.FPK.ProbabilityCurrent
 
 open MeasureTheory Set
 open scoped ENNReal

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Additive and multiplicative functionals, terminal times
 
 Formalization of the analytic core of Sections 2.2, 3.2 and 4 of
@@ -33,7 +36,6 @@ coordinate process `x_t`, as in Lemma 1 of the paper):
 * the memoryless identity `P(S' > t + u | S' > t) = P_{x_t}(S' > u)` of Eq. (26)
   and the exponential computation `P[m > Λ_t] = exp(-Λ_t)` of Eq. (3).
 -/
-import Mathlib
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal

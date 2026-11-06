@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.OrderStatisticTransform
 
+/-!
 # The Beta laws with a unit parameter, and extremes of a uniform sample
 
 Two families of Beta laws have elementary distribution functions:
@@ -19,7 +22,6 @@ integral, and then applies them to the order-statistic theory of batches
 * an order statistic of a sample from a `Beta(1,b)` law has distribution
   function `I_{1−(1−x)^b}(j+1, m+1)`.
 -/
-import SHSLib.Foundations.OrderStatisticTransform
 
 open MeasureTheory Set
 

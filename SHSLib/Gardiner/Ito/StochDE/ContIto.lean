@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Version
+
+/-!
 # A continuous, adapted, jointly measurable version of the running Itô integral
 
 For an Itô integrand `G` on `[0, T]`, `Gardiner.Ito.itoInt W 𝓕 P t G` is defined separately for each
@@ -17,7 +19,6 @@ The construction approximates `G` by elementary integrands along a fast subseque
 inequality for the differences of the elementary running integrals gives almost sure uniform
 convergence on `[0, T]`.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Version
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.DoubleWell
+
+/-!
 # Equilibration of the populations in each well: §9.2, (9.2.1)–(9.2.33), (9.2.46)–(9.2.49)
 
 Kramers' method reduces the double-well Smoluchowski equation to the three relaxation equations
@@ -28,7 +30,6 @@ potential is `U/γ` and `D = kT/γ`, so `H` carries a factor `γ` (not `γ⁻¹`
 (9.2.49) `ψ(z) = n_a⁻¹ Σ_{y=z}^{b-1} P_s(y)` for `z ≤ b` and `n_c⁻¹ Σ_{y=b}^{z-1} P_s(y)` for
 `z > b` (the text has upper limits `b` and `z + 1`).
 -/
-import SHSLib.Gardiner.Escape.DoubleWell
 
 open MeasureTheory Set Filter Topology Real
 

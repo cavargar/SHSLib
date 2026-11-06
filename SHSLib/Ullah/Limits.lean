@@ -1,4 +1,8 @@
-/-
+import SHSLib.Ullah.Near
+
+/-!
+# The limits (8.11) and (8.12) of the near and far regions (Ullah and Wolkenhauer §8.2)
+
 §8.2, the two limits (8.11) and (8.12).
 
 `fpTerm` is the right-hand side of (8.11), the drift–diffusion (Fokker–Planck) part
@@ -7,8 +11,11 @@ jump part produced by the far region.
 
 The limits are taken in two stages, exactly as in the text: first `Δt → 0` at fixed
 `ε`, then `ε → 0`, the second stage absorbing the `o(ε)` errors of (8.8), (8.9).
+
+## References
+
+* [UllahWolkenhauer2011], §8.2
 -/
-import SHSLib.Ullah.Near
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

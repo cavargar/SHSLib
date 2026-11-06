@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBeta
 
+/-!
 # Stirling's approximation for the Beta function
 
 Applying the Stirling bracket `½log(2π) < S(t) < ½log(2π) + 1/(12t)` for the
@@ -19,7 +22,6 @@ The symmetric case reads `B(x,x) ≈ √(4π/x)·4^{−x}`, i.e.
 
   `|log B(x,x) − (½log(4π/x) − 2x log 2)| ≤ 1/(6x)`.
 -/
-import SHSLib.Foundations.StirlingBeta
 
 open Real Set Filter Topology
 

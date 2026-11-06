@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.GBM
+
+/-!
 # Square-integrable initial factors and GBM with an unbounded initial value
 
 `Gardiner.Ito.itoInt_mul_left` takes a *bounded* `𝓕 0`-measurable factor out of the Itô integral.
@@ -10,7 +12,6 @@ As an application, geometric Brownian motion solves `dx = λx dt + μx dW` for e
 initial value `x₀` independent of `W` (`Gardiner.Ito.IsFWiener.geomBM_ito_of_memLp`), which is
 Gardiner's setting in §4.4.2.
 -/
-import SHSLib.Gardiner.Ito.Calculus.GBM
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
+import SHSLib.Gardiner.Ito.Calculus.ItoExamples
+
+/-!
 # Instances of Itô's formula for Itô processes
 
 * `Gardiner.Ito.IsFWiener.isItoProcess_W`: `W` itself is an Itô process (`a = 0`, `b = 1`), using
@@ -10,8 +13,6 @@
 * `Gardiner.Ito.IsFWiener.ito_formula_sin_sin_W`: (4.3.14) for `f = sin` along the Itô process
   `x = sin W`, an instance with a genuinely random, non-constant `b`.
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
-import SHSLib.Gardiner.Ito.Calculus.ItoExamples
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

@@ -1,18 +1,29 @@
-/-
-  Formal skeleton for Chapter 2 of M.H.A. Davis,
-  "Markov Models and Optimization" (1993).
-
-  Chapter 2: Piecewise-Deterministic Markov Processes
-
-  This file formalizes the key definitions, theorems, and propositions
-  from the chapter, organized by section number matching the textbook.
-  The chapter introduces piecewise-deterministic Markov processes (PDPs)
-  and establishes their main properties: the strong Markov property,
-  an exact characterization of the extended generator, and the fact
-  that PDPs are right processes.
--/
-
 import Mathlib
+
+/-!
+# Piecewise-deterministic Markov processes (Davis, Chapter 2)
+
+Formalization of Chapter 2 of M.H.A. Davis, "Markov Models and Optimization" (1993).
+The chapter introduces piecewise-deterministic Markov processes (PDPs)
+and establishes their main properties: the strong Markov property,
+an exact characterization of the extended generator, and the fact
+that PDPs are right processes.
+
+Along the way the file covers the memorylessness of the exponential law, survivor and hazard
+functions, the Poisson process, the renewal equation, ODE flows (the group property and the
+chain rule), the deterministic Dynkin formula, variation of constants for linear ODEs,
+Grönwall uniqueness and inverse-transform sampling. For the PDP itself it proves the Markov
+property, the strong Markov property for stopping times with countably many values (extended to
+all stopping times in `SHSLib.Foundations.DavisCh2StrongMarkov`), the compensator martingale,
+and the characterization of the extended generator with its boundary condition.
+
+This file formalizes the key definitions, theorems, and propositions
+from the chapter, organized by section number matching the textbook.
+
+## References
+
+* [Davis1993], Chapter 2
+-/
 
 open MeasureTheory Topology Filter Set ProbabilityTheory
 open scoped ENNReal NNReal

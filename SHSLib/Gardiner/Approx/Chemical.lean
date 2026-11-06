@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Approx.ReactionXA
+import SHSLib.Gardiner.Special
+
+/-!
 # Combinatorial kinetics and the chemical Fokker–Planck equation
 
 Gardiner, *Handbook of Stochastic Methods*, §7.5, equations (7.5.3)–(7.5.9) and
@@ -25,8 +28,6 @@ Main results:
   diffusion matrix is positive semidefinite; `Gardiner.chemFPE` — the chemical Fokker–Planck
   equation (7.5.31) as an instance of the dCKE-layer `Gardiner.fpRHS`.
 -/
-import SHSLib.Gardiner.Approx.ReactionXA
-import SHSLib.Gardiner.Special
 
 open Finset
 

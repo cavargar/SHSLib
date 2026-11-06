@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DensityEvolution
 
+/-!
 # Example 16 of Bect (2010): the master equation
 
 For a pure jump process (`L = 0`) with an absolutely continuous reset kernel
@@ -18,7 +21,6 @@ which is exactly the master equation (27)
 
   `∂p/∂t (y, t) = ∫ (γ(x, y) p(x, t) − γ(y, x) p(y, t)) m(dx)`.
 -/
-import SHSLib.FPK.DensityEvolution
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

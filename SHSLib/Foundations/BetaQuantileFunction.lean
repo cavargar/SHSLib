@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaQuantile
 
+/-!
 # The Beta quantile function
 
 Batch 173 proved that for every level `p ∈ [0,1]` there is a unique `x ∈ [0,1]`
@@ -17,7 +20,6 @@ The pair (`regBetaFn`, `betaQuantile`) is the inverse-transform interface: if
 `U` is uniform on `[0,1]` then `betaQuantile a b U` has the Beta law with
 parameters `a, b`.
 -/
-import SHSLib.Foundations.BetaQuantile
 
 open Real Set Filter Topology MeasureTheory
 

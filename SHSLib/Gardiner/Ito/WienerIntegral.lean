@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.MSLimit
+
+/-!
 # The Wiener integral of deterministic functions (Gardiner §4.2.1, §4.2.6)
 
 For `f : ℝ → ℝ` and `0 ≤ a ≤ b`, `Gardiner.Ito.wienerInt W P f a b = ∫ₐᵇ f(s) dW(s)` is the
@@ -23,7 +25,6 @@ continuous `f`:
 For step functions the same definition gives the simple integral
 (`SHSLib.Gardiner.Ito.WienerStep`).  Instances for `stdWiener`: `SHSLib.Gardiner.Ito.WienerInstances`.
 -/
-import SHSLib.Gardiner.Ito.MSLimit
 
 open MeasureTheory ProbabilityTheory Filter Topology Finset
 open scoped NNReal ENNReal

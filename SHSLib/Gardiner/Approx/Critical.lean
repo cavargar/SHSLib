@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.SystemSize
+
+/-!
 # Kurtz's theorem and critical fluctuations
 
 Gardiner, *Handbook of Stochastic Methods*, §7.2.4, equations (7.2.62)–(7.2.67), and §7.2.5,
@@ -22,7 +24,6 @@ with explicit constants.  The exponent bookkeeping (7.2.71)–(7.2.77) is
 `Gardiner.critical_cubic_solution`, with the non-degenerate instance
 `Gardiner.cubic_critGen_sub_critLim_le` built from the reaction of §7.1.3.
 -/
-import SHSLib.Gardiner.Approx.SystemSize
 
 open MeasureTheory Filter Topology Set Asymptotics
 open scoped Nat

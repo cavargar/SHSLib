@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.IncompleteBeta
 
+/-!
 # Regularity of the Beta CDF and the Beta quantile function
 
 The regularised incomplete Beta function `I_x(a,b)` of batch 172 is shown here
@@ -19,7 +22,6 @@ itself whose derivative is the Beta density of batch 171:
   generate Beta-distributed random variables by inverse transform, in the
   style of the clock-noise modules of `SHSLib/Core/`.
 -/
-import SHSLib.Foundations.IncompleteBeta
 
 open Real Set Filter Topology MeasureTheory
 

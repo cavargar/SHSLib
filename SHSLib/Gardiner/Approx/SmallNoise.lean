@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # Small noise expansion of the Fokker–Planck equation
 
 Gardiner, *Handbook of Stochastic Methods*, §6.1 and §6.3 (equations (6.1.6)–(6.1.13) and
@@ -17,7 +19,6 @@ Gardiner, *Handbook of Stochastic Methods*, §6.1 and §6.3 (equations (6.1.6)�
   generator of (6.3.8) is within `|ε| (K y² |f'| + L |y| |f''|)/2` of the generator of the
   time-dependent Ornstein–Uhlenbeck equation (6.3.12).
 -/
-import SHSLib.Gardiner.Approx.Calculus
 
 open MeasureTheory Filter Topology Set ProbabilityTheory
 open scoped BigOperators Nat NNReal

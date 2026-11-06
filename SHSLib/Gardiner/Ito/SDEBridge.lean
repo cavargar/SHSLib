@@ -1,4 +1,10 @@
-/-
+import SHSLib.Gardiner.Ito.Generator
+import SHSLib.Gardiner.Ito.CalculusBridge
+import SHSLib.Gardiner.Ito.Schemes
+import SHSLib.Gardiner.SDE.Schemes
+import SHSLib.Gardiner.Special
+
+/-!
 # Bridge: the SDE layer (E4) and generator layer (E5) → the rest of `Gardiner`
 
 `SHSLib.Gardiner.Ito.StochDE` (job E4) and `SHSLib.Gardiner.Ito.Generator` (job E5) are stated
@@ -24,11 +30,6 @@ Dynkin formula (`GSHS.FPKData.WeakDynkin`) live in `SHSLib/Category/ItoDiffusion
 | `pd_comp_coord` | `∂/∂z₀ (g ∘ z₀) = g′ ∘ z₀` on `Sp 1` |
 | `itoFPRHS_eq_fpRHS` | E5's `itoFPRHS` is Gardiner's `fpRHS` (3.5.6) in dimension one |
 -/
-import SHSLib.Gardiner.Ito.Generator
-import SHSLib.Gardiner.Ito.CalculusBridge
-import SHSLib.Gardiner.Ito.Schemes
-import SHSLib.Gardiner.SDE.Schemes
-import SHSLib.Gardiner.Special
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

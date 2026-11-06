@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaQuantileFunction
 
+/-!
 # Continuity of the Beta quantile and the CDF/quantile bijection
 
 The Beta CDF `regBetaFn a b` restricted to `[0,1]` is a continuous bijection of
@@ -15,7 +18,6 @@ mutually inverse bijections of `[0,1]` and the Galois-style characterisation
 which is the form in which a quantile is used to convert a statement about a
 uniform variate into a statement about a Beta variate.
 -/
-import SHSLib.Foundations.BetaQuantileFunction
 
 open Real Set Filter Topology MeasureTheory
 

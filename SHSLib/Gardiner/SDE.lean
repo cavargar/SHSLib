@@ -1,4 +1,17 @@
-/-
+import SHSLib.Gardiner.SDE.GaussianMoments
+import SHSLib.Gardiner.SDE.Expansion
+import SHSLib.Gardiner.SDE.Pathwise
+import SHSLib.Gardiner.SDE.EulerPathwise
+import SHSLib.Gardiner.SDE.Cubic
+import SHSLib.Gardiner.SDE.Statistics
+import SHSLib.Gardiner.SDE.SchemeMoments
+import SHSLib.Gardiner.SDE.WeakError
+import SHSLib.Gardiner.SDE.Stability
+import SHSLib.Gardiner.SDE.Schemes
+import SHSLib.Gardiner.SDE.Vector
+import SHSLib.Gardiner.SDE.Examples
+
+/-!
 # Small-noise expansion of SDEs and numerical simulation of SDEs (Gardiner §6.2, §10.1–§10.5)
 
 Index of the SDE layer (C. W. Gardiner, *Handbook of Stochastic Methods*: §6.2 small-noise
@@ -156,15 +169,3 @@ and §10.5.3–§10.5.5).  The error recursions themselves are proved as inequal
 estimates (10.1.36)–(10.1.39) of the Itô–Taylor expansion, which are not available without a
 stochastic integral.
 -/
-import SHSLib.Gardiner.SDE.GaussianMoments
-import SHSLib.Gardiner.SDE.Expansion
-import SHSLib.Gardiner.SDE.Pathwise
-import SHSLib.Gardiner.SDE.EulerPathwise
-import SHSLib.Gardiner.SDE.Cubic
-import SHSLib.Gardiner.SDE.Statistics
-import SHSLib.Gardiner.SDE.SchemeMoments
-import SHSLib.Gardiner.SDE.WeakError
-import SHSLib.Gardiner.SDE.Stability
-import SHSLib.Gardiner.SDE.Schemes
-import SHSLib.Gardiner.SDE.Vector
-import SHSLib.Gardiner.SDE.Examples

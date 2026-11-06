@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Approx.KramersMoyal
+import SHSLib.Gardiner.Approx.SmallNoise
+
+/-!
 # Van Kampen's system size expansion
 
 Gardiner, *Handbook of Stochastic Methods*, §7.2.3, equations (7.2.28)–(7.2.40) and
@@ -36,8 +39,6 @@ Main results:
 * The moments of the linear-noise equation, (4.4.84)–(4.4.85) in one dimension:
   `Gardiner.lna_mean_ode`, `Gardiner.lna_second_moment_ode`, `Gardiner.linear_ode_eq`.
 -/
-import SHSLib.Gardiner.Approx.KramersMoyal
-import SHSLib.Gardiner.Approx.SmallNoise
 
 open MeasureTheory Filter Topology Set
 open scoped BigOperators Nat

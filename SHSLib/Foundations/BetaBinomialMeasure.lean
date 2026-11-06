@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaBinomial
+import SHSLib.Foundations.BetaMeasure
+import Mathlib.Probability.ProbabilityMassFunction.Binomial
 
+/-!
 # The Beta–Binomial identity as a statement about measures
 
 `SHSLib/Foundations/BetaBinomial.lean` proves the analytic Beta–Binomial
@@ -25,9 +30,6 @@ is exactly the `i`-th term `binomTailTerm j m i x` of the tail, once the
 exponent `(j+m+1) − (j+1+i)` is simplified to `m − i`; summing over the `m+1`
 indices of the tail and applying `PMF.toMeasure_apply_finset` finishes it.
 -/
-import SHSLib.Foundations.BetaBinomial
-import SHSLib.Foundations.BetaMeasure
-import Mathlib.Probability.ProbabilityMassFunction.Binomial
 
 open Real Set MeasureTheory ENNReal NNReal
 

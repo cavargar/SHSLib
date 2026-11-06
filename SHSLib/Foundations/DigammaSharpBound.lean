@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.DigammaAsymptotics
 
+/-!
 # The sharp upper bound `ψ(x) < log x − 1/(2x)`
 
 Batch 148 proved `log x − 1/x < ψ(x) < log x` from the mean value theorem.  The
@@ -20,7 +23,6 @@ Hence `f(x) > f(x+1) ≥ lim_n f(x+n) = 0`.  Specialising at `x = n+1` sharpens
 the harmonic bound of batch 148 to
 `H_n < γ + log(n+1) − 1/(2(n+1))` (`harmonic_lt_log_sub_half_inv`).
 -/
-import SHSLib.Foundations.DigammaAsymptotics
 
 open Real Set Filter Topology
 

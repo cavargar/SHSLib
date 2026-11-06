@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingConstant
 
+/-!
 # Explicit Stirling bounds
 
 `SHSLib/Foundations/StirlingLogGamma.lean` shows that the Stirling defect
@@ -25,7 +28,6 @@ two-sided bounds on `log n!` and, after exponentiating,
 
 (`log_factorial_bracket`, `factorial_bracket`).
 -/
-import SHSLib.Foundations.StirlingConstant
 
 open Real Set Filter Topology
 

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaDistribution
 
+/-!
 # The incomplete Beta function and the Beta cumulative distribution function
 
 The **incomplete Beta function** is the partial Euler integral
@@ -22,7 +25,6 @@ This module proves the basic facts:
   `I_x(a,b) = 1 − I_{1−x}(b,a)`, obtained from the substitution `t ↦ 1 − t`;
 * the median of the symmetric Beta law: `I_{1/2}(a,a) = ½`.
 -/
-import SHSLib.Foundations.BetaDistribution
 
 open Real Set Filter Topology MeasureTheory
 

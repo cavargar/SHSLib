@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Escape.Laplace
+import SHSLib.Gardiner.Adiabatic.KramersGenerator
+
+/-!
 # Escape over a potential barrier: the Kramers/Arrhenius limit with rate `O(√D)`
 
 Gardiner, *Handbook of Stochastic Methods*, §5.2.7 c) (5.2.162)–(5.2.176) and §9.1.3 (9.1.9).
@@ -39,8 +42,6 @@ The proof is the text's argument made quantitative: `F(y) = ∫_{-∞}^y e^{-(U 
 increasing and pinned between its values at `a + r` and `x₀`, both `√(2πD/k_a)(1 + O(√D))` by
 Laplace's method (`Gardiner.Escape.laplace_min`); the outer integral is `√(2πD/k_b)(1 + O(√D))`.
 -/
-import SHSLib.Gardiner.Escape.Laplace
-import SHSLib.Gardiner.Adiabatic.KramersGenerator
 
 open MeasureTheory Set Filter Topology Real
 

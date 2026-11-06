@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoPath
+
+/-!
 # Pathwise core of Itô's formula for a general Itô process
 
 `Gardiner.Ito.IsC12.ito_pathwise_gen` is deterministic.  Let `X` be a continuous path whose
@@ -15,7 +17,6 @@ Then `F(T, X_T) - F(0, X_0) = ∫₀ᵀ (F_t + a F_x + ½ β F_xx)(s, X_s) ds + 
 For an Itô process `x = x₀ + ∫ a ds + ∫ b dW`, `yᵢ` is the increment of `∫ b dW` and `β = b²`;
 the hypotheses hold almost surely along a subsequence (`Gardiner.Ito.ItoGeneral`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoPath
 
 open Filter Topology Set MeasureTheory
 

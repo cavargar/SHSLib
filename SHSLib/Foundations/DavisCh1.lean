@@ -1,14 +1,23 @@
-/-
-  Formal skeleton for Chapter 1 of M.H.A. Davis,
-  "Markov Models and Optimization" (1993).
-
-  Chapter 1: Analysis, Probability and Stochastic Processes
-
-  This file formalizes the key definitions, theorems, and propositions
-  from the chapter, organized by section number matching the textbook.
--/
-
 import Mathlib
+
+/-!
+# Analysis, probability and stochastic processes (Davis, Chapter 1)
+
+Formalization of Chapter 1 of M.H.A. Davis, "Markov Models and Optimization" (1993): the
+prerequisite results on which the theories of piecewise-deterministic processes and of the SHS
+generator rest. It covers topology and analysis (for instance `Davis.C0T_banach`, and almost
+everywhere differentiability of absolutely continuous functions), measure-theoretic probability
+(the Doob–Dynkin factorization, the monotone and dominated convergence theorems, Fatou's lemma),
+martingale theory (`Davis.submartingale_convergence`), and the foundations of Markov processes:
+transition functions, semigroups and generators.
+
+This file formalizes the key definitions, theorems, and propositions
+from the chapter, organized by section number matching the textbook.
+
+## References
+
+* [Davis1993], Chapter 1
+-/
 
 open MeasureTheory Topology Filter Set ProbabilityTheory
 open scoped ENNReal NNReal

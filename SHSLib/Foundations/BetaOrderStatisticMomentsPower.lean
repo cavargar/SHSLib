@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaOrderStatisticMoments
 
+/-!
 # Moments of an order statistic of a power-law (`Beta(a,1)`) sample
 
 Batch 193 computed the moments of an order statistic of a `Beta(1,b)` sample,
@@ -23,7 +26,6 @@ Two checks: at `a = 1` (the uniform parent) this module's ratio and batch 193's
 agree and both give the classical mean `(j+1)/(n+1)`; and at `m = 0` (the sample
 maximum) the mean is `na/(na+1)`, the mean of a `Beta(na, 1)` variable.
 -/
-import SHSLib.Foundations.BetaOrderStatisticMoments
 
 open MeasureTheory ProbabilityTheory Set
 

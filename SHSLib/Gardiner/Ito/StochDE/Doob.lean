@@ -1,10 +1,11 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus
+
+/-!
 # Doob's `L²` maximal inequality (discrete time and on dyadic grids)
 
 * `Gardiner.Ito.StochDE.doob_L2_nat`: for a square integrable martingale `(f k)_{k ∈ ℕ}`,
   `E[(max_{k ≤ n} |f k|)²] ≤ 4 E[f n ²]`.
 -/
-import SHSLib.Gardiner.Ito.Calculus
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaVariance
 
+/-!
 # Chebyshev concentration for the Beta law
 
 Batch 180 proved that the identity is square-integrable for `betaMeasure a b`
@@ -13,7 +16,6 @@ and this module records the two resulting statements in closed form:
 * `betaMeasure_concentration` — the complementary form, a lower bound for the
   mass of the symmetric interval `(m − c, m + c)` around the mean `m`.
 -/
-import SHSLib.Foundations.BetaVariance
 
 open Real Set Filter Topology MeasureTheory ProbabilityTheory
 open scoped ENNReal

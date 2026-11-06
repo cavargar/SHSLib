@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
+import SHSLib.FPK.HespanhaResetJacobian
+import SHSLib.FPK.DensityEvolution
 
+/-!
 # Example 18 of Bect (2010): Hespanha's generalized FPK equation, Eq. (33)
 
 For a stochastic hybrid system whose jumps are driven by finitely many intensities
@@ -28,9 +33,6 @@ What is formalized:
 * `GSHS.hespanha_fpk_equation` — Eq. (33) itself, obtained from the measure-theoretic
   core of Theorem 13.
 -/
-import Mathlib
-import SHSLib.FPK.HespanhaResetJacobian
-import SHSLib.FPK.DensityEvolution
 
 open MeasureTheory Set ProbabilityTheory Function
 open scoped ENNReal NNReal BigOperators

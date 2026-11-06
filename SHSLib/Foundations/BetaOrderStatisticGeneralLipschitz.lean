@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaOrderStatisticLipschitz
 
+/-!
 # The variance of an order statistic under a Lipschitz parent quantile
 
 Batch 197 bounded the variance of the order statistic of a sample of `k`-th
@@ -19,7 +22,6 @@ The hypothesis is a genuine restriction on the parent — it says the parent
 density is bounded below on its support — and it is satisfied, with `L = k`, by
 the power parents of batch 196.
 -/
-import SHSLib.Foundations.BetaOrderStatisticLipschitz
 
 open MeasureTheory ProbabilityTheory Set
 

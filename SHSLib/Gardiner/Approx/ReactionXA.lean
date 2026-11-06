@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # The exactly solvable reaction `X ⇌ A`
 
 Gardiner, *Handbook of Stochastic Methods*, §7.1.2, equations (7.1.24)–(7.1.55).
@@ -26,7 +28,6 @@ Main results:
 * `Gardiner.xa_mean_variance_exact` — for any solution of the master equation started at
   `δ_{x,N}`, the mean and variance are exactly (7.1.38) and (7.1.40).
 -/
-import SHSLib.Gardiner.Approx.Calculus
 
 open PowerSeries Filter Topology
 open scoped Nat

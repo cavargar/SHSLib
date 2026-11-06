@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.SmallNoise
+
+/-!
 # Moments and autocorrelation functions in the small noise expansion
 
 Gardiner, *Handbook of Stochastic Methods*, §6.3.1 (equations (6.3.16)–(6.3.35)).
@@ -19,7 +21,6 @@ Gardiner, *Handbook of Stochastic Methods*, §6.3.1 (equations (6.3.16)–(6.3.3
 * (6.3.32)–(6.3.35): the autocorrelation hierarchy.  (6.3.32) holds exactly only when
   `⟨y⟩ₛ = 0`; the general identity carries the cross term `α ε (⟨y(t)⟩ + ⟨y(0)⟩)`.
 -/
-import SHSLib.Gardiner.Approx.SmallNoise
 
 open MeasureTheory Filter Topology Set
 open scoped BigOperators Nat

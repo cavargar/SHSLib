@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.SpontaneousJumps
 
+/-!
 # Section 5.3 and Appendix D of Bect (2010): from measures to densities
 
 Theorem 13 turns the measure-valued FPK equation (14) into an evolution equation for the
@@ -25,7 +28,6 @@ is the measure-theoretic core of the argument:
 * `GSHS.theorem23_lebesgue_radon_nikodym` : the Lebesgue–Radon–Nikodym theorem quoted as
   Theorem 23 in Appendix D, in the form used in the paper.
 -/
-import SHSLib.FPK.SpontaneousJumps
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

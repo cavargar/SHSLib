@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # Kramers' equation: the Smoluchowski generator and its `γ⁻²` correction
 
 Gardiner, *Handbook of Stochastic Methods*, §6.4.1 (6.4.54)–(6.4.66) and §6.4.5
@@ -44,7 +46,6 @@ the distance between the Kramers dynamics and the (corrected) Smoluchowski dynam
 `Gardiner.Adiabatic.kramers_doubleWell` applies the expansion to the concrete double well
 `U = y⁴/4 - y²/2` and test function `f = sin`.
 -/
-import SHSLib.Gardiner.Approx.Calculus
 
 open Set
 

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Elementary
+
+/-!
 # The space of Itô integrands on `[0, T]` (Gardiner §4.2.4, §4.2.6)
 
 * `Gardiner.Ito.tsMeasure P T = (Lebesgue on (0, T]) ⊗ P`, the time–space measure: the squared
@@ -12,7 +14,6 @@
 
 Mean-square helpers (`Gardiner.Ito.l2Lim`, …) are also collected here.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Elementary
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Euler
+
+/-!
 # Examples of Itô SDEs with state-dependent coefficients
 
 Gardiner §4.4.2 and §4.4.4, and a nonlinear example.
@@ -14,7 +16,6 @@ Gardiner §4.4.2 and §4.4.4, and a nonlinear example.
   the Hölder condition, so the SDE has a unique solution on every `[0, T]` and the Euler scheme
   converges with strong order ½ (`sinSDE_existsUnique`, `sinSDE_euler`).
 -/
-import SHSLib.Gardiner.Ito.StochDE.Euler
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

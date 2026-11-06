@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.KramersMoyal
+
+/-!
 # Stationary distribution of the birth–death approximation of a diffusion
 
 Gardiner, *Handbook of Stochastic Methods*, §7.2.1 c), (7.2.19)–(7.2.21).
@@ -22,7 +24,6 @@ logarithm converges to that of the stationary Fokker–Planck solution (7.2.21),
 * `Gardiner.bdStat_ou_rate` — non-degenerate instance: the Ornstein–Uhlenbeck process
   `A(x) = -kx`, `B = D`.
 -/
-import SHSLib.Gardiner.Approx.KramersMoyal
 
 open MeasureTheory Filter Topology Set Finset
 open scoped BigOperators Nat

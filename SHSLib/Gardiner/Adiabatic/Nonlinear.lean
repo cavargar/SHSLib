@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Adiabatic.WhiteNoise
+
+/-!
 # Adiabatic elimination in the general case (Gardiner §6.6.2–§6.6.4)
 
 Gardiner, *Handbook of Stochastic Methods*, §6.6.2 (Haken's model, (6.6.36)–(6.6.64)),
@@ -44,7 +46,6 @@ with exact remainders.
   The diffusion is `+D`: the overall sign in (6.6.120)/(6.6.122) as printed would give a negative
   diffusion coefficient (erratum).  Instance: `Gardiner.Adiabatic.nlc_ou_instance`.
 -/
-import SHSLib.Gardiner.Adiabatic.WhiteNoise
 
 noncomputable section
 

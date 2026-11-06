@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Basic
+
+/-!
+# Setting for the derivation of the dCKE (Ullah and Wolkenhauer §8.2)
+
 Formalization of §8.2, "Derivation of the dCKE", of
 M. Ullah and O. Wolkenhauer, *Stochastic Approaches for Systems Biology*, Chapter 8.
 
@@ -11,8 +15,11 @@ the first two terms of the Taylor expansion.
 
 The state space, partial derivatives and Taylor remainder are those of
 `SHSLib.Gardiner.Basic`.
+
+## References
+
+* [UllahWolkenhauer2011], §8.2
 -/
-import SHSLib.Gardiner.Basic
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.EulerDef
+
+/-!
 # Strong convergence of the Euler–Maruyama scheme: order ½
 
 Gardiner §10.1.4, (10.1.15)–(10.1.26), and the Cauchy–Euler construction §4.3.1 (4.3.5)–(4.3.9).
@@ -16,7 +18,6 @@ the Euler scheme on the uniform grid `t_i = t₀ + i τ` satisfies (`euler_stron
 * `euler_strong_order_half`: the strong order-½ estimate (10.1.26);
 * `tendsto_euler`: the Cauchy–Euler approximations converge in mean square to the solution.
 -/
-import SHSLib.Gardiner.Ito.StochDE.EulerDef
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

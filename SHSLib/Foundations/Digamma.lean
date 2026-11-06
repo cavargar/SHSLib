@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.Tetragamma
 
+/-!
 # The digamma series `ψ(x) − ψ(1) = ∑_{k ≥ 0} (1/(k+1) − 1/(x+k))`
 
 The series for `ψ' = (log Γ)''` proved in
@@ -26,7 +29,6 @@ Also recorded here, as immediate consequences of `trigamma_pos` and
 `tetragamma_neg`: `ψ` is strictly increasing, `log Γ` is strictly convex, and
 `ψ` is strictly concave on `(0, ∞)`.
 -/
-import SHSLib.Foundations.Tetragamma
 
 open Real Set Filter
 

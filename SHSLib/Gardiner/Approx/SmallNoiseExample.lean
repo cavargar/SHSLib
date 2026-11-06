@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.SmallNoiseMoments
+
+/-!
 # The example of §6.3.2
 
 Gardiner, *Handbook of Stochastic Methods*, §6.3.2, equations (6.3.36)–(6.3.51): the
@@ -22,7 +24,6 @@ Fokker–Planck equation `∂ₜ p = ∂ₓ[(x + x³) p] + (ε²/6) ∂ₓ² p`,
   `S(ω) = -ε² λ₁ / (6π (λ₁² + ω²))`.  The text's (6.3.51), `ε²/(12π(λ₁² + ω²))`, differs from
   this by the factor `-2λ₁` (which tends to `2` as `ε → 0`).
 -/
-import SHSLib.Gardiner.Approx.SmallNoiseMoments
 
 open MeasureTheory Filter Topology Set
 open scoped BigOperators Nat

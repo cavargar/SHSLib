@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoPath
+
+/-!
 # Itô's formula in one dimension (Gardiner §4.3.3, (4.3.14); §4.2.6 d, (4.2.39))
 
 Let `x(t) = x(0) + ∫₀ᵗ a(s) ds + b W(t)` be an Itô process with an adapted drift `a` whose paths
@@ -16,7 +18,6 @@ the Itô integral (`itoRiemann_tendsto`) and the weighted quadratic variation te
 square (`integral_wqv_sq`).  A subsequence converges almost surely, and on each such path the
 deterministic `IsC12.ito_pathwise` applies.
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoPath
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

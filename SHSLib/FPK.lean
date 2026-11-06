@@ -1,6 +1,41 @@
-/-
-# A unifying formulation of the Fokker–Planck–Kolmogorov equation for general
-  stochastic hybrid systems
+import SHSLib.FPK.AdjointUniqueness
+import SHSLib.FPK.AppendixB42
+import SHSLib.FPK.AppendixC1
+import SHSLib.FPK.AppendixC1Box
+import SHSLib.FPK.AppendixC1BoxExample
+import SHSLib.FPK.AppendixE
+import SHSLib.FPK.BoundaryGeometry
+import SHSLib.FPK.DensityEvolution
+import SHSLib.FPK.DiffusionGenerator
+import SHSLib.FPK.DivergenceTheorem
+import SHSLib.FPK.DualKernelMeasure
+import SHSLib.FPK.DynkinFormula
+import SHSLib.FPK.ForcedJumps
+import SHSLib.FPK.GeneralizedFPK
+import SHSLib.FPK.HespanhaBridge
+import SHSLib.FPK.HespanhaDynkin
+import SHSLib.FPK.HespanhaFPK
+import SHSLib.FPK.HespanhaResetJacobian
+import SHSLib.FPK.HespanhaResetKernel
+import SHSLib.FPK.HybridStateSpace
+import SHSLib.FPK.JumpDiscontinuity
+import SHSLib.FPK.LevySystemIntensity
+import SHSLib.FPK.LevySystemProcess
+import SHSLib.FPK.MarkovChain
+import SHSLib.FPK.MasterEquation
+import SHSLib.FPK.MeanJumpIntensity
+import SHSLib.FPK.PathwiseIto
+import SHSLib.FPK.ProbabilityCurrent
+import SHSLib.FPK.ProbabilityFlow
+import SHSLib.FPK.SawtoothExample
+import SHSLib.FPK.SawtoothSolution
+import SHSLib.FPK.SpontaneousJumps
+import SHSLib.FPK.SwitchingDiffusions
+import SHSLib.FPK.TotalVariationBounds
+import SHSLib.FPK.TwoStateChain
+
+/-!
+# A unifying formulation of the Fokker–Planck–Kolmogorov equation for general stochastic hybrid systems
 
 A formalization of J. Bect, *A unifying formulation of the Fokker–Planck–Kolmogorov
 equation for general stochastic hybrid systems*, Nonlinear Analysis: Hybrid Systems
@@ -48,40 +83,9 @@ Naming note: `SHS.levyTotalIntensity` (`SHSLib.FPK.HespanhaBridge`) is `λ = Σ_
 the stochastic intensity of the Lévy system (6) for a Hespanha SHS.  It is distinct
 from `SHS.totalIntensity` in `SHSLib.Core.DavisBridge`, which is the Davis-state
 total jump rate.
--/
 
-import SHSLib.FPK.AdjointUniqueness
-import SHSLib.FPK.AppendixB42
-import SHSLib.FPK.AppendixC1
-import SHSLib.FPK.AppendixC1Box
-import SHSLib.FPK.AppendixC1BoxExample
-import SHSLib.FPK.AppendixE
-import SHSLib.FPK.BoundaryGeometry
-import SHSLib.FPK.DensityEvolution
-import SHSLib.FPK.DiffusionGenerator
-import SHSLib.FPK.DivergenceTheorem
-import SHSLib.FPK.DualKernelMeasure
-import SHSLib.FPK.DynkinFormula
-import SHSLib.FPK.ForcedJumps
-import SHSLib.FPK.GeneralizedFPK
-import SHSLib.FPK.HespanhaBridge
-import SHSLib.FPK.HespanhaDynkin
-import SHSLib.FPK.HespanhaFPK
-import SHSLib.FPK.HespanhaResetJacobian
-import SHSLib.FPK.HespanhaResetKernel
-import SHSLib.FPK.HybridStateSpace
-import SHSLib.FPK.JumpDiscontinuity
-import SHSLib.FPK.LevySystemIntensity
-import SHSLib.FPK.LevySystemProcess
-import SHSLib.FPK.MarkovChain
-import SHSLib.FPK.MasterEquation
-import SHSLib.FPK.MeanJumpIntensity
-import SHSLib.FPK.PathwiseIto
-import SHSLib.FPK.ProbabilityCurrent
-import SHSLib.FPK.ProbabilityFlow
-import SHSLib.FPK.SawtoothExample
-import SHSLib.FPK.SawtoothSolution
-import SHSLib.FPK.SpontaneousJumps
-import SHSLib.FPK.SwitchingDiffusions
-import SHSLib.FPK.TotalVariationBounds
-import SHSLib.FPK.TwoStateChain
+## References
+
+* [Bect2010]
+* [Hespanha2005] (Example 18 of [Bect2010] specializes to this model)
+-/

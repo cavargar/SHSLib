@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.ClopperPearson
 
+/-!
 # Monotonicity of the Clopper–Pearson endpoints in the observed count
 
 Observing more successes should shift the exact confidence interval to the
@@ -16,7 +19,6 @@ which in turn is the parameter monotonicity `I_x(a+1,b) ≤ I_x(a,b+1)` of
 `SHSLib/Foundations/ClopperPearson.lean` read through the strictly increasing
 CDF: the quantile of the pointwise *smaller* CDF is the *larger* number.
 -/
-import SHSLib.Foundations.ClopperPearson
 
 open Real Set
 

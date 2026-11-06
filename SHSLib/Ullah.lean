@@ -1,4 +1,9 @@
-/-
+import SHSLib.Ullah.Basic
+import SHSLib.Ullah.Near
+import SHSLib.Ullah.Limits
+import SHSLib.Ullah.DCKE
+
+/-!
 # §8.2, Derivation of the differential Chapman–Kolmogorov equation
 
 A formalization of the derivation in §8.2 ("Derivation of the dCKE") of Chapter 8,
@@ -55,8 +60,8 @@ variables of (8.7), the Taylor expansion, the cancellation of the first two term
 the recognition of the conditional moments, the vanishing of the third-order
 coefficient, the `ε → 0` limit of the jump region, and the final assembly (8.13) —
 is proved.
+
+## References
+
+* [UllahWolkenhauer2011], §8.2
 -/
-import SHSLib.Ullah.Basic
-import SHSLib.Ullah.Near
-import SHSLib.Ullah.Limits
-import SHSLib.Ullah.DCKE

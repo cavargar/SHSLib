@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Riemann
+
+/-!
 # Weighted quadratic variation and `∫₀ᵀ W dW` (Gardiner §4.2.2, §4.2.5)
 
 * `Gardiner.Ito.IsFWiener.integral_wqv_sq`: for nonanticipating square-integrable weights `gᵢ`,
@@ -7,7 +9,6 @@
 * `Gardiner.Ito.IsFWiener.itoInt_W`: `∫₀ᵀ W dW = ½(W(T)² - T)` almost surely, Gardiner (4.2.20),
   as a genuine Itô integral.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Riemann
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBinetThird
+import SHSLib.Foundations.StirlingCentralBinom
+import Mathlib.Analysis.Real.Pi.Wallis
 
+/-!
 # The central binomial coefficient to fifth order, and the Wallis products
 
 Batch 159 (`SHSLib/Foundations/StirlingBinetThird.lean`) bracketed the Stirling
@@ -24,9 +29,6 @@ the same bracket squared bounds `W(n)` around `πn/(2n+1)` with an error
 `exp(1/(4n) − 1/(96n³) + O(n⁻⁵))` — in particular `W(n) < π/2` with an
 explicit gap, and `W(n) → π/2` with rate.
 -/
-import SHSLib.Foundations.StirlingBinetThird
-import SHSLib.Foundations.StirlingCentralBinom
-import Mathlib.Analysis.Real.Pi.Wallis
 
 open Real Set Filter Topology
 

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingCentralBinom
 
+/-!
 # `Γ` at the half-integers, and the ratio `Γ(n + ½)/Γ(n + 1)`
 
 The closed form
@@ -20,7 +23,6 @@ two-sided estimate
 
 and hence `√n · Γ(n + ½)/Γ(n + 1) → 1` with an explicit rate.
 -/
-import SHSLib.Foundations.StirlingCentralBinom
 
 open Real Set Filter Topology
 

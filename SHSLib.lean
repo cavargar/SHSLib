@@ -382,3 +382,56 @@ import SHSLib.Category.DCKE       -- dCKE presentation; Gardiner/Ullah kernel se
 import SHSLib.Category.Diagram    -- Composite paths and cross-framework transfer theorems
 import SHSLib.Category            -- Index + framework/bridge correspondence table
 import SHSLib.Category.ItoDiffusion -- GenPres of a 1-D diffusion; martingale problem / Dynkin up to horizon T
+
+/-!
+# SHSLib
+
+A Lean 4 / Mathlib formalization of **stochastic hybrid systems** (SHS): processes with a discrete
+mode and a continuous state, which follow an ordinary differential equation between random jumps
+that switch the mode and reset the state. The core follows Hespanha [Hespanha2005] and rests on
+Davis's theory of piecewise-deterministic Markov processes [Davis1993]. The homepage,
+<https://cavargar.github.io/SHSLib/>, gives an overview with the key equations.
+
+Importing `SHSLib` brings in every module of the library. It contains no `sorry` and no `axiom`:
+every theorem depends only on `propext`, `Classical.choice` and `Quot.sound`.
+
+## Layers
+
+* [`SHSLib.Core`](SHSLib/Core/Basic.html): Hespanha's SHS, its flow and extended generator, the
+  bridge to Davis's PDPs, the reset compensators and their martingales, and global existence
+  of the flow.
+* [`SHSLib.Foundations`](SHSLib/Foundations/DavisCh2.html): Davis, Chapters 1 and 2 (measure
+  theory, martingales, PDP theory, the strong Markov property), and special functions:
+  Stirling, Beta, polygamma, Clopper–Pearson and order statistics.
+* [`SHSLib.FPK`](SHSLib/FPK.html): Bect's generalized Fokker–Planck–Kolmogorov equation for
+  stochastic hybrid systems [Bect2010].
+* [`SHSLib.Gardiner`](SHSLib/Gardiner.html): the differential Chapman–Kolmogorov equation,
+  Itô calculus and stochastic differential equations, approximation methods, escape problems
+  and SDE numerics [Gardiner2004]. The Wiener process comes from the brownian-motion
+  project [Degenne2025].
+* [`SHSLib.Ullah`](SHSLib/Ullah.html): the differential Chapman–Kolmogorov equation derived
+  without integration by parts [UllahWolkenhauer2011].
+* [`SHSLib.Bujorianu2006`](SHSLib/Bujorianu2006/HybridSpace.html): the general theory of
+  stochastic hybrid systems of [BujorianuLygeros2006].
+* [`SHSLib.Category`](SHSLib/Category.html): one category of generator presentations that
+  relates all of the above; Dynkin's formula, the forward equation and the martingale problem
+  transfer along its morphisms.
+
+## Main results
+
+* `SHS.theorem1_generator_formula`: Dynkin's formula for the extended generator of an SHS
+  (Hespanha, Theorem 1).
+* `Gardiner.differentialCK`: the differential Chapman–Kolmogorov equation, Gardiner (3.4.22).
+* `Ullah.differentialCK`: the same equation by near/far splitting, Ullah and Wolkenhauer (8.13).
+* `GSHS.FPKData.IsWeakFPKSolution`: Bect's generalized FPK equation, Definition 7 / Eq. (14).
+
+## References
+
+* [Hespanha2005]
+* [Davis1993]
+* [Bect2010]
+* [Gardiner2004]
+* [UllahWolkenhauer2011]
+* [BujorianuLygeros2006]
+* [Degenne2025]
+-/

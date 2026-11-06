@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Simple
+
+/-!
 # Mean-square limits
 
 Helper layer for the Wiener integral: mean-square convergence is convergence in `L²(P)`.
@@ -9,7 +11,6 @@ Correlations and means pass to mean-square limits (`Gardiner.Ito.tendsto_integra
 `Gardiner.Ito.tendsto_integral_of_ms`), and so do centred Gaussian laws with converging variances
 (`Gardiner.Ito.map_eq_gaussianReal_of_ms`, via characteristic functions).
 -/
-import SHSLib.Gardiner.Ito.Simple
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

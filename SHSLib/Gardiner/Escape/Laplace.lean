@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Laplace's method with explicit error terms
 
 Toolkit for the small-`D` asymptotics of Gardiner, *Handbook of Stochastic Methods*, §5.2.7 c)
@@ -21,7 +23,6 @@ statements carry an explicit error term `C·D` (or `C·D²`) valid for every `0 
 
 The relative errors are therefore `O(√D)` (Gaussian case) and `O(D)` (endpoint case).
 -/
-import Mathlib
 
 open MeasureTheory Set Filter Topology Real
 

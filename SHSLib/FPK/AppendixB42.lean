@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.TotalVariationBounds
 
+/-!
 # Appendix B of Bect (2010): Eqs. (42) and (43)
 
 In the direction "(b) and (c) ⟹ (a)" of Theorem 8, Eq. (13) is rewritten, for every
@@ -27,7 +30,6 @@ forced jumps.  This file supplies the two missing links:
   `φ = 1_Γ` and `Γ ⊆ G`;
 * `GSHS.eq43_of_eq42` — Eq. (43).
 -/
-import SHSLib.FPK.TotalVariationBounds
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal

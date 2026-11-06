@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBinet
 
+/-!
 # The shifted Gamma ratio `Γ(x+a)/(Γ(x) x^a)`
 
 The Stirling defect `S(y) = log Γ(y) − (y − ½) log y + y` is trapped between
@@ -20,7 +23,6 @@ hence `|log Γ(x+a) − log Γ(x) − a log x| ≤ (a² + a + 1)/x` for `x ≥ �
 `a ≥ 0`, and in particular `log Γ(x+a) − log Γ(x) − a log x → 0`, the
 quantitative form of `Γ(x+a) ∼ Γ(x) x^a`.
 -/
-import SHSLib.Foundations.StirlingBinet
 
 open Real Set Filter Topology
 

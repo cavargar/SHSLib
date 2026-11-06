@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.Splitting
+
+/-!
 # A concrete asymmetric quartic double well
 
 `U(x) = x⁴/4 - x³/3 - x²`, `U'(x) = x(x + 1)(x - 2)`: minima `a = -1` (`U = -5/12`,
@@ -8,7 +10,6 @@ The left well is the upper one, so the population results of §9.1–9.2 are non
 `Gardiner.Escape.awHyp` verifies `TwoWellHyp` (radius `1/4`, cubic constant `2`, separation
 `1/100`), and every theorem of `DoubleWell.lean` and `Splitting.lean` is applied to it.
 -/
-import SHSLib.Gardiner.Escape.Splitting
 
 open MeasureTheory Set Filter Topology Real
 

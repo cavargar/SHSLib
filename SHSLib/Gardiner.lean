@@ -1,4 +1,12 @@
-/-
+import SHSLib.Gardiner.Basic
+import SHSLib.Gardiner.Taylor
+import SHSLib.Gardiner.WeakForm
+import SHSLib.Gardiner.Strong
+import SHSLib.Gardiner.Special
+import SHSLib.Gardiner.HigherMoments
+import SHSLib.Gardiner.Backward
+
+/-!
 # Derivation of the differential Chapman–Kolmogorov equation
 
 A formalization of §3.4.1 of C. W. Gardiner, *Handbook of Stochastic Methods*.
@@ -72,11 +80,8 @@ The three special cases of (3.4.22) and the facts stated about them:
 | generator form      | `Gardiner.backward_generator`,                              |
 |                     | `Gardiner.backward_generator_of_kernel`                     |
 | (3.6.4)             | `Gardiner.backwardDifferentialCK`                           |
+
+## References
+
+* [Gardiner2004], Chapter 3
 -/
-import SHSLib.Gardiner.Basic
-import SHSLib.Gardiner.Taylor
-import SHSLib.Gardiner.WeakForm
-import SHSLib.Gardiner.Strong
-import SHSLib.Gardiner.Special
-import SHSLib.Gardiner.HigherMoments
-import SHSLib.Gardiner.Backward

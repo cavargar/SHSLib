@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingWallis
 
+/-!
 # Explicit approximations to `π` from the central binomial coefficient
 
 Batch 162 proved the exact identity `W(n) = 16ⁿ/(C(2n,n)²(2n+1))` for Wallis'
@@ -19,7 +22,6 @@ bars: with `A(n) = 16ⁿ/(n · C(2n,n)²)`,
 whose two sides differ by the factor `e^{1/(315n⁵) + 1/(20160n⁵)}`.  In
 particular `A(n)·e^{−1/(4n) + 1/(96n³)} → π`, with relative error `O(n⁻⁵)`.
 -/
-import SHSLib.Foundations.StirlingWallis
 
 open Real Set Filter Topology
 

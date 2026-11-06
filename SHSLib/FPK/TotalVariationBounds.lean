@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DynkinFormula
+import SHSLib.FPK.MeanJumpIntensity
 
+/-!
 # Appendix B of Bect (2010): the total-variation bounds (39) and (41)
 
 The proof of Theorem 8 rests, besides the differentiation of Eq. (13), on the elementary
@@ -30,8 +34,6 @@ Theorem 8, the measure `|ν|(Γ)` being replaced by `|ν φ|` for a test functio
   `GSHS.FPKData.integrableOn_derivPair_of_fpk` — the corresponding local-integrability
   transfers used in the proof of Theorem 8.
 -/
-import SHSLib.FPK.DynkinFormula
-import SHSLib.FPK.MeanJumpIntensity
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal

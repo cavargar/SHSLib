@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Translation
+
+/-!
 # Density of elementary integrands (Gardiner §4.2.6)
 
 `Gardiner.Ito.exists_elem_approx`: every Itô integrand `G` on `[0, T]` (jointly measurable,
@@ -17,7 +19,6 @@ The proof follows the classical argument for measurable adapted processes (Doob'
    translation in `L²(ℝ)` (`Gardiner.Ito.tendsto_translate_sq`);
 3. hence some shift has small error.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Translation
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

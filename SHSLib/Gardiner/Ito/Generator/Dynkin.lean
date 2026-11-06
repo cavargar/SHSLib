@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
+import SHSLib.Gardiner.Ito.Calculus.Martingale
+import SHSLib.Gardiner.Ito.Generator.Basic
+
+/-!
 # Dynkin's formula and the martingale problem for Itô processes (Gardiner §4.3.4)
 
 Let `x` be an Itô process on `[0, T]` (`Gardiner.Ito.IsItoProcess`) whose drift and noise
@@ -15,9 +19,6 @@ bounded `f'`, `f''` (`C2BddDeriv`).  Then:
   jointly continuous, the process stopped at `T` is a Mathlib `Martingale` (the form used by
   `SHSCat.GenPres.SolvesMartingaleProblem`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
-import SHSLib.Gardiner.Ito.Calculus.Martingale
-import SHSLib.Gardiner.Ito.Generator.Basic
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

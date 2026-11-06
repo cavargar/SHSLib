@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.DavisMartingale
+import SHSLib.FPK.DynkinFormula
+import SHSLib.FPK.HespanhaResetKernel
 
+/-!
 # Eq. (12) for a concrete stochastic hybrid system
 
 The generalized Dynkin formula (12) of Bect (2010),
@@ -21,9 +26,6 @@ clock coordinate — the Dynkin formula takes exactly the form
 `GSHS.FPKData.weakDynkin_of_dynkin12` expects, so that the weak formulation of the
 generalized FPK equation applies to the concrete process.
 -/
-import SHSLib.Core.DavisMartingale
-import SHSLib.FPK.DynkinFormula
-import SHSLib.FPK.HespanhaResetKernel
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

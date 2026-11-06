@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaPowerLaw
+import SHSLib.Foundations.UniformOrderStatisticMoments
 
+/-!
 # Moments of an order statistic of a Beta sample
 
 Batch 190 identified the law of the `(j+1)`-st order statistic of a sample of
@@ -24,8 +28,6 @@ Together they give the mean, the second moment and the variance of the
 and, as a check, the classical uniform values `(j+1)/(n+1)` when `b = 1` and the
 mean `1/(nb+1)` of the minimum of `n` such variables.
 -/
-import SHSLib.Foundations.BetaPowerLaw
-import SHSLib.Foundations.UniformOrderStatisticMoments
 
 open MeasureTheory ProbabilityTheory Set
 

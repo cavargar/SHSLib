@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Ito.Brownian
+import SHSLib.Gardiner.SDE.SchemeMoments
+import SHSLib.Gardiner.SDE.Schemes
+
+/-!
 # Wiener increments, quadratic variation and `∫W dW` (Gardiner §4.2.2, §4.2.5)
 
 For a Wiener process `W` (`Gardiner.Ito.IsWiener W P`) and a partition
@@ -32,9 +36,6 @@ line `Σ_{i,j}[(tᵢ - tᵢ₋₁) - (t - t₀)][(tⱼ - tⱼ₋₁) - (t - t₀
 (`Gardiner.Ito.eq_4_2_18_printed_wrong`: for `n = 2` on `[0, 1]` the mean-square error is `1`,
 the printed expression gives `2`).  The final value `2 Σ Δtᵢ²` is correct.
 -/
-import SHSLib.Gardiner.Ito.Brownian
-import SHSLib.Gardiner.SDE.SchemeMoments
-import SHSLib.Gardiner.SDE.Schemes
 
 open MeasureTheory ProbabilityTheory Finset Filter Topology
 open scoped NNReal

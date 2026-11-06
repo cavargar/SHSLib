@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Eq. (3) of Bect (2010): the pathwise content of the generalized Itô formula
 
 Section 2.2 states the *generalized Itô formula*
@@ -30,7 +33,6 @@ The convention is that `a 0 = 0` and `a n = t`, that the jump times are among th
 sum over `Finset.range n` really only sees the genuine jumps in `(0; t]`; in particular
 the term `i = 0` vanishes, since the process does not jump at time `0`).
 -/
-import Mathlib
 
 open MeasureTheory intervalIntegral
 

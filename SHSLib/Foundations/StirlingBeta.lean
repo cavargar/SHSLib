@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingShiftRatio
 
+/-!
 # The Beta function and its asymptotics `B(x,y) ∼ Γ(y)·x^{−y}`
 
 Mathlib carries the Beta *integral* only in its complex form, so we introduce
@@ -24,7 +27,6 @@ turns the shifted-ratio bracket of batch 166 into
 and hence `B(x,y)·x^y/Γ(y) → 1` as `x → ∞`: the classical
 `B(x,y) ∼ Γ(y)·x^{−y}`, here with an explicit `O(1/x)` error.
 -/
-import SHSLib.Foundations.StirlingShiftRatio
 
 open Real Set Filter Topology
 

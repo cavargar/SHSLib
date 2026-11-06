@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.DigammaReflection
 
+/-!
 # Reflection at third order, and the cubic Mittag-Leffler expansion
 
 Differentiating the trigamma reflection formula
@@ -19,7 +22,6 @@ this into the cubic Mittag-Leffler expansion
 valid for `x ∈ (0,1)`.  At the fixed point `x = 1/2` both sides vanish, which
 is recorded as `tsum_inv_cube_half_cancel`.
 -/
-import SHSLib.Foundations.DigammaReflection
 
 open Real Set Filter
 

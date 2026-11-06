@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBeta
 
+/-!
 # The Euler integral for the real Beta function
 
 Batch 167 defined `B(x,y) = Γ(x)Γ(y)/Γ(x+y)` and studied its asymptotics.
@@ -19,7 +22,6 @@ Three consequences are recorded:
 * `B(k+1, m+1) = k!·m!/(k+m+1)!` for naturals;
 * the classical `∫₀¹ t^k(1−t)^{m} dt = k!·m!/(k+m+1)!`.
 -/
-import SHSLib.Foundations.StirlingBeta
 
 open Real Set Filter Topology intervalIntegral
 

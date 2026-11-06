@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GlobalFlowLinearGrowth
+import SHSLib.Core.FlowRegularity
 
+/-!
 # Regularity of the flow for drifts that are only locally Lipschitz
 
 `SHSLib.Core.FlowRegularity` establishes, for a *globally* Lipschitz drift, that
@@ -30,8 +34,6 @@ globally Lipschitz, and the results of the global theory apply.
   combining existence, continuity, the growth envelope, uniqueness and the
   restart identity, with no regularity hypothesis left on the flow.
 -/
-import SHSLib.Core.GlobalFlowLinearGrowth
-import SHSLib.Core.FlowRegularity
 
 open MeasureTheory Metric Set Topology
 

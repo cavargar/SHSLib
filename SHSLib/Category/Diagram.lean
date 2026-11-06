@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Hespanha
+import SHSLib.Category.Bujorianu
+import SHSLib.Category.DCKE
 
+/-!
 # The diagram of frameworks, and results transferred along its paths
 
 The framework files provide objects and arrows of `GenPres`:
@@ -32,9 +37,6 @@ transfer theorems:
 * `Gardiner.GardinerKernel.satisfiesDynkin` — Dynkin's formula for the strong
   generator of a kernel semigroup yields Dynkin's formula for the dCKE operator.
 -/
-import SHSLib.Category.Hespanha
-import SHSLib.Category.Bujorianu
-import SHSLib.Category.DCKE
 
 open CategoryTheory MeasureTheory Set Filter
 open scoped ENNReal

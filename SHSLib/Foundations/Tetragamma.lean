@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.TrigammaSeries
 
+/-!
 # The tetragamma series `ψ''(x) = −2 ∑_{k ≥ 0} 1/(x+k)³`
 
 This file repeats, one derivative higher, the argument of
@@ -19,7 +22,6 @@ the defect vanishes:
 At `x = 1` this is `(log Γ)'''(1) = −2 ζ(3)`
 (`SHSLib.Trigamma.tetragamma_one_eq_tsum`).
 -/
-import SHSLib.Foundations.TrigammaSeries
 
 open Real Set Filter
 

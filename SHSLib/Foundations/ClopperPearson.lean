@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaRecurrence
+import SHSLib.Foundations.BetaQuantileFunction
+import SHSLib.Foundations.BetaBinomialMeasure
 
+/-!
 # The Clopper–Pearson interval
 
 The exact ("Clopper–Pearson") confidence interval for the success probability
@@ -34,9 +39,6 @@ first parameter is increased and increases when the second one is, which at
 integer parameters is the obvious statement that a binomial upper tail shrinks
 as its threshold rises.
 -/
-import SHSLib.Foundations.BetaRecurrence
-import SHSLib.Foundations.BetaQuantileFunction
-import SHSLib.Foundations.BetaBinomialMeasure
 
 open Real Set MeasureTheory ENNReal NNReal
 

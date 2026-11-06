@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaMeasure
 
+/-!
 # Expectations under the Beta law
 
 Batch 171 computed the moments of the Beta distribution as interval integrals
@@ -14,7 +17,6 @@ so the moment formulas of batch 171 become genuine expectations.  The mean,
 the second moment, the general integer moment and the variance are restated in
 that form.
 -/
-import SHSLib.Foundations.BetaMeasure
 
 open Real Set Filter Topology MeasureTheory
 open scoped ENNReal

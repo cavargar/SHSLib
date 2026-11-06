@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.FlowRegularityLinearGrowth
 
+/-!
 # Explicit flows for the two simplest drifts
 
 Assumption 1 of Hespanha (2005) — the existence of a global flow
@@ -24,7 +27,6 @@ regularity they need to be recognised as *the* flow:
   `SHS.flow_eq_linearDriftFlow`: any global flow with continuous trajectories is
   the explicit one.
 -/
-import SHSLib.Core.FlowRegularityLinearGrowth
 
 open MeasureTheory Metric Set
 

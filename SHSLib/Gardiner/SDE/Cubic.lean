@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.EulerPathwise
+
+/-!
 # Failure of small-noise perturbation theory: the cubic process (Gardiner §6.2.4 a)
 
 Gardiner (6.2.33)–(6.2.47).  For `dx = -x³dt + ε dW`:
@@ -27,7 +29,6 @@ Gardiner (6.2.33)–(6.2.47).  For `dx = -x³dt + ε dW`:
   **Erratum:** (6.2.47) prints `-y₁[3y₀²c(0) + y₀³c'(0)]`; the term `y₀⁴c'(0)` does not
   contain `y₁` (`Gardiner.SDE.cubic_first_order_printed_wrong`).
 -/
-import SHSLib.Gardiner.SDE.EulerPathwise
 
 open Set Finset MeasureTheory intervalIntegral Real
 open scoped Topology

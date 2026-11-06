@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Basic
+
+/-!
 # The basic `L²` estimates for Itô processes with state-dependent coefficients
 
 * `isItoIntegrand_drive`: for a jointly measurable adapted process `x` with
@@ -8,7 +10,6 @@
   `E sup_{t₀ ≤ u ≤ t} |Y(u)|² ≤ 3 E ζ² + 3 (t - t₀) ∫_{t₀}^t E A² ds + 12 ∫_{t₀}^t E B² ds`.
   The factor `12 = 3 · 4` comes from Doob's inequality for the Itô integral.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Basic
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

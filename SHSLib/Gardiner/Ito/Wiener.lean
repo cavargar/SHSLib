@@ -1,4 +1,9 @@
-/-
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Independence.Basic
+import Mathlib.Probability.Process.Filtration
+import Mathlib.Probability.ConditionalExpectation
+
+/-!
 # The SHSLib interface to a standard Wiener process on real time (Gardiner §3.8.1, §4.2)
 
 This file is the **stable interface** through which SHSLib talks about Brownian motion.  It
@@ -35,10 +40,6 @@ filtration only looks at `r ∈ [0, s]`.
 * `Gardiner.Ito.iIndepFun_nat_of_fin`: independence of a sequence from independence of its
   initial segments (used to pass from finite partitions to grid sequences).
 -/
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Process.Filtration
-import Mathlib.Probability.ConditionalExpectation
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

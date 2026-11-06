@@ -1,4 +1,19 @@
-/-
+import SHSLib.Gardiner.Ito.Wiener
+import SHSLib.Gardiner.Ito.Brownian
+import SHSLib.Gardiner.Ito.Increments
+import SHSLib.Gardiner.Ito.Scaling
+import SHSLib.Gardiner.Ito.Pathwise
+import SHSLib.Gardiner.Ito.Schemes
+import SHSLib.Gardiner.Ito.Simple
+import SHSLib.Gardiner.Ito.MSLimit
+import SHSLib.Gardiner.Ito.WienerIntegral
+import SHSLib.Gardiner.Ito.WienerStep
+import SHSLib.Gardiner.Ito.WienerInstances
+import SHSLib.Gardiner.Ito.Linearised
+import SHSLib.Gardiner.Ito.OU
+import SHSLib.Gardiner.Ito.Multiple
+
+/-!
 # Wiener process and the first Itô computations (Gardiner §3.8.1, §4.2.2, §4.2.5, (6.2.40))
 
 Index of the Brownian-motion layer.  It connects a genuine Brownian motion (from the
@@ -106,17 +121,3 @@ deterministic continuous or step integrands are covered here), the Itô formula 
 strong solutions of SDEs with multiplicative noise are the subject of later jobs; they should be
 built on `Gardiner.Ito.IsWiener` and `Gardiner.Ito.wienerFiltration` only.
 -/
-import SHSLib.Gardiner.Ito.Wiener
-import SHSLib.Gardiner.Ito.Brownian
-import SHSLib.Gardiner.Ito.Increments
-import SHSLib.Gardiner.Ito.Scaling
-import SHSLib.Gardiner.Ito.Pathwise
-import SHSLib.Gardiner.Ito.Schemes
-import SHSLib.Gardiner.Ito.Simple
-import SHSLib.Gardiner.Ito.MSLimit
-import SHSLib.Gardiner.Ito.WienerIntegral
-import SHSLib.Gardiner.Ito.WienerStep
-import SHSLib.Gardiner.Ito.WienerInstances
-import SHSLib.Gardiner.Ito.Linearised
-import SHSLib.Gardiner.Ito.OU
-import SHSLib.Gardiner.Ito.Multiple

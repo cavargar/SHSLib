@@ -1,4 +1,32 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Filtered
+import SHSLib.Gardiner.Ito.Calculus.Elementary
+import SHSLib.Gardiner.Ito.Calculus.Space
+import SHSLib.Gardiner.Ito.Calculus.Translation
+import SHSLib.Gardiner.Ito.Calculus.Density
+import SHSLib.Gardiner.Ito.Calculus.Integral
+import SHSLib.Gardiner.Ito.Calculus.Martingale
+import SHSLib.Gardiner.Ito.Calculus.Riemann
+import SHSLib.Gardiner.Ito.Calculus.Quadratic
+import SHSLib.Gardiner.Ito.Calculus.Taylor
+import SHSLib.Gardiner.Ito.Calculus.ItoPath
+import SHSLib.Gardiner.Ito.Calculus.ItoFormula
+import SHSLib.Gardiner.Ito.Calculus.Growth
+import SHSLib.Gardiner.Ito.Calculus.ItoExamples
+import SHSLib.Gardiner.Ito.Calculus.MulLeft
+import SHSLib.Gardiner.Ito.Calculus.GBM
+import SHSLib.Gardiner.Ito.Calculus.Moments
+import SHSLib.Gardiner.Ito.Calculus.ItoProcess
+import SHSLib.Gardiner.Ito.Calculus.Localize
+import SHSLib.Gardiner.Ito.Calculus.FourthMoment
+import SHSLib.Gardiner.Ito.Calculus.QuadVar
+import SHSLib.Gardiner.Ito.Calculus.ItoPathGen
+import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
+import SHSLib.Gardiner.Ito.Calculus.ItoGeneralExamples
+import SHSLib.Gardiner.Ito.Calculus.RiemannCont
+import SHSLib.Gardiner.Ito.Calculus.MulLeftL2
+import SHSLib.Gardiner.Ito.Calculus.MomentsL2
+
+/-!
 # The general Itô integral and Itô's formula (job E3)
 
 Index of the stochastic-calculus layer `SHSLib.Gardiner.Ito.Calculus.*` (Gardiner §4.2–§4.4).
@@ -36,30 +64,3 @@ filtration `Gardiner.Ito.wienerFiltration`.  These files import Mathlib only; th
 | `MulLeftL2` | `∫ Z G dW = Z ∫ G dW` for unbounded `𝓕 0`-measurable `Z`; GBM solves `dx = λx dt + μx dW` for `x₀ ∈ L²` |
 | `MomentsL2` | GBM mean / second-moment equations and ODEs from Itô's formula for `x₀ ∈ L²` / `x₀² ∈ L²` |
 -/
-import SHSLib.Gardiner.Ito.Calculus.Filtered
-import SHSLib.Gardiner.Ito.Calculus.Elementary
-import SHSLib.Gardiner.Ito.Calculus.Space
-import SHSLib.Gardiner.Ito.Calculus.Translation
-import SHSLib.Gardiner.Ito.Calculus.Density
-import SHSLib.Gardiner.Ito.Calculus.Integral
-import SHSLib.Gardiner.Ito.Calculus.Martingale
-import SHSLib.Gardiner.Ito.Calculus.Riemann
-import SHSLib.Gardiner.Ito.Calculus.Quadratic
-import SHSLib.Gardiner.Ito.Calculus.Taylor
-import SHSLib.Gardiner.Ito.Calculus.ItoPath
-import SHSLib.Gardiner.Ito.Calculus.ItoFormula
-import SHSLib.Gardiner.Ito.Calculus.Growth
-import SHSLib.Gardiner.Ito.Calculus.ItoExamples
-import SHSLib.Gardiner.Ito.Calculus.MulLeft
-import SHSLib.Gardiner.Ito.Calculus.GBM
-import SHSLib.Gardiner.Ito.Calculus.Moments
-import SHSLib.Gardiner.Ito.Calculus.ItoProcess
-import SHSLib.Gardiner.Ito.Calculus.Localize
-import SHSLib.Gardiner.Ito.Calculus.FourthMoment
-import SHSLib.Gardiner.Ito.Calculus.QuadVar
-import SHSLib.Gardiner.Ito.Calculus.ItoPathGen
-import SHSLib.Gardiner.Ito.Calculus.ItoGeneral
-import SHSLib.Gardiner.Ito.Calculus.ItoGeneralExamples
-import SHSLib.Gardiner.Ito.Calculus.RiemannCont
-import SHSLib.Gardiner.Ito.Calculus.MulLeftL2
-import SHSLib.Gardiner.Ito.Calculus.MomentsL2

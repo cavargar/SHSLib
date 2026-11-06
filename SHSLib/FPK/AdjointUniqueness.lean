@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.GeneralizedFPK
 
+/-!
 # Eq. (15) and Definition 7(d) of Bect (2010): the adjoint `L*μ` and the FPK equation
 as an equality between measures
 
@@ -42,7 +45,6 @@ determined by its action on `C²_c(E)`.
   7(d)**: `μ'_t = L*μ_t + r_t(K − I)` as an equality between measures, evaluated on an
   arbitrary measurable set.
 -/
-import SHSLib.FPK.GeneralizedFPK
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 

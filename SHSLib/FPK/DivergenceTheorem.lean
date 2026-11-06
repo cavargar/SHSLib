@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.ProbabilityCurrent
 
+/-!
 # Appendix A of Bect (2010): the divergence theorem
 
 Assumption 10 of the paper requires each domain `E_q` to be a `C²`-manifold with
@@ -23,7 +26,6 @@ corners, a box `[a, b] ⊂ ℝⁿ⁺¹`, in the form used in the paper:
   `Σᵢ ∂fⁱ/∂zⁱ` computed from partial derivatives agrees with the trace of the Fréchet
   derivative.
 -/
-import SHSLib.FPK.ProbabilityCurrent
 
 open MeasureTheory Set
 

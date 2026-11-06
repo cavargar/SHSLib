@@ -1,4 +1,9 @@
-/-
+import SHSLib.Gardiner.SDE.Vector
+import SHSLib.Gardiner.SDE.Stability
+import SHSLib.Gardiner.SDE.Statistics
+import SHSLib.Gardiner.SDE.Cubic
+
+/-!
 # Concrete instances for the SDE small-noise and numerics layer
 
 Every main theorem of `SHSLib.Gardiner.SDE` is applied here (or next to its statement) to a
@@ -23,10 +28,6 @@ concrete, non-degenerate instance.
 * **Error recursions (10.1.24)–(10.1.29)** at `A = B = C = D = P = 1`
   (`Gardiner.SDE.error_recursion_instance`).
 -/
-import SHSLib.Gardiner.SDE.Vector
-import SHSLib.Gardiner.SDE.Stability
-import SHSLib.Gardiner.SDE.Statistics
-import SHSLib.Gardiner.SDE.Cubic
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal

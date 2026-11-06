@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # The trigamma function at `1`
 
 This file proves the classical identity
@@ -35,7 +38,6 @@ values along the integers and the half-integers:
 `ψ'(n+1/2) = π²/2 − ∑_{k<n} 1/(k+1/2)²`
 (`SHSLib.Trigamma.trigamma_nat_add_half`).
 -/
-import Mathlib
 
 open Real Set Filter
 

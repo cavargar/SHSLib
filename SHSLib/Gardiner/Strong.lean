@@ -1,11 +1,18 @@
-/-
+import SHSLib.Gardiner.WeakForm
+
+/-!
+# The differential Chapman–Kolmogorov equation (Gardiner (3.4.22))
+
 Integration by parts (3.4.19) and the differential Chapman–Kolmogorov equation
 (3.4.22) of Gardiner, §3.4.1.
 
 The process is assumed to take place on all of `ℝⁿ`, so that the surface terms of
 (3.4.19) are absent, as in the last paragraph of §3.4.1.
+
+## References
+
+* [Gardiner2004], §3.4.1
 -/
-import SHSLib.Gardiner.WeakForm
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

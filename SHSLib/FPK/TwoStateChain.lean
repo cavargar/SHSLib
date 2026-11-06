@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.GeneralizedFPK
+import SHSLib.FPK.SpontaneousJumps
 
+/-!
 # A concrete solution of the generalized FPK equation: the symmetric two-state chain
 
 The framework of Section 4 of Bect (2010) — the data `GSHS.FPKData`, the generalized
@@ -27,8 +31,6 @@ Main results:
 In particular the hypotheses of Theorem 8 are satisfiable: the definitions of the
 general theory are not vacuous.
 -/
-import SHSLib.FPK.GeneralizedFPK
-import SHSLib.FPK.SpontaneousJumps
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Basic
+
+/-!
 # Increments of the running Itô integral
 
 Auxiliary facts about the running Itô integral `t ↦ ∫₀ᵗ G dW` (`Gardiner.Ito.itoInt`):
@@ -9,7 +11,6 @@ Auxiliary facts about the running Itô integral `t ↦ ∫₀ᵗ G dW` (`Gardine
 * `itoInt_process_eq_running`: for an elementary integrand, the running Itô integral is the
   elementary running sum.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Basic
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

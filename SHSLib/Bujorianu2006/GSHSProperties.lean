@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.MarkovString
+import SHSLib.Bujorianu2006.Generator
 
+/-!
 # Properties of GSHS: executions, sojourn times and the renewal kernel
 
 Formalization of Definition 2 (Section 2.3) and of the verification steps of
@@ -22,8 +26,6 @@ content are
 both are proved here (`sojournTime_isTerminalTime` and
 `renewalKernel_shift_invariant`).
 -/
-import SHSLib.Bujorianu2006.MarkovString
-import SHSLib.Bujorianu2006.Generator
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

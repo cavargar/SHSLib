@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # The hybrid state space of a General Stochastic Hybrid System
 
 Formalization of Section 2.2–2.3 of
@@ -22,7 +25,6 @@ Contents.
 * Definition 1: the data of a General Stochastic Hybrid System, together with
   Assumptions 1–2 (continuous evolution, discrete transitions).
 -/
-import Mathlib
 
 open MeasureTheory MeasurableSpace Set Topology Filter
 open scoped ENNReal NNReal

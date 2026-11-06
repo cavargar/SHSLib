@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Adiabatic.KramersGenerator
+
+/-!
 # Boundary conditions and the initial layer (Gardiner §6.4.4, §6.4.5 (b)–(c))
 
 Gardiner, *Handbook of Stochastic Methods*, (6.4.81)–(6.4.89) and (6.4.109)–(6.4.113).
@@ -23,7 +25,6 @@ Gardiner, *Handbook of Stochastic Methods*, (6.4.81)–(6.4.89) and (6.4.109)–
   the zero-order operator `∂ᵤ(u + ∂ᵤ) - u∂_z` (`Gardiner.Adiabatic.psi0_stationary`,
   `Gardiner.Adiabatic.psi0'_stationary`).
 -/
-import SHSLib.Gardiner.Adiabatic.KramersGenerator
 
 open MeasureTheory
 

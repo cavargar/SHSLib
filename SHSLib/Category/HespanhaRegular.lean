@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Hespanha
+import SHSLib.Core.FlowDynkin
 
+/-!
 # Classical `C¹` test functions belong to the SHS generator domain
 
 `SHS.genPres S hflow` (in `SHSLib.Category.Hespanha`) takes as tests the
@@ -22,8 +26,6 @@ shows that this condition is automatic for classical test functions:
   the presentation restricted to classical test functions, so that every
   transferable property of `genPres` holds for all classical test functions.
 -/
-import SHSLib.Category.Hespanha
-import SHSLib.Core.FlowDynkin
 
 open CategoryTheory MeasureTheory Set Filter Topology
 

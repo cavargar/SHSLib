@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.ExplicitFlows
 
+/-!
 # Sharpness of the linear-growth envelope
 
 `SHSLib.Core.GlobalFlowLinearGrowth` bounds every trajectory of a drift with
@@ -23,7 +26,6 @@ flows of `SHSLib.Core.ExplicitFlows`:
   not vanish, the envelope is strictly larger than the true norm
   (`SHS.norm_flow_constDrift_lt_linearGrowthBound`).
 -/
-import SHSLib.Core.ExplicitFlows
 
 open Metric Set
 

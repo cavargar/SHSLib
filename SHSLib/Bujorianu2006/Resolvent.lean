@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.MarkovString
 
+/-!
 # Semigroup, resolvent and `p`-excessive functions
 
 Formalization of the potential-theoretic ingredients used in the proof of
@@ -22,7 +25,6 @@ and the fact that `U_p g` is a `p`-excessive function of the semigroup, i.e.
 
 and the resulting sub-invariance are proved here.
 -/
-import SHSLib.Bujorianu2006.MarkovString
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal

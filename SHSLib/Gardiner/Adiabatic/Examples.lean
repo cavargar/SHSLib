@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Adiabatic.Chemical
+import SHSLib.Gardiner.Adiabatic.Telegraph
+
+/-!
 # Concrete instances of the main theorems of `SHSLib.Gardiner.Adiabatic`
 
 Every main theorem of the adiabatic-elimination layer is applied here (or next to its
@@ -17,8 +20,6 @@ statement) to a concrete, non-degenerate instance.
   (`Gardiner.Adiabatic.proj_time_instance`); the Laplace-transformed equation (6.4.47) for
   `v(t) = e^{-4t}` (`Gardiner.Adiabatic.laplace_instance`).
 -/
-import SHSLib.Gardiner.Adiabatic.Chemical
-import SHSLib.Gardiner.Adiabatic.Telegraph
 
 open MeasureTheory Filter Topology Set
 

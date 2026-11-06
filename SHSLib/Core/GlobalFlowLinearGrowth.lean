@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GlobalFlowExistence
 
+/-!
 # Global existence of the flow under local Lipschitz continuity and linear growth
 
 `SHSLib.Core.GlobalFlowExistence` constructs the flow of an SHS whose drift is
@@ -35,7 +38,6 @@ linear growth.  The argument is the classical truncation argument:
 * `SHS.exists_hasGlobalFlow_of_linear_growth` — the corresponding statement for
   a stochastic hybrid system: `SHS.HasGlobalFlow` holds.
 -/
-import SHSLib.Core.GlobalFlowExistence
 
 open MeasureTheory Metric Set Topology Filter
 

@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.Polygamma
+import SHSLib.Foundations.DigammaAsymptotics
 
+/-!
 # Quantitative decay of the polygamma functions
 
 The mean value technique of batch 148, applied one derivative higher, brackets
@@ -23,8 +27,6 @@ function:
 hence `(log Γ)^{(m)}(x) → 0` as `x → ∞` for every `m ≥ 2`
 (`tendsto_polygamma_atTop`).
 -/
-import SHSLib.Foundations.Polygamma
-import SHSLib.Foundations.DigammaAsymptotics
 
 open Real Set Filter Topology
 

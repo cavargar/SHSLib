@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GlobalFlowLinearGrowth
 
+/-!
 # Global flow under a linear growth condition with time-varying coefficients
 
 `SHSLib.Core.GlobalFlowLinearGrowth` constructs the flow of an SHS whose drift
@@ -21,7 +24,6 @@ module carries the whole chain over to that setting:
 * `SHS.exists_hasGlobalFlow_of_linear_growth_var` — Assumption 1 for an SHS with
   a time-varying linear growth bound.
 -/
-import SHSLib.Core.GlobalFlowLinearGrowth
 
 open MeasureTheory Metric Set Topology Filter
 

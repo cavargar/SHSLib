@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.MeanJumpIntensity
 
+/-!
 # Section 6.1 of Bect (2010): models with spontaneous jumps only
 
 For a GSHS without forced jumps (`G = ∅`), the mean jump intensity is
@@ -20,7 +23,6 @@ Corollary 15 (`GSHS.meanJumpIntensity_density`, `GSHS.corollary15_source_density
 the verification of Assumption 14 for an absolutely continuous reset kernel
 `K(x, dy) = k(x, y) m(dy)` — Example 16, the case of the master equation (27).
 -/
-import SHSLib.FPK.MeanJumpIntensity
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.Expansion
+
+/-!
 # Pathwise small-noise expansion for additive noise (Gardiner §6.2, §6.2.1)
 
 For additive noise the SDE (6.2.1) reads `dx = a(x)dt + ε dw`.  Written as the integral equation
@@ -34,7 +36,6 @@ The noise cancels exactly in `x - Σ εⁿxₙ`, so the error is a `C¹` functio
 energy estimate (`Gardiner.SDE.energy_bound`) plus the algebraic remainder
 `Gardiner.SDE.expansion_remainder`.
 -/
-import SHSLib.Gardiner.SDE.Expansion
 
 open Set Finset MeasureTheory intervalIntegral Polynomial
 open scoped Nat Topology

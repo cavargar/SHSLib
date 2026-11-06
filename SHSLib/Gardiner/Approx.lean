@@ -1,4 +1,19 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+import SHSLib.Gardiner.Approx.SmallNoise
+import SHSLib.Gardiner.Approx.SmallNoiseMoments
+import SHSLib.Gardiner.Approx.SmallNoiseExample
+import SHSLib.Gardiner.Approx.SmallNoiseStationary
+import SHSLib.Gardiner.Approx.ReactionXA
+import SHSLib.Gardiner.Approx.KramersMoyal
+import SHSLib.Gardiner.Approx.JumpStationary
+import SHSLib.Gardiner.Approx.SystemSize
+import SHSLib.Gardiner.Approx.ReactionXAvk
+import SHSLib.Gardiner.Approx.Critical
+import SHSLib.Gardiner.Approx.Chemical
+import SHSLib.Gardiner.Approx.ChemicalKM
+import SHSLib.Gardiner.Approx.ChemicalLNA
+
+/-!
 # Small-noise and system-size approximations (Gardiner, Ch. 6 and Ch. 7)
 
 Index of the approximation layer built on the dCKE layer of `SHSLib.Gardiner`
@@ -143,17 +158,3 @@ The limit and integral interchanges the text makes silently are named hypotheses
 * (6.3.54): coefficients of the `ε²` and `ε⁴` terms (`SmallNoiseStationary`).
 * (7.2.4): `α₂ = ∫ y²Φ + δA²Q`; the text's value is the leading order (`KramersMoyal`).
 -/
-import SHSLib.Gardiner.Approx.Calculus
-import SHSLib.Gardiner.Approx.SmallNoise
-import SHSLib.Gardiner.Approx.SmallNoiseMoments
-import SHSLib.Gardiner.Approx.SmallNoiseExample
-import SHSLib.Gardiner.Approx.SmallNoiseStationary
-import SHSLib.Gardiner.Approx.ReactionXA
-import SHSLib.Gardiner.Approx.KramersMoyal
-import SHSLib.Gardiner.Approx.JumpStationary
-import SHSLib.Gardiner.Approx.SystemSize
-import SHSLib.Gardiner.Approx.ReactionXAvk
-import SHSLib.Gardiner.Approx.Critical
-import SHSLib.Gardiner.Approx.Chemical
-import SHSLib.Gardiner.Approx.ChemicalKM
-import SHSLib.Gardiner.Approx.ChemicalLNA

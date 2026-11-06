@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.GeneralizedFPK
+import SHSLib.FPK.SawtoothExample
 
+/-!
 # The sawtooth process with uniform initial law solves the generalized FPK equation
 
 `SHSLib.FPK.SawtoothExample` studies the process of Section 3.2 of Bect (2010) — motion
@@ -25,8 +29,6 @@ Main results:
 * `GSHS.Sawtooth.uniformData_weakDynkin` — the generalized Dynkin formula (13);
 * `GSHS.Sawtooth.uniformData_isWeakFPKSolution` — Definition 7 with `μ'_t = 0`.
 -/
-import SHSLib.FPK.GeneralizedFPK
-import SHSLib.FPK.SawtoothExample
 
 open MeasureTheory Set ProbabilityTheory intervalIntegral
 open scoped ENNReal

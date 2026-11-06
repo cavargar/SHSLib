@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Martingale
+
+/-!
 # Pulling an initial random factor out of the Itô integral
 
 If `Z` is bounded and measurable with respect to `𝓕 0` (for instance a random initial value
@@ -6,7 +8,6 @@ independent of the Wiener process), then `∫₀ᵀ Z G dW = Z ∫₀ᵀ G dW` a
 (`Gardiner.Ito.itoInt_mul_left`).  Gardiner uses this tacitly when solving linear equations with a
 random initial condition `x(t₀)` independent of `W` (§4.4.2).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Martingale
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

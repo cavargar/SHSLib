@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.UniformOrderStatisticLaw
+import SHSLib.Foundations.BetaConcentration
 
+/-!
 # Moments and concentration of a uniform order statistic
 
 Since the `(j+1)`-st order statistic of `n = j+m+1` independent uniforms has the
@@ -16,8 +20,6 @@ The transfers are the change-of-variables formula for a pushforward
 (`integral_map`, `variance_map`) and, for the concentration statement, the
 definition of the pushforward on a measurable set.
 -/
-import SHSLib.Foundations.UniformOrderStatisticLaw
-import SHSLib.Foundations.BetaConcentration
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

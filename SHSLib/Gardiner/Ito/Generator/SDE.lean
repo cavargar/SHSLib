@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.Dynkin
+import SHSLib.Gardiner.Ito.StochDE.Restart
+
+/-!
 # Dynkin's formula and the martingale problem for solutions of Lipschitz SDEs
 
 For a solution `x` of `dx = a(x, t) dt + b(x, t) dW` on `[0, T]` in the sense of job E4
@@ -17,8 +20,6 @@ bounded.  They come from the Itô formula of job E3 (`ito_formula_process_C2`), 
 continuous drift and noise paths and a bounded noise coefficient; see the plan for the
 localisation that would remove the boundedness of `b`.
 -/
-import SHSLib.Gardiner.Ito.Generator.Dynkin
-import SHSLib.Gardiner.Ito.StochDE.Restart
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.ContIto
+import SHSLib.Gardiner.Ito.StochDE.Gronwall
+
+/-!
 # Itô stochastic differential equations: definitions and the basic `L²` estimate
 
 Gardiner §4.3.1, (4.3.3)–(4.3.4), (4.3.10)–(4.3.11).  For a Wiener process `W` with respect to a
@@ -16,8 +19,6 @@ filtration `𝓕` (`Gardiner.Ito.IsFWiener W 𝓕 P`) and coefficients `a(x, t)`
 The main estimate is `sup_sq_le`: if `Y(u) = ζ + ∫_{t₀}^u A ds + ∫_{t₀}^u B dW` for all `u`, then
 `E sup_{t₀ ≤ u ≤ t} |Y(u)|² ≤ 3 E ζ² + 3 (t - t₀) ∫_{t₀}^t E A² + 12 ∫_{t₀}^t E B²`.
 -/
-import SHSLib.Gardiner.Ito.StochDE.ContIto
-import SHSLib.Gardiner.Ito.StochDE.Gronwall
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

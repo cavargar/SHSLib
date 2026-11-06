@@ -1,8 +1,15 @@
-/-
+import SHSLib.Gardiner.Taylor
+
+/-!
+# The weak form of the differential Chapman–Kolmogorov equation (Gardiner (3.4.16))
+
 The weak form of the differential Chapman–Kolmogorov equation: equations
 (3.4.8)–(3.4.16) of Gardiner, §3.4.1.
+
+## References
+
+* [Gardiner2004], §3.4.1
 -/
-import SHSLib.Gardiner.Taylor
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

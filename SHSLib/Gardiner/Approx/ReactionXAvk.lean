@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Approx.ReactionXA
+import SHSLib.Gardiner.Approx.SystemSize
+
+/-!
 # The system size expansion of `X ⇌ A`
 
 Gardiner, *Handbook of Stochastic Methods*, §7.2.3 b), equations (7.2.41)–(7.2.58).
@@ -26,8 +29,6 @@ in the numerator and `δ - δ²` for `δ + δ²`.  Correspondingly (7.2.58) shou
 `log Pₛ(z) ≈ const - (k₁/(2k₂a₀)) (z/√V + z²)`, so that the Gaussian has variance `k₂a₀/k₁`
 in agreement with (7.2.52); the text has `z/√V - z²`, which is not normalisable.
 -/
-import SHSLib.Gardiner.Approx.ReactionXA
-import SHSLib.Gardiner.Approx.SystemSize
 
 open MeasureTheory Filter Topology Set
 open scoped Nat

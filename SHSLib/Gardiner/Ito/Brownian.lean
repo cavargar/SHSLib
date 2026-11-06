@@ -1,4 +1,7 @@
-/-
+import BrownianMotion.Gaussian.BrownianMotion
+import SHSLib.Gardiner.Ito.Wiener
+
+/-!
 # Adapter: a concrete standard Wiener process from the `brownian-motion` library
 
 This is the **only** SHSLib file that imports the `brownian-motion` dependency (and, per
@@ -30,8 +33,6 @@ Library facts used: `IsBrownian_brownian`, `continuous_brownian`, `measurable_br
 `IsPreBrownian.isFilteredPreBrownian` (independence of future increments from the `ℝ≥0` natural
 filtration, which in turn rests on `IsPreBrownian.indepFun_shift`).
 -/
-import BrownianMotion.Gaussian.BrownianMotion
-import SHSLib.Gardiner.Ito.Wiener
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

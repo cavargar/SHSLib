@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaQuantileContinuity
 
+/-!
 # The Beta law as a measure
 
 Batches 171–176 built the Beta density `betaPDF`, the regularised incomplete
@@ -24,7 +27,6 @@ This is the bridge that lets the Beta law be used wherever this library speaks
 about probability measures, in particular for the division ratio of the
 cell-size models.
 -/
-import SHSLib.Foundations.BetaQuantileContinuity
 
 open Real Set Filter Topology MeasureTheory
 open scoped ENNReal

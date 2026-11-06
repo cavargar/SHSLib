@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.WeakFP
+
+/-!
 # The Fokker–Planck equation in strong form (Gardiner (4.3.19)–(4.3.20))
 
 * `itoFPRHS a b p t y = -∂_y[a(y, t) p(t, y)] + ½ ∂²_y[b(y, t)² p(t, y)]`, the right-hand side
@@ -17,7 +19,6 @@
 Regularity hypotheses (on an open time interval `(t₁, t₂)`): `p(s, ·)` continuous; `∂ₜp` exists
 and is jointly continuous; `y ↦ a(y, s) p(s, y)` is `C¹` and `y ↦ b(y, s)² p(s, y)` is `C²`.
 -/
-import SHSLib.Gardiner.Ito.Generator.WeakFP
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.HespanhaBridge
 
+/-!
 # From the generalized Itô formula to the generalized Dynkin formula (Section 4.1)
 
 Formalization of the step "(3) ⟹ (12) ⟹ (13)" of
@@ -39,7 +42,6 @@ be discharged for a concrete process.
 * `GSHS.FPKData.isWeakFPKSolution_of_martingale` — combining with Theorem 8(a)+(b)⇒(c):
   the law of the process is a weak solution of the generalized FPK equation (14).
 -/
-import SHSLib.FPK.HespanhaBridge
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.WeakForm
+
+/-!
+# The backward differential Chapman–Kolmogorov equation (Gardiner §3.6)
+
 The backward differential Chapman–Kolmogorov equation: §3.6 of Gardiner,
 "Equations for Time Development in Initial Time — Backward Equations",
 equations (3.6.1)–(3.6.4).
@@ -14,8 +18,11 @@ quotient (3.6.1) into (3.6.2); the continuity assumption of the text replaces th
 inner time `t' + Δt'` by `t'`, giving (3.6.3); and then the argument of §3.4.1 —
 Taylor expansion inside the ball `|z - y| < ε`, conditions (ii) and (iii) for the
 first two moments, and condition (i) outside the ball — produces (3.6.4).
+
+## References
+
+* [Gardiner2004], §3.6
 -/
-import SHSLib.Gardiner.WeakForm
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.SpontaneousJumps
 
+/-!
 # Eq. (24) of Bect (2010): Assumption 14 as an equality of measures on `E × E`
 
 Assumption 14 requires the reset kernel `K` to admit a dual kernel `K*` with respect to
@@ -16,7 +19,6 @@ form is *exactly* Eq. (24) read as an equality of measures on `E × E`: the comp
 product `m ⊗ₘ K` (which is `m(dx)K(x, dy)`) coincides with the image of `m ⊗ₘ K*`
 (which is `m(dy)K*(y, dx)`) under the coordinate swap.
 -/
-import SHSLib.FPK.SpontaneousJumps
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal

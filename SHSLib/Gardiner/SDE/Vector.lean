@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.Schemes
+
+/-!
 # Vector stochastic differential equations: notation, double integrals and vector algorithms
 (Gardiner §10.5.1–§10.5.6)
 
@@ -39,7 +41,6 @@ plays no role in the algebra below).
   (10.4.16); as printed, (10.5.40) together with (10.5.41) does not determine `ȳ`.  The omitted
   term has mean zero given `⟨E⟩ = 0` (`Gardiner.SDE.E_term_mean_zero`).
 -/
-import SHSLib.Gardiner.SDE.Schemes
 
 open MeasureTheory Finset
 

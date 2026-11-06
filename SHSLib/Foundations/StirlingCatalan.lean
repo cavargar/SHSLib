@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingCentralBinom
 
+/-!
 # Catalan numbers, and the asymptotics `C(2n,n) ~ 4ⁿ/√(πn)` with explicit rate
 
 Batch 158 (`SHSLib/Foundations/StirlingCentralBinom.lean`) proved
@@ -16,7 +19,6 @@ equivalences
 
 now with the *explicit* rate `e^{−1/(7n)} < · < 1` attached.
 -/
-import SHSLib.Foundations.StirlingCentralBinom
 
 open Real Set Filter Topology
 

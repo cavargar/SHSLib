@@ -1,4 +1,16 @@
-/-
+import SHSLib.Gardiner.Adiabatic.Projector
+import SHSLib.Gardiner.Adiabatic.ProjectorBound
+import SHSLib.Gardiner.Adiabatic.Telegraph
+import SHSLib.Gardiner.Adiabatic.Brownian
+import SHSLib.Gardiner.Adiabatic.KramersGenerator
+import SHSLib.Gardiner.Adiabatic.WhiteNoise
+import SHSLib.Gardiner.Adiabatic.Chemical
+import SHSLib.Gardiner.Adiabatic.Nonlinear
+import SHSLib.Gardiner.Adiabatic.ShortTime
+import SHSLib.Gardiner.Adiabatic.Boundary
+import SHSLib.Gardiner.Adiabatic.Examples
+
+/-!
 # Adiabatic elimination of fast variables (Gardiner, §6.4–§6.6)
 
 Index of the adiabatic-elimination layer (C. W. Gardiner, *Handbook of Stochastic Methods*,
@@ -135,14 +147,3 @@ system-size layer `SHSLib.Gardiner.Approx` and uses the same conventions:
 * (6.6.120), (6.6.122): the overall sign as printed gives a negative diffusion coefficient; the
   correct diffusion is `+D = ⟨ψχ⟩₀` (`Nonlinear`).
 -/
-import SHSLib.Gardiner.Adiabatic.Projector
-import SHSLib.Gardiner.Adiabatic.ProjectorBound
-import SHSLib.Gardiner.Adiabatic.Telegraph
-import SHSLib.Gardiner.Adiabatic.Brownian
-import SHSLib.Gardiner.Adiabatic.KramersGenerator
-import SHSLib.Gardiner.Adiabatic.WhiteNoise
-import SHSLib.Gardiner.Adiabatic.Chemical
-import SHSLib.Gardiner.Adiabatic.Nonlinear
-import SHSLib.Gardiner.Adiabatic.ShortTime
-import SHSLib.Gardiner.Adiabatic.Boundary
-import SHSLib.Gardiner.Adiabatic.Examples

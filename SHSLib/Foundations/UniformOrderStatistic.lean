@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaBinomialMeasure
+import Mathlib.Data.Fin.Tuple.Sort
 
+/-!
 # Uniform order statistics are Beta distributed
 
 Let `U₁, …, U_n` be independent uniforms on `[0,1]`.  The classical statement
@@ -29,8 +33,6 @@ the law of a sum of independent Bernoulli trials:
 The order statistic itself is `w ∘ Tuple.sort w`, the monotone rearrangement of
 the sample provided by Mathlib.
 -/
-import SHSLib.Foundations.BetaBinomialMeasure
-import Mathlib.Data.Fin.Tuple.Sort
 
 open MeasureTheory Set ENNReal
 

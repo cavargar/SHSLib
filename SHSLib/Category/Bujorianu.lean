@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Levy
+import SHSLib.Bujorianu2006.Generator
 
+/-!
 # General stochastic hybrid systems (Bujorianu–Lygeros 2006) in the
 # categorical organization
 
@@ -20,8 +24,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
   satisfying the boundary condition of Theorem 2; on the boundary its generator
   reduces to the continuous part (`domainPres_gen_of_frontier`).
 -/
-import SHSLib.Category.Levy
-import SHSLib.Bujorianu2006.Generator
 
 open CategoryTheory MeasureTheory Set Filter ProbabilityTheory
 

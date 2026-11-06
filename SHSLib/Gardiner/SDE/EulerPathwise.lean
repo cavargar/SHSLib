@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.Pathwise
+
+/-!
 # Pathwise convergence of the Euler scheme for additive noise (Gardiner §10.1.1, §10.1.4)
 
 For additive noise the explicit Euler algorithm (10.1.3), (10.1.15)–(10.1.17),
@@ -20,7 +22,6 @@ pathwise counterpart of the strong order `τ^{1/2}` claimed in (10.1.26).  The i
 `Gardiner.SDE.euler_sin_sqrt` treats `a = -sin x` driven by the Hölder-`½` path `w(t) = √t`:
 `|x(T) - y_N| ≤ (e^T - 1)(T/N + |ε| √(T/N))`.
 -/
-import SHSLib.Gardiner.SDE.Pathwise
 
 open Set Finset MeasureTheory intervalIntegral
 open scoped Interval

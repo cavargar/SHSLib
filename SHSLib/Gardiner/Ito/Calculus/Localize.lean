@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.MulLeft
+
+/-!
 # Localising the Itô integral in time
 
 For an Itô integrand `G` on `[0, T]` and `0 ≤ s ≤ t ≤ T`:
@@ -13,7 +15,6 @@ For an Itô integrand `G` on `[0, T]` and `0 ≤ s ≤ t ≤ T`:
 These are the ingredients for Itô's formula along a general Itô process
 (`Gardiner.Ito.ItoGeneral`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.MulLeft
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

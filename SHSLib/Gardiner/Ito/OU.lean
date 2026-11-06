@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Linearised
+import SHSLib.Gardiner.Ito.Schemes
+
+/-!
 # The Ornstein–Uhlenbeck process (Gardiner §4.4.4, (4.4.22)–(4.4.31))
 
 `Gardiner.Ito.ouProc k D x0 W t = x(0)e^{-kt} + √D ∫₀ᵗ e^{-k(t-t')} dW(t')` (4.4.26), written
@@ -24,8 +27,6 @@ with the Wiener integral `Gardiner.Ito.ouInt` (`Gardiner.Ito.IsWiener.ouProc_ae`
 
 The printed (4.4.27), (4.4.29), (4.4.30) are correct (for `k ≠ 0`, with `x(0)` independent of `W`).
 -/
-import SHSLib.Gardiner.Ito.Linearised
-import SHSLib.Gardiner.Ito.Schemes
 
 open MeasureTheory ProbabilityTheory Filter Topology Set intervalIntegral Finset
 open scoped NNReal

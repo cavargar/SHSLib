@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Adiabatic.KramersGenerator
+
+/-!
 # White noise as a limit of non-white noise (Gardiner §6.5)
 
 Gardiner, *Handbook of Stochastic Methods*, §6.5, (6.5.1)–(6.5.74).
@@ -32,7 +34,6 @@ Gardiner, *Handbook of Stochastic Methods*, §6.5, (6.5.1)–(6.5.74).
   same expansion holds with an additional `∂_τ` and with `a, b, D, E` evaluated at `τ = t`
   (`Gardiner.Adiabatic.wn_generator_time`); `D(τ)` may depend on `τ`, which is (6.5.73)–(6.5.74).
 -/
-import SHSLib.Gardiner.Adiabatic.KramersGenerator
 
 open MeasureTheory Set
 

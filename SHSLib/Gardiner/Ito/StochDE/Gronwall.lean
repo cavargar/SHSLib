@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Integral Gronwall inequalities in `ℝ≥0∞`
 
 * `lintegral_Ioc_pow`: `∫_{(t₀, t]} ((L (s - t₀))ᵏ / k!) ds = (L (t - t₀))^{k+1} / ((k+1)! L)`, in the
@@ -8,7 +10,6 @@
 * `iterate_bound_ennreal`: if `Δ₀ ≤ M` and `Δ_{n+1} t ≤ L ∫_{t₀}^t Δ_n`, then
   `Δ_n t ≤ M (L (t - t₀))ⁿ / n!` (the Picard iteration bound).
 -/
-import Mathlib
 
 open MeasureTheory Filter Topology
 open scoped ENNReal

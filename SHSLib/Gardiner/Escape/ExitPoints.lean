@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.FirstPassage
+
+/-!
 # Bistability in several dimensions, I: exit points and the mean exit time, §9.3.1–9.3.3
 
 The Matkowsky–Schuss construction of §9.3.1–9.3.2 consists of three exact one-dimensional
@@ -38,7 +40,6 @@ correct statement is `C₀ ∫ e^{-φ/ε} √(2εκ/π) = ∫ e^{-φ/ε}[√(2ε
 negative; the correct denominator is `∫_S e^{-φ/ε}|v·ν|`.  (9.3.43) `e^{φ/ε}` must be `e^{-φ/ε}`,
 and the left-hand side is `T(x) = e^{K/ε}τ(x)`, not `τ(x)`.
 -/
-import SHSLib.Gardiner.Escape.FirstPassage
 
 open MeasureTheory Set Filter Topology Real
 

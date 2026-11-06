@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingLogGamma
+import Mathlib.Analysis.SpecialFunctions.Stirling
 
+/-!
 # The Stirling constant is `½ log (2π)`
 
 `SHSLib/Foundations/StirlingLogGamma.lean` shows that the Stirling defect
@@ -21,8 +25,6 @@ Since `S` converges along the reals, that value is the limit:
   `log Γ(x) = (x − 1/2) log x − x + ½ log (2π) + o(1)`
   (`tendsto_stirlingDefect`, `tendsto_logGamma_sub_stirling`).
 -/
-import SHSLib.Foundations.StirlingLogGamma
-import Mathlib.Analysis.SpecialFunctions.Stirling
 
 open Real Set Filter Topology
 

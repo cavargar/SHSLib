@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Section 5.1 of Bect (2010): the surface measure and the boundary conditions (19)
 
 Two ingredients of Section 5.1 are formalized here.
@@ -26,7 +29,6 @@ has velocity `v` with `⟨∇ψ, v⟩ > 0`, then the curve leaves the domain for
 positive times.  Its contrapositive is `GSHS.inward_drift_of_stays_in_domain`, which is
 exactly the necessity of the first condition in Eq. (19).
 -/
-import Mathlib
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

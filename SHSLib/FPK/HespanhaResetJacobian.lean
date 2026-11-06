@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.SpontaneousJumps
 
+/-!
 # Example 18 of Bect (2010): deterministic reset maps and their Jacobians
 
 In the SHS of Hespanha the post-jump state is obtained by applying a reset map
@@ -23,7 +26,6 @@ This file proves that identity, by the change-of-variables formula:
 Together with `GSHS.corollary15_source_density` this yields the density
 `d(r_tK)/dm = K*(λ p_t)` of Eq. (25), which is Hespanha's FPK equation (33).
 -/
-import SHSLib.FPK.SpontaneousJumps
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

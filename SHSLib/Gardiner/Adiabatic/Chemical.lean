@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Adiabatic.Brownian
+
+/-!
 # Elimination of a short-lived chemical intermediate (Gardiner §6.6.1)
 
 Gardiner, *Handbook of Stochastic Methods*, §6.6.1, (6.6.1)–(6.6.35), for
@@ -25,7 +27,6 @@ equations (6.6.2) and all `t ≥ 0`,
 `O(γ⁻¹)` uniformly in time.  `Gardiner.Adiabatic.chem_mean_instance` constructs an explicit
 solution (for every `γ > 0`) and applies the bound to it.
 -/
-import SHSLib.Gardiner.Adiabatic.Brownian
 
 open Set MeasureTheory
 

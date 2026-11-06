@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.MeanJumpIntensity
 
+/-!
 # Eq. (8) from the Lévy system: the mean jump intensity of spontaneous jumps
 
 Formalization of the derivation of Eq. (8) in Section 3.1 of
@@ -22,7 +25,6 @@ is a mean jump intensity (Definition 6) for the spontaneous jumps: this is
 `GSHS.meanJumpIntensity_spontaneous_of_levy` below, which discharges the hypothesis
 `hR` of `GSHS.meanJumpIntensity_spontaneous`.
 -/
-import SHSLib.FPK.MeanJumpIntensity
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

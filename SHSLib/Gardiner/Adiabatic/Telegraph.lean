@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Adiabatic.ProjectorBound
+import SHSLib.Gardiner.Adiabatic.Projector
+
+/-!
 # Concrete instances of the projector method: telegraph noise in a Fourier mode
 
 Gardiner §6.5.1 notes that the elimination procedure works for any Markov fast process, "in
@@ -30,8 +33,6 @@ Instances proved here (all non-degenerate: `c ≠ 0`, and `d ≠ 0` for the non-
 * `Gardiner.Adiabatic.mat_secondOrder`: a `2 × 2` rational instance of the commutator algebra
   (6.6.90)–(6.6.105) with `PL₃ ≠ L₃P`.
 -/
-import SHSLib.Gardiner.Adiabatic.ProjectorBound
-import SHSLib.Gardiner.Adiabatic.Projector
 
 noncomputable section
 

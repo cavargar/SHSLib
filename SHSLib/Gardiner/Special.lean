@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Strong
+
+/-!
+# The Master, Fokker–Planck and Liouville equations (Gardiner §3.5)
+
 Interpretation of the conditions and results: §3.5 of Gardiner,
 *Handbook of Stochastic Methods*.
 
@@ -16,8 +20,11 @@ together with
   (distributional) form of the argument (3.5.18)–(3.5.21);
 * the Gaussian short-time solution (3.5.9) of the frozen-coefficient
   Fokker–Planck equation (3.5.8), in one dimension.
+
+## References
+
+* [Gardiner2004], §3.5
 -/
-import SHSLib.Gardiner.Strong
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

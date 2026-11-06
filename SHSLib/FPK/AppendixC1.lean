@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.ProbabilityCurrent
 
+/-!
 # Appendix C.1 of Bect (2010): Eqs. (46) and (47), the computation of `L*μ_t`
 
 The pointwise identities (44) and (45) of Appendix C.1,
@@ -28,7 +31,6 @@ which is the tested form of Eq. (48).  This file formalizes these two steps:
 * `GSHS.density_mul_normal_eq_zero_of_sq` — the elementary step of Appendix C.2 behind
   that vanishing: if `p Σ_l ⟨f_l,n⟩² = 0` then `p ⟨f_l,n⟩ = 0` for every `l`.
 -/
-import SHSLib.FPK.ProbabilityCurrent
 
 open MeasureTheory Set
 

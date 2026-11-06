@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GronwallGrowthBound
+import Mathlib.Analysis.ODE.PicardLindelof
 
+/-!
 # Global existence of the flow of an SHS with a Lipschitz drift
 
 `SHSLib.Core.Basic` records the existence of a globally defined flow of the
@@ -36,8 +40,6 @@ for all times.
 * `SHS.exists_hasGlobalFlow_of_lipschitz` — every SHS with a globally Lipschitz,
   jointly continuous drift has a global flow.
 -/
-import SHSLib.Core.GronwallGrowthBound
-import Mathlib.Analysis.ODE.PicardLindelof
 
 open MeasureTheory Metric Set Topology Filter
 

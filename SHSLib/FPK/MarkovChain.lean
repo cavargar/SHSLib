@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.MasterEquation
 
+/-!
 # Purely discrete modes: the forward Kolmogorov equation
 
 Example 16 of Bect (2010) notes that, when all the modes of the hybrid system are purely
@@ -16,7 +19,6 @@ equations
 
   `dp_y/dt = ∑ₓ (γ(x, y) p(x) − γ(y, x) p(y))`.   (27, discrete case)
 -/
-import SHSLib.FPK.MasterEquation
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal BigOperators

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.Tetragamma
 
+/-!
 # The polygamma series at every order
 
 Batches 144 and 145 proved
@@ -25,7 +28,6 @@ for every `j : ℕ` and every `x > 0`, equivalently
 the zeta values `(log Γ)^{(m)}(1) = (−1)^m (m−1)! ζ(m)`
 (`polygamma_one_eq_zeta`).
 -/
-import SHSLib.Foundations.Tetragamma
 
 open Real Set Filter
 

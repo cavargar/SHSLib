@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Martingale
+
+/-!
 # Left-point Riemann sums converge to the Itô integral (Gardiner §4.2.1, (4.2.8)–(4.2.10))
 
 Gardiner *defines* `∫₀ᵀ G dW` as the mean-square limit of the left-point sums
@@ -11,7 +13,6 @@ Gardiner's definition wherever the latter applies, in particular with the Wiener
 
 `W` itself is an Itô integrand when it is jointly measurable (`Gardiner.Ito.IsFWiener.isItoIntegrand_W`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Martingale
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

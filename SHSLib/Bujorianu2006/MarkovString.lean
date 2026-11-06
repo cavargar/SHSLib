@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.TerminalTimes
 
+/-!
 # Markov strings: jump times, translations, càdlàg paths, Markov property
 
 Formalization of Section 3.3–3.4 of
@@ -35,7 +38,6 @@ the current sojourn time is the same as restarting.  From these we *derive*:
 * the semigroup property and Chapman–Kolmogorov equation for a process with
   the Markov property (Eq. (14)) (Proposition 2).
 -/
-import SHSLib.Bujorianu2006.TerminalTimes
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal

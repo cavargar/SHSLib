@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Wellposed
+
+/-!
 # Existence of solutions of Itô SDEs: Picard iteration
 
 Gardiner §4.3.1, (4.3.10)–(4.3.11).  Under the Lipschitz and growth conditions on `[t₀, T]`
@@ -13,7 +15,6 @@ initial value `ξ`, the Picard iterates
   `E sup_{[t₀, T]} |x|² < ∞`;
 * `isSDESol_sdeSol`: **existence**: `sdeSol` is a solution of (4.3.4) on `[t₀, T]`.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Wellposed
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

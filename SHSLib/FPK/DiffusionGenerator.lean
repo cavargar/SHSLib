@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.ProbabilityCurrent
 
+/-!
 # Eq. (4) and Eq. (16) of Bect (2010): the differential generator and the probability
 current
 
@@ -26,7 +29,6 @@ records their basic properties:
   the Fokker–Planck equation `∂p/∂t = F p` is the conservation equation
   `∂p/∂t + div(j) = 0` for the probability current.
 -/
-import SHSLib.FPK.ProbabilityCurrent
 
 open MeasureTheory Set Finset
 

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.SDE
+
+/-!
 # The weak Fokker–Planck equation for the law of an Itô diffusion (Gardiner (4.3.18)–(4.3.19))
 
 Let `μ_t = P ∘ x(t)⁻¹` be the law of `x(t)`.  For a test function `φ ∈ C²_c` (`IsC2c φ`) and
@@ -12,7 +14,6 @@ jointly continuous coefficients `a`, `b` (with `b` bounded along the process):
 * `IsSDESol.weakFP_integrated`, `IsSDESol.weakFP_hasDerivWithinAt`, `IsSDESol.weakFP_hasDerivAt`:
   the same for solutions of Lipschitz SDEs on `[0, T]`.
 -/
-import SHSLib.Gardiner.Ito.Generator.SDE
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Category.GenPres
+import SHSLib.Gardiner.Ito.SDEBridge
+
+/-!
 # Itô diffusions as generator presentations: Dynkin's formula and the martingale problem
 
 The hub category `SHSCat.GenPres` (`SHSLib/Category/GenPres.lean`) phrases Dynkin's formula
@@ -23,8 +26,6 @@ derivatives; generator `a φ′ + ½ b² φ″`), and transfers E5's results.
 | `ItoDiffusion.satisfiesDynkinOn_of_isSDESol`, `satisfiesDynkin_of_isSDESol` | Dynkin's formula on `[0, T]`, and on `[0, ∞)` for global solutions |
 | `ItoDiffusion.stdWiener_*`, `ItoDiffusion.sinSDE_satisfiesDynkinOn` | instances: the standard Wiener process; `dx = −sin x dt + σ dW` |
 -/
-import SHSLib.Category.GenPres
-import SHSLib.Gardiner.Ito.SDEBridge
 
 open MeasureTheory Set
 

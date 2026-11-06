@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingShift
 
+/-!
 # `Γ(x+a)/(Γ(x)·x^a)` in multiplicative form
 
 Batch 165 bounded the *logarithm* of the shifted Gamma ratio:
@@ -13,7 +16,6 @@ Exponentiating turns this into a two-sided multiplicative bracket
 together with the limit `Γ(x+a)/(Γ(x)·x^a) → 1`, i.e. the classical
 `Γ(x+a) ∼ Γ(x)·x^a`.
 -/
-import SHSLib.Foundations.StirlingShift
 
 open Real Set Filter Topology
 

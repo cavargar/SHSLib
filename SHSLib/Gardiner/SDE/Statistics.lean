@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.SDE.Pathwise
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # Stationary solutions, mean, variance and time correlation (Gardiner §6.2.2–§6.2.3)
 
 Gardiner (6.2.14), (6.2.26)–(6.2.32).  The linearised process (6.2.13)–(6.2.14),
@@ -33,8 +36,6 @@ for (6.2.14)).  From it we derive:
   with integrable `C` (e.g. `Gardiner.SDE.pathwise_expansion` applied path by path) gives
   `|⟨x⟩ - Σ εⁿ⟨xₙ⟩| ≤ ⟨C⟩ |ε|^{N+1}` (`Gardiner.SDE.mean_expansion_of_pathwise`).
 -/
-import SHSLib.Gardiner.SDE.Pathwise
-import SHSLib.Gardiner.Approx.Calculus
 
 open Set Finset MeasureTheory ProbabilityTheory intervalIntegral Filter Topology
 

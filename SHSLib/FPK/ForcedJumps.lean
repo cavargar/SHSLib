@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DensityEvolution
+import SHSLib.FPK.ProbabilityFlow
 
+/-!
 # Section 6.2 of Bect (2010): a class of models with forced jumps
 
 Assumption 19(a) of the paper describes a GSHS whose jumps are all *forced* (`λ = 0`) and
@@ -34,8 +38,6 @@ The reset map is modelled as a measurable equivalence `e : E ≃ᵐ E` (Assumpti
 `Ψ` is a diffeomorphism from `G` onto `H`, and only its behaviour on `G` matters since
 all measures involved are carried by `G`, resp. `H`).
 -/
-import SHSLib.FPK.DensityEvolution
-import SHSLib.FPK.ProbabilityFlow
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

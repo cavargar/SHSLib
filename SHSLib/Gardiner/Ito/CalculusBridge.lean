@@ -1,4 +1,9 @@
-/-
+import SHSLib.Gardiner.Ito.Brownian
+import SHSLib.Gardiner.Ito.Calculus
+import SHSLib.Gardiner.Ito.WienerIntegral
+import SHSLib.Gardiner.SDE.WeakError
+
+/-!
 # Bridge: the E1/E2 Wiener process → the E3 Itô calculus
 
 The general Itô calculus `SHSLib.Gardiner.Ito.Calculus.*` (job E3) is stated for an abstract
@@ -18,10 +23,6 @@ This is deferred item 1 of `research/docs/plans/plan_gardiner_ito_formula.md`.
 | `IsWiener.integral_geomBM_const`, `IsWiener.integral_geomBM_sq_const` | GBM moments equal `Gardiner.SDE.gbmMean` and `Gardiner.SDE.gbmSecond` |
 | `geomBM_ito_stdWiener` | GBM solves `dx = λx dt + μx dW` driven by `stdWiener` |
 -/
-import SHSLib.Gardiner.Ito.Brownian
-import SHSLib.Gardiner.Ito.Calculus
-import SHSLib.Gardiner.Ito.WienerIntegral
-import SHSLib.Gardiner.SDE.WeakError
 
 open MeasureTheory ProbabilityTheory
 

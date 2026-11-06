@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Integral
+
+/-!
 # The running Itô integral is a martingale (Gardiner §4.2.6 f)
 
 For an Itô integrand `G` on `[0, t]` and `s ≤ t`, `E[∫₀ᵗ G dW | 𝓕 s] = ∫₀ˢ G dW` a.s.
@@ -6,7 +8,6 @@ For an Itô integrand `G` on `[0, t]` and `s ≤ t`, `E[∫₀ᵗ G dW | 𝓕 s]
 (`Gardiner.Ito.martingale_itoInt`), and so is the process stopped at a horizon `T` for an integrand
 given on `[0, T]` only (`Gardiner.Ito.martingale_itoInt_min`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Integral
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

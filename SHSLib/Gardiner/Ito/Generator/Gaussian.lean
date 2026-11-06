@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.StrongFP
+
+/-!
 # Gaussian densities solve the Fokker–Planck equation of linear SDEs
 
 * `gaussDens m v y = (2π v)^{-1/2} exp(-(y - m)²/(2v))` (equal to Mathlib's `gaussianPDFReal`,
@@ -9,7 +11,6 @@
   `dx = -k x dt + √D dW`), then `p(t, y) = gaussDens (m t) (v t) y` satisfies
   `∂ₜp = -∂_y[-k y p] + ½ ∂²_y[D p]`, i.e. Gardiner (4.3.20) for the OU coefficients.
 -/
-import SHSLib.Gardiner.Ito.Generator.StrongFP
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Real
 open scoped NNReal

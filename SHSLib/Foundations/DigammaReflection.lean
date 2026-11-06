@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.DigammaEuler
 
+/-!
 # Reflection formulas for `ψ` and `ψ'`, and the quarter-integer values
 
 `SHSLib/Foundations/Trigamma.lean` records the first derivative of Euler's
@@ -23,7 +26,6 @@ quarter integers:
 
   `ψ(1/4) = −γ − 3 log 2 − π/2`,  `ψ(3/4) = −γ − 3 log 2 + π/2`.
 -/
-import SHSLib.Foundations.DigammaEuler
 
 open Real Set Filter
 

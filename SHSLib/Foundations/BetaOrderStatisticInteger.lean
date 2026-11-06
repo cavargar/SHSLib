@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaOrderStatisticConcentration
 
+/-!
 # Order statistics of a sample of powers of uniforms
 
 Batches 193–194 expressed the moments of a Beta order statistic as ratios of
@@ -22,7 +25,6 @@ are the parent quantile evaluated at a rank fraction, so this is an explicit,
 non-asymptotic form of the statement that a sample quantile sits at the parent
 quantile of its rank fraction.
 -/
-import SHSLib.Foundations.BetaOrderStatisticConcentration
 
 open MeasureTheory ProbabilityTheory Set
 

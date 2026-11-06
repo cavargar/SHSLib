@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.MarkovString
 
+/-!
 # The jump counting measures `p`, `p*` of a Markov string
 
 Formalization of the counting processes appearing in the proof of Theorem 2 of
@@ -25,7 +28,6 @@ these are genuine counting measures (monotone in time and in the set,
 countably additive over disjoint sets), they vanish before the first jump, and
 under the non-Zeno Assumption 6 they are finite at every finite time.
 -/
-import SHSLib.Bujorianu2006.MarkovString
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal Classical

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Growth
+
+/-!
 # Itô's formula for functions of `W(t)` and `t`; worked integrals
 
 * `Gardiner.Ito.IsFWiener.ito_formula_W` — Gardiner (4.2.39):
@@ -9,7 +11,6 @@
   `∫₀ᵀ Wⁿ dW = W(T)ⁿ⁺¹/(n+1) - (n/2) ∫₀ᵀ Wⁿ⁻¹ dt`.
 * `Gardiner.Ito.IsFWiener.ito_exp` — Gardiner (4.2.38): `e^{W(T)} - 1 = ∫₀ᵀ ½ e^{W} dt + ∫₀ᵀ e^{W} dW`.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Growth
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

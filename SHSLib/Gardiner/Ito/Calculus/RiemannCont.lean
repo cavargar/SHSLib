@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoFormula
+import SHSLib.Gardiner.Ito.Calculus.Riemann
+
+/-!
 # Riemann sums for continuous adapted integrands (Gardiner §4.2.1)
 
 `Gardiner.Ito.itoRiemann_tendsto` assumes that the integrand is uniformly continuous in mean square.
@@ -13,8 +16,6 @@ the Itô integral in §4.2.1.  Bounded continuous adapted integrands are the spe
 
 Some domination is needed: path continuity alone does not give mean-square convergence of the sums.
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoFormula
-import SHSLib.Gardiner.Ito.Calculus.Riemann
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

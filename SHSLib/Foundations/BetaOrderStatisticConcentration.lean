@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaOrderStatisticMomentsPower
 
+/-!
 # Concentration of an order statistic of a Beta sample
 
 Batches 193–194 computed the mean and the variance of the `(j+1)`-st order
@@ -19,7 +22,6 @@ The general statements are `orderStat_betaSample_chebyshev` and
 `orderStat_betaSample_concentration`; specialising the mean and the variance
 gives the explicit forms for the two elementary parent families.
 -/
-import SHSLib.Foundations.BetaOrderStatisticMomentsPower
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

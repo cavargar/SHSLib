@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.FourthMoment
+
+/-!
 # Quadratic variation of a general Itô integral
 
 Let `b` be a bounded Itô integrand on `[0, T]`, `I(t) = ∫₀ᵗ b dW`, and `tᵢ` the uniform partition of
@@ -15,7 +17,6 @@ centred squared increments orthogonal, and the fourth-moment bound
 We also show that `Σᵢ g(tᵢ) (I(tᵢ₊₁) - I(tᵢ)) → ∫₀ᵀ g b dW` in mean square for bounded, adapted `g`
 with continuous paths (`Gardiner.Ito.sum_mul_incr_tendsto`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.FourthMoment
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

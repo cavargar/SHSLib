@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.Generator
 
+/-!
 # Time-varying Grönwall bound and Hespanha's Lemma 1 (Eq. 35)
 
 Companion to `SHSLib.Core.Generator`.
@@ -24,7 +27,6 @@ together with the general real-analysis ingredient it rests on, a Grönwall
 inequality with time-varying coefficient (`gronwall_varying_rate`), which is not
 available in Mathlib (Mathlib's `gronwallBound` API assumes a constant rate).
 -/
-import SHSLib.Core.Generator
 
 open MeasureTheory Topology Filter
 

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.SpontaneousJumps
 
+/-!
 # Section 4.2 of Bect (2010): the "physical" interpretation of the jump term
 
 The jump term of the generalized FPK equation (14) is `r_t (K - I) = r_t^src - r_t`,
@@ -20,7 +23,6 @@ This file formalizes these statements: `GSHS.jumpFlow` is `W_t`, `GSHS.jumpFlow_
 and `GSHS.jumpFlow_snd` identify its marginals with the sink and the source, and
 `GSHS.source_total_eq_sink_total` is the mass conservation identity.
 -/
-import SHSLib.FPK.SpontaneousJumps
 
 open MeasureTheory Set ProbabilityTheory
 

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.Kramers
+
+/-!
 # Mean first-passage times and exit probabilities in one dimension: §5.2.7–5.2.8
 
 Gardiner, *Handbook of Stochastic Methods*, (5.2.139)–(5.2.190), for the homogeneous backward
@@ -30,7 +32,6 @@ The ODE layer is exact.  A function `u` *solves the backward equation with right
   becomes `D⁻¹∫_x^b e^{U/D} ∫_a^y e^{-U/D}`, whose `a → -∞` limit is (5.2.165), i.e.
   `Gardiner.Escape.mfptBarrier` (`smolReflA_tendsto`; instance `doubleWell_reflect_limit`).
 -/
-import SHSLib.Gardiner.Escape.Kramers
 
 open MeasureTheory Set Filter Topology Real
 

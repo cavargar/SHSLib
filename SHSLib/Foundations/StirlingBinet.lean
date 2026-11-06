@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBounds
 
+/-!
 # The Binet constant `1/(12x)`
 
 Batch 155 (`SHSLib/Foundations/StirlingBounds.lean`) trapped the Stirling
@@ -25,7 +28,6 @@ whose derivative collapses to the manifestly positive `t⁴/(6(1+t)³)`.  Since
 `binetAux 0 = 0`, that gives `binetAux t > 0` for `t > 0` and hence the step
 inequality for every `x > 0`.
 -/
-import SHSLib.Foundations.StirlingBounds
 
 open Real Set Filter Topology
 

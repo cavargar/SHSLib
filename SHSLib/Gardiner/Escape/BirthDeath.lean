@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Escape.Splitting
+import SHSLib.Gardiner.Approx.JumpStationary
+
+/-!
 # Mean first-passage times for birth–death processes: §7.4 and §9.2.3
 
 Gardiner, *Handbook of Stochastic Methods*, (7.4.1)–(7.4.19) and (9.2.34)–(9.2.50), for a
@@ -31,8 +34,6 @@ one-step process on `ℤ` with birth rates `t⁺(x) > 0` and death rates `t⁻(x
 * `bdSplit_spec` — **(9.2.50)**: the splitting probabilities solve the discrete backward equation
   with `π_c(a) = 0`, `π_c(c) = 1`; `bd_flux_identity` — **(9.2.41)–(9.2.45)**.
 -/
-import SHSLib.Gardiner.Escape.Splitting
-import SHSLib.Gardiner.Approx.JumpStationary
 
 open Finset Filter Topology
 

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Increments
+import SHSLib.Gardiner.SDE.Examples
+
+/-!
 # Numerical schemes driven by Brownian grid increments (Gardiner §10.1–§10.4)
 
 The moment theorems of the Itô-free layer (`Gardiner.SDE.linScheme_moments` and the weak-error
@@ -20,8 +23,6 @@ schemes of Ch. 10 can be driven by a genuine Brownian motion, as in (10.1.15)–
   `Gardiner.SDE.gbm_ms_instance` for schemes driven by Brownian increments;
 * `Gardiner.Ito.ou_weak_stdWiener`: the same for the standard Wiener process.
 -/
-import SHSLib.Gardiner.Ito.Increments
-import SHSLib.Gardiner.SDE.Examples
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Doob
+
+/-!
 # Jointly measurable, adapted versions of continuous processes and of drift integrals
 
 The interface `IsFWiener` gives a Wiener process that is adapted with almost surely continuous
@@ -13,7 +15,6 @@ regularisations needed to build solutions of stochastic differential equations:
   for all `t ∈ [t₀, T]`.  It is the limit of the drift integrals along the step approximations
   `x (t₀ + ⌊2ⁿ (s - t₀)⌋ / 2ⁿ)` of `x`.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Doob
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

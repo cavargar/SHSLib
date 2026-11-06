@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.GBM
+
+/-!
 # An Itô process with drift: `x(t) = μt + σW(t)` (Gardiner §4.3.3)
 
 A non-degenerate instance of the general one-dimensional Itô formula
@@ -12,7 +14,6 @@ It also records the moments of geometric Brownian motion with a deterministic in
 `x(0) = x₀`, in the closed forms `x₀ e^{λt}` and `x₀² e^{(2λ+μ²)t}` used by the SDE layer
 (`Gardiner.Ito.IsFWiener.integral_geomBM_const`, `Gardiner.Ito.IsFWiener.integral_geomBM_sq_const`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.GBM
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 

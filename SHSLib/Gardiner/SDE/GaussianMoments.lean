@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Moments of a centred Gaussian increment (Gardiner §10.1.4)
 
 The numerical schemes of Gardiner Ch. 10 are driven by i.i.d. Gaussian increments
@@ -17,7 +19,6 @@ which we derive here from the moment generating function `exp(τ t²/2)` of `gau
 and the expectation of an arbitrary polynomial of degree `≤ 4` in `ΔW`
 (`Gardiner.SDE.gauss_poly4`).
 -/
-import Mathlib
 
 open MeasureTheory ProbabilityTheory Real
 open scoped NNReal

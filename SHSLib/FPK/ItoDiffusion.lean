@@ -1,4 +1,7 @@
-/-
+import SHSLib.FPK.GeneralizedFPK
+import SHSLib.Gardiner.Ito.SDEBridge
+
+/-!
 # Itô diffusions as Bect FPK data: the weak Dynkin formula (13) without jumps
 
 Bect's generalized Fokker–Planck–Kolmogorov framework (`GSHS.FPKData`, `SHSLib/FPK/`) packages a
@@ -19,8 +22,6 @@ whose weak Dynkin formula is the weak heat equation.
 | `weakDynkin_of_isSDESol` | Bect (13) for global solutions of Lipschitz SDEs with bounded noise |
 | `weakDynkin_stdWiener` | instance: the standard Wiener process (`a = 0`, `b = 1`) |
 -/
-import SHSLib.FPK.GeneralizedFPK
-import SHSLib.Gardiner.Ito.SDEBridge
 
 open MeasureTheory ProbabilityTheory
 

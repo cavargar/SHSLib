@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.GenPres
+import SHSLib.Bujorianu2006.Martingale
 
+/-!
 # The category of transition semigroups and the strong-generator functor
 
 Objects are transition semigroups `(P_t)_{t ≥ 0}` in the sense of
@@ -21,8 +25,6 @@ martingale problems, forward equations — see `SHSLib.Category.GenPres`)
 applies to transition semigroups, and transfers along intertwiners.  We also
 show that intertwiners transport resolvents and Bujorianu's Dynkin formula.
 -/
-import SHSLib.Category.GenPres
-import SHSLib.Bujorianu2006.Martingale
 
 open CategoryTheory MeasureTheory Set Filter Topology
 

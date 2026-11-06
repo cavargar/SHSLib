@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.ChemicalLNA
+
+/-!
 # Short-time behaviour of the Smoluchowski limit (Gardiner §6.4.3)
 
 Gardiner, *Handbook of Stochastic Methods*, §6.4.3, (6.4.70)–(6.4.80).  In the time domain the
@@ -22,7 +24,6 @@ interchange of `K` with the time integral being the only property used).
 * Instance: `Gardiner.Adiabatic.shortTime_instance`, `E = ℝ`, `K = -2`, `γ = 3`,
   `q(t) = 2e^{-t} - e^{-2t}`.
 -/
-import SHSLib.Gardiner.Approx.ChemicalLNA
 
 open Set MeasureTheory intervalIntegral
 

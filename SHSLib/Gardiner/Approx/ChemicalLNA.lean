@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.ChemicalKM
+
+/-!
 # The multivariate linear noise approximation
 
 Gardiner, *Handbook of Stochastic Methods*, §7.5 (linearisation of the chemical Fokker–Planck
@@ -16,7 +18,6 @@ equation (7.5.31) about the deterministic solution) with the covariance evolutio
   closed moment equations, then for solutions of the chemical master equation (7.5.9).
 * `Gardiner.xa_chem_affine` — `X ⇌ A` as a chemical network satisfies the affinity hypotheses.
 -/
-import SHSLib.Gardiner.Approx.ChemicalKM
 
 open Finset Filter Topology Set
 open scoped Nat

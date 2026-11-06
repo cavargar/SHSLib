@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GeneratorDefs
+import SHSLib.FPK.GeneralizedFPK
 
+/-!
 # The Hespanha SHS as a GSHS with spontaneous jumps (Example 18 of Bect, 2010)
 
 Bect's framework describes the jumps of a GSHS through a Lévy system (Eqs. (5)–(6)):
@@ -20,8 +24,6 @@ the two descriptions:
   state, producing exactly the two terms `μ_t(L₀ψ) + r_t(K − I)ψ` of the generalized
   Dynkin formula (13), with the mean jump intensity `r_t = λ μ_t` of Eq. (8).
 -/
-import SHSLib.Core.GeneratorDefs
-import SHSLib.FPK.GeneralizedFPK
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

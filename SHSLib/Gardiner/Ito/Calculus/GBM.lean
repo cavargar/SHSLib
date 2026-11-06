@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoExamples
+import SHSLib.Gardiner.Ito.Calculus.MulLeft
+
+/-!
 # Geometric Brownian motion (Gardiner §4.4.2, (4.4.3)–(4.4.13))
 
 `geomBM λ μ x₀ W t = x₀ exp((λ - μ²/2) t + μ W(t))` solves the linear multiplicative-noise
@@ -13,8 +16,6 @@ equation `dx = λ x dt + μ x dW` of job D in the integral sense
 
 The initial value `x₀` is `𝓕 0`-measurable, i.e. independent of the Wiener increments.
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoExamples
-import SHSLib.Gardiner.Ito.Calculus.MulLeft
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

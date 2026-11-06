@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # The expansion algebra of the small-noise expansion (Gardiner (6.2.3)–(6.2.9), (6.2.19)–(6.2.20))
 
 Gardiner §6.2 substitutes `x = x₀ + εx₁ + ε²x₂ + …` into a coefficient function `a(x)` and
@@ -30,7 +32,6 @@ This involves no noise at all.  We formalize it in full generality, for an arbit
 
 The same function `snCoeff` gives the expansion (6.2.8) of the noise coefficient `b`.
 -/
-import SHSLib.Gardiner.Approx.Calculus
 
 open Polynomial Finset
 open scoped Nat

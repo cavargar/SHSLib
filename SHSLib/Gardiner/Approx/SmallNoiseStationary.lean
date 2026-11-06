@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Special
+
+/-!
 # Asymptotic method for stationary distributions
 
 Gardiner, *Handbook of Stochastic Methods*, §6.3.3, (6.3.52)–(6.3.56).
@@ -25,7 +27,6 @@ the coefficients `-½(∂ᵢBᵢⱼ∂ⱼφ + ∂ⱼBᵢⱼ∂ᵢφ)` (`= -Σ �
 term `-½ Σ Bᵢⱼ ∂ᵢ∂ⱼφ` at order `ε²`, and the term `½ Σ ∂ᵢ∂ⱼBᵢⱼ` at order `ε⁴`, not `ε²`.
 The leading order (6.3.56) is unaffected.
 -/
-import SHSLib.Gardiner.Special
 
 open Finset Filter Topology
 

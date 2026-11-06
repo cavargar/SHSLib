@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.Kramers
+
+/-!
 # Diffusion in a double well: small-`D` asymptotics with error terms
 
 Gardiner, *Handbook of Stochastic Methods*, §9.1.2 (9.1.4)–(9.1.8), §9.1.4 (9.1.11)–(9.1.13) and
@@ -21,7 +23,6 @@ Everything is proved with an explicit relative error `O(√D)`:
 
 The hypotheses are bundled in `Gardiner.Escape.TwoWellHyp`.
 -/
-import SHSLib.Gardiner.Escape.Kramers
 
 open MeasureTheory Set Filter Topology Real
 

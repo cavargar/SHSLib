@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.DoubleWell
+
+/-!
 # Splitting probabilities in a double well: §9.1.4, (9.1.10)–(9.1.21)
 
 For the Smoluchowski process (9.1.1) with absorbing barriers at the two minima `a < c`, the
@@ -18,7 +20,6 @@ normalised error function (its limit at `∞` is `π/(2√2) ≠ 1`), and with i
 `erf_G(x) = √(2/π)∫₀ˣ e^{-t²/2} dt = erf(x/√2)`; equivalently, with the standard
 `erf(x) = (2/√π)∫₀ˣ e^{-t²}`, `π_c → ½ erfc(y₀ √(|U''(b)|/2))`.  See `gauss_tail_eq`.
 -/
-import SHSLib.Gardiner.Escape.DoubleWell
 
 open MeasureTheory Set Filter Topology Real
 

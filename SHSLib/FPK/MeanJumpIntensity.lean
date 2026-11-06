@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Mean jump intensity of a general stochastic hybrid system
 
 Formalization of Section 3 of
@@ -27,7 +30,6 @@ This file contains:
 * `GSHS.meanJumpIntensity_spontaneous` — Eq. (8): for spontaneous jumps with
   stochastic intensity `λ`, the measure `r_t = λ · μ_t` is a mean jump intensity.
 -/
-import Mathlib
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal

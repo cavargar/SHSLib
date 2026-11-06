@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.DigammaSharpBound
+import SHSLib.Foundations.PolygammaAsymptotics
 
+/-!
 # The sharp trigamma bracket `1/x + 1/(2x²) < ψ'(x) < 1/x + 1/x²`
 
 Batch 152 bracketed the trigamma function between `1/x` and `1/(x−1)`, which is
@@ -19,8 +23,6 @@ positive rational function,
 using the trigamma recurrence `ψ'(x+1) = ψ'(x) − 1/x²`, and both defects tend
 to `0` at infinity because `ψ'` does.
 -/
-import SHSLib.Foundations.DigammaSharpBound
-import SHSLib.Foundations.PolygammaAsymptotics
 
 open Real Set Filter Topology
 

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.QuadVar
+import SHSLib.Gardiner.Ito.Calculus.ItoPathGen
+
+/-!
 # Itô processes and Itô's formula (Gardiner §4.3.3, (4.3.14); §4.2.6 d)
 
 An **Itô process** on `[0, T]` (`Gardiner.Ito.IsItoProcess`) is a process
@@ -18,8 +21,6 @@ increments of `I = ∫ b dW`.  Then `Σ F_x(tᵢ, xᵢ) ΔIᵢ → ∫ b F_x dW`
 (`qv_weighted_sq_le`).  Along a subsequence all three converge almost surely, and the deterministic
 `IsC12.ito_pathwise_gen` applies path by path.
 -/
-import SHSLib.Gardiner.Ito.Calculus.QuadVar
-import SHSLib.Gardiner.Ito.Calculus.ItoPathGen
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

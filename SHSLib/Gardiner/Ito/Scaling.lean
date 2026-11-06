@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Ito.Brownian
+import SHSLib.Gardiner.SDE.Cubic
+import SHSLib.Gardiner.SDE.SchemeMoments
+
+/-!
 # Brownian scaling (Gardiner (6.2.39)–(6.2.44))
 
 Gardiner reduces the cubic process `dx = -x³dt + ε dW(t)` to the parameterless form
@@ -23,9 +27,6 @@ process `W̃(τ) = √ε W(τ/ε)` is again a standard Wiener process.
   `Gardiner.Ito.cubic_scaling_stdWiener` (`c(z) = 1/(1 + z⁴)`, where pathwise solutions exist for
   every Brownian path).
 -/
-import SHSLib.Gardiner.Ito.Brownian
-import SHSLib.Gardiner.SDE.Cubic
-import SHSLib.Gardiner.SDE.SchemeMoments
 
 open MeasureTheory ProbabilityTheory Filter Set
 open scoped NNReal

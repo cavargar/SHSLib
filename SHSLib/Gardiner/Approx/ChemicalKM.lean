@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Chemical
+
+/-!
 # Multivariate Kramers–Moyal truncation
 
 Gardiner, *Handbook of Stochastic Methods*, §7.5, (7.5.30)–(7.5.32): the Kramers–Moyal
@@ -14,7 +16,6 @@ Fokker–Planck equation, with an explicit error term.
 * `Gardiner.mjGen_coord`, `Gardiner.mjGen_coord_mul` — the generator on coordinates and their
   products (the source of the moment equations).
 -/
-import SHSLib.Gardiner.Approx.Chemical
 
 open Finset Filter Topology Set
 open scoped Nat

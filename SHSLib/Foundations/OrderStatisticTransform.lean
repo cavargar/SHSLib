@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.UniformOrderStatisticLaw
+import SHSLib.Foundations.BetaInverseTransform
 
+/-!
 # The probability integral transform for order statistics
 
 Batches 187–189 established that the `(j+1)`-st order statistic of
@@ -25,8 +29,6 @@ statement for a Beta sample:
 
 where `Q_{a,b}` is the quantile function of `Beta(a,b)`.
 -/
-import SHSLib.Foundations.UniformOrderStatisticLaw
-import SHSLib.Foundations.BetaInverseTransform
 
 open MeasureTheory Set ENNReal
 

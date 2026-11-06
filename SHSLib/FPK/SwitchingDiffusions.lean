@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DensityEvolution
 
+/-!
 # Example 17 of Bect (2010): switching diffusions
 
 For a switching diffusion the hybrid state space is `E = Q × Z` (with `Q` countable and
@@ -22,7 +25,6 @@ proves the duality (`GSHS.isDualKernel_switching`), and computes the source dens
 `Σ_{q'} λ_{q' q}(z) p_t(q', z)` of the classical FPK equation (30) for switching
 diffusions.
 -/
-import SHSLib.FPK.DensityEvolution
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

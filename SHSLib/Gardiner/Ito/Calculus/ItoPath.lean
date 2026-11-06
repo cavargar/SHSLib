@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Taylor
+
+/-!
 # The pathwise core of Itô's formula
 
 `Gardiner.Ito.IsC12.ito_pathwise` is a purely deterministic statement.  Let
@@ -14,7 +16,6 @@ Then `F(T, X_T) - F(0, X_0) = ∫₀ᵀ (F_t + a F_x + ½ b² F_xx)(s, X_s) ds +
 For a Wiener path `w = W(·, ω)` the three hypotheses hold almost surely along a subsequence,
 which gives Itô's formula (`Gardiner.Ito.IsFWiener.ito_formula`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Taylor
 
 open Filter Topology Set MeasureTheory
 

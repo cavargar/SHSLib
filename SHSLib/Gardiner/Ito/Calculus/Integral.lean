@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Density
+
+/-!
 # The Itô integral of a general nonanticipating integrand (Gardiner §4.2.1, §4.2.4, §4.2.6)
 
 For an Itô integrand `G` on `[0, T]` (`Gardiner.Ito.IsItoIntegrand`) and a Wiener process `W` with
@@ -18,7 +20,6 @@ approximating sequence, so that it is exactly (not only a.e.) `𝓕 T`-measurabl
   `itoInt_mul_iter`, `itoInt_sq`);
 * martingale property of `t ↦ ∫₀ᵗ G dW` (`itoInt_condExp`, `martingale_itoInt`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Density
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

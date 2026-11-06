@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Estimate
+
+/-!
 # Uniqueness, moment bound and continuous dependence for Itô SDEs
 
 Gardiner §4.3.1, (4.3.10)–(4.3.11).  For solutions of (4.3.4) on `[t₀, T]` (`IsSDESol`):
@@ -9,7 +11,6 @@ Gardiner §4.3.1, (4.3.10)–(4.3.11).  For solutions of (4.3.4) on `[t₀, T]` 
   `E sup_{t₀ ≤ t ≤ T} |x(t) - y(t)|² ≤ 3 e^{L (T - t₀)} E |ξ - η|²`, `L = (3 (T - t₀) + 12) K²`;
 * `IsSDESol.unique`: **uniqueness up to indistinguishability**.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Estimate
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

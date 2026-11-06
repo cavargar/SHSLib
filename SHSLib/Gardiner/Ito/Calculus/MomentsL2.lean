@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Moments
+import SHSLib.Gardiner.Ito.Calculus.MulLeftL2
+
+/-!
 # GBM moment equations for unbounded initial values
 
 `Gardiner.Ito.IsFWiener.geomBM_mean_eq` and `geomBM_second_eq` (`Moments.lean`) derive the moment
@@ -10,8 +13,6 @@ equations of `dx = λx dt + μx dW` from Itô's formula for a *bounded* initial 
   applied to `x²`, a GBM with initial value `x₀²`, and its noise term `∫ 2μx² dW` must be an Itô
   integral with mean zero.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Moments
-import SHSLib.Gardiner.Ito.Calculus.MulLeftL2
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

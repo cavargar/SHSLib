@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.LevySystemIntensity
 
+/-!
 # Eqs. (6) and (7) of Bect (2010): the Lévy-system process `H` and the jump measure `R`
 
 Section 2.3 of the paper introduces the predictable increasing process
@@ -29,7 +32,6 @@ Formalized here:
   `GSHS.meanJumpIntensity_of_split`, which assembles a mean jump intensity for `R` out
   of mean jump intensities for the two parts.
 -/
-import SHSLib.FPK.LevySystemIntensity
 
 open MeasureTheory Set
 open scoped ENNReal

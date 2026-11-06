@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.AppendixC1Box
 
+/-!
 # A worked instance of Eq. (46) on a box
 
 `GSHS.appendixC1_eq46_box` proves Eq. (46) of Appendix C.1 of Bect (2010) on a box, under
@@ -13,7 +16,6 @@ are satisfiable and recovering the divergence theorem for the vector field `φ c
 
   `∫_{[a,b]} Σᵢ cⁱ φ = flux of φ c through the faces of the box`.
 -/
-import SHSLib.FPK.AppendixC1Box
 
 open MeasureTheory Set
 

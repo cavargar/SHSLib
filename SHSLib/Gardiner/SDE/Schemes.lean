@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.SDE.SchemeMoments
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # One-variable schemes: Taylor expansion, Euler, Milstein, implicit schemes and consistency
 (Gardiner §10.1, §10.3.1, §10.4)
 
@@ -42,8 +45,6 @@
   (`Gardiner.SDE.thetaTrunc_consistent_iff`), so the naive implicit/semi-implicit scheme
   (`A = a`, `θ > 0`) is inconsistent unless `bb' = 0` (`Gardiner.SDE.naive_implicit_inconsistent`).
 -/
-import SHSLib.Gardiner.SDE.SchemeMoments
-import SHSLib.Gardiner.Approx.Calculus
 
 open MeasureTheory ProbabilityTheory Finset Real
 open scoped NNReal

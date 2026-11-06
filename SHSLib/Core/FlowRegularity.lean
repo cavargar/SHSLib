@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GlobalFlowExistence
 
+/-!
 # Regularity of the flow of an SHS with a Lipschitz drift
 
 `SHSLib.Core.GlobalFlowExistence` constructs the flow of the continuous dynamics
@@ -22,7 +25,6 @@ continuous, and then combined with the existence theorem into a single
 statement, `SHS.exists_hasGlobalFlow_regular_of_lipschitz`, in which no
 continuity hypothesis remains.
 -/
-import SHSLib.Core.GlobalFlowExistence
 
 open MeasureTheory Metric Set Topology Filter
 

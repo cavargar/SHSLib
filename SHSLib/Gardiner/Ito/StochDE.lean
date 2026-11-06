@@ -1,4 +1,18 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Doob
+import SHSLib.Gardiner.Ito.StochDE.Version
+import SHSLib.Gardiner.Ito.StochDE.ContIto
+import SHSLib.Gardiner.Ito.StochDE.Gronwall
+import SHSLib.Gardiner.Ito.StochDE.Basic
+import SHSLib.Gardiner.Ito.StochDE.Estimate
+import SHSLib.Gardiner.Ito.StochDE.Wellposed
+import SHSLib.Gardiner.Ito.StochDE.Picard
+import SHSLib.Gardiner.Ito.StochDE.ItoIncr
+import SHSLib.Gardiner.Ito.StochDE.EulerDef
+import SHSLib.Gardiner.Ito.StochDE.Euler
+import SHSLib.Gardiner.Ito.StochDE.Examples
+import SHSLib.Gardiner.Ito.StochDE.Restart
+
+/-!
 # Itô stochastic differential equations with state-dependent coefficients (job E4)
 
 Index of `SHSLib.Gardiner.Ito.StochDE.*` (Gardiner §4.3.1–§4.3.2, §4.4.2, §4.4.4,
@@ -74,16 +88,3 @@ including the remaining work (Markov property §4.3.2), is
 * The Markov property `E[f(x(t)) | 𝓕 s] = (P_{s,t} f)(x(s))` (§4.3.2) is not yet formalized;
   only the restart property is.  See the plan.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Doob
-import SHSLib.Gardiner.Ito.StochDE.Version
-import SHSLib.Gardiner.Ito.StochDE.ContIto
-import SHSLib.Gardiner.Ito.StochDE.Gronwall
-import SHSLib.Gardiner.Ito.StochDE.Basic
-import SHSLib.Gardiner.Ito.StochDE.Estimate
-import SHSLib.Gardiner.Ito.StochDE.Wellposed
-import SHSLib.Gardiner.Ito.StochDE.Picard
-import SHSLib.Gardiner.Ito.StochDE.ItoIncr
-import SHSLib.Gardiner.Ito.StochDE.EulerDef
-import SHSLib.Gardiner.Ito.StochDE.Euler
-import SHSLib.Gardiner.Ito.StochDE.Examples
-import SHSLib.Gardiner.Ito.StochDE.Restart

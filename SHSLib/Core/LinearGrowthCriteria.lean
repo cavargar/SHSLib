@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GlobalFlowLinearGrowth
 
+/-!
 # Convenient criteria for the hypotheses of the linear-growth existence theorem
 
 `SHS.exists_hasGlobalFlow_of_linear_growth` asks for a drift that is jointly
@@ -16,7 +19,6 @@ sufficient conditions:
 * an affine drift `f(t, x) = A x + v t` satisfies all three conditions, giving
   the ready-made corollary `SHS.exists_hasGlobalFlow_of_affine_drift`.
 -/
-import SHSLib.Core.GlobalFlowLinearGrowth
 
 open Metric Set
 

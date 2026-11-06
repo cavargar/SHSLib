@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaOrderStatisticInteger
 
+/-!
 # A variance bound and localization for the sample quantile of powers of uniforms
 
 Batch 196 computed the mean of the `(j+1)`-st order statistic of a sample of
@@ -18,7 +21,6 @@ order statistic within `c` of its mean, and hence — by batch 196 — within
 `c + O(k/n)` of the parent quantile at its rank fraction, with probability at
 least `1 − k²/(4(n+2)c²)`.
 -/
-import SHSLib.Foundations.BetaOrderStatisticInteger
 
 open MeasureTheory ProbabilityTheory Set
 

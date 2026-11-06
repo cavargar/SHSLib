@@ -1,11 +1,12 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Space
+
+/-!
 # Continuity of translation in `L²(ℝ)`
 
 `∫ (f(t - q) - f(t))² dt → 0` as `q → 0` for every `f ∈ L²(ℝ)`
 (`Gardiner.Ito.tendsto_translate_sq`).  Used in the density of elementary integrands.
 Mathlib only.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Space
 
 open MeasureTheory Filter Topology
 open scoped ENNReal

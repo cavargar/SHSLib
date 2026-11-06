@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.GronwallGrowthBound
 
+/-!
 # Discharging the hypotheses of Lemma 2 from a growth envelope
 
 `SHS.lemma2_bounded_implies_finite` (Hespanha 2005, Lemma 2) derives the
@@ -18,7 +21,6 @@ The main result `SHS.lemma2_of_polynomial_bounds` composes the polynomial bounds
 with the envelope: `α(s) = c_λ(1 + E(s))^{p_λ}` and
 `β(s) = c_ψ(1 + max(E(s), c_φ))^{p_ψ}`, where `c_φ` bounds the reset images.
 -/
-import SHSLib.Core.GronwallGrowthBound
 
 open MeasureTheory Set
 

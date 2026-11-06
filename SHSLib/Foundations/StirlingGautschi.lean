@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingHalfInteger
 
+/-!
 # Gautschi's inequality for the Gamma ratio
 
 For `x > 0` and `s ∈ (0,1)`,
@@ -22,7 +25,6 @@ The special case `s = ½` bounds `Γ(x+1)/Γ(x+½)` between `√x` and `√(x+½
 complementing the sharp bracket for integer arguments proved in
 `SHSLib/Foundations/StirlingHalfInteger.lean`.
 -/
-import SHSLib.Foundations.StirlingHalfInteger
 
 open Real Set Filter Topology
 

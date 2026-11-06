@@ -1,4 +1,14 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.Basic
+import SHSLib.Gardiner.Ito.Generator.Dynkin
+import SHSLib.Gardiner.Ito.Generator.SDE
+import SHSLib.Gardiner.Ito.Generator.WeakFP
+import SHSLib.Gardiner.Ito.Generator.StrongFP
+import SHSLib.Gardiner.Ito.Generator.Gaussian
+import SHSLib.Gardiner.Ito.Generator.Examples
+import SHSLib.Gardiner.Ito.Generator.ExamplesGBM
+import SHSLib.Gardiner.Ito.Generator.Markov
+
+/-!
 # Generator, Dynkin's formula and the Fokker–Planck equation for Itô SDEs (job E5)
 
 Index of `SHSLib.Gardiner.Ito.Generator.*` (Gardiner §4.3.4, with the §4.3.2 Markov property for
@@ -83,12 +93,3 @@ examples).  Plan and remaining work: `research/docs/plans/plan_gardiner_ito_brid
   that this is the law of the OU solution (Gaussianity of Wiener integrals) is not formalized.
   For the Wiener process the law is known (`IsFWiener.map_eval`), giving `wiener_strongFP`.
 -/
-import SHSLib.Gardiner.Ito.Generator.Basic
-import SHSLib.Gardiner.Ito.Generator.Dynkin
-import SHSLib.Gardiner.Ito.Generator.SDE
-import SHSLib.Gardiner.Ito.Generator.WeakFP
-import SHSLib.Gardiner.Ito.Generator.StrongFP
-import SHSLib.Gardiner.Ito.Generator.Gaussian
-import SHSLib.Gardiner.Ito.Generator.Examples
-import SHSLib.Gardiner.Ito.Generator.ExamplesGBM
-import SHSLib.Gardiner.Ito.Generator.Markov

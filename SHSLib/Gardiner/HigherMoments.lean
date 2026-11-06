@@ -1,11 +1,18 @@
-/-
+import SHSLib.Gardiner.Basic
+
+/-!
+# Vanishing of the third and higher conditional moments (Gardiner (3.4.4)–(3.4.7))
+
 The vanishing of the higher order moment coefficients: equations (3.4.4)–(3.4.7)
 of Gardiner, §3.4 ("Notice that all higher-order coefficients of the form in
 (3.4.2,3) must vanish"), together with the last sentence of the paragraph
 ("Similarly, we can show that all corresponding higher-order quantities also
 vanish").
+
+## References
+
+* [Gardiner2004], §3.4
 -/
-import SHSLib.Gardiner.Basic
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

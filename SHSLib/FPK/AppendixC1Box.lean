@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DivergenceTheorem
 
+/-!
 # Appendix C.1 of Bect (2010) on a box: Eq. (46) proved from the divergence theorem
 
 `SHSLib.FPK.ProbabilityCurrent` contains the pointwise differential identities of
@@ -25,7 +28,6 @@ Main results:
   `(Lφ) p = div(φ j) + φ F p + ½ Σ_l div((f_l φ) p f_l)`, i.e. Eqs. (44)–(45) combined;
 * `GSHS.appendixC1_eq46_box` — **Eq. (46)** on a box.
 -/
-import SHSLib.FPK.DivergenceTheorem
 
 open MeasureTheory Set
 

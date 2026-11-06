@@ -1,7 +1,13 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Semigroup
+import SHSLib.Gardiner.Backward
+import SHSLib.Gardiner.Strong
+import SHSLib.Ullah.DCKE
 
+/-!
 # The differential Chapman–Kolmogorov equation (Gardiner, Ullah) in the
 # categorical organization
 
@@ -29,10 +35,6 @@ picture:
   and `Ullah.fpTerm_add_jumpTerm` shows that Ullah's strong form (8.13) has
   exactly Gardiner's right-hand side (3.4.22).
 -/
-import SHSLib.Category.Semigroup
-import SHSLib.Gardiner.Backward
-import SHSLib.Gardiner.Strong
-import SHSLib.Ullah.DCKE
 
 open CategoryTheory MeasureTheory Set Filter Topology Metric
 

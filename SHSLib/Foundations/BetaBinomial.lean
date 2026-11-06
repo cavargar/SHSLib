@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.IncompleteBeta
 
+/-!
 # The Beta–Binomial identity
 
 At integer parameters the regularised incomplete Beta function is the upper
@@ -19,7 +22,6 @@ derivative of the right telescopes, after the two binomial identities
 vanish at `x = 0`, the two polynomials coincide — for *every* real `x`, not
 only on `[0,1]`.
 -/
-import SHSLib.Foundations.IncompleteBeta
 
 open Real Set Filter Topology MeasureTheory
 

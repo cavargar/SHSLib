@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.HybridSpace
 
+/-!
 # The extended generator of a General Stochastic Hybrid System
 
 Formalization of Section 4 ("The Process Generator", Proposition 6 and
@@ -28,7 +31,6 @@ boundary condition makes the boundary jump term `I₂` vanish, and the generator
 annihilates constants.  A scalar instance of the formula is computed
 explicitly at the end of the file.
 -/
-import SHSLib.Bujorianu2006.HybridSpace
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal Matrix

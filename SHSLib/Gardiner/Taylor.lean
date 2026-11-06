@@ -1,8 +1,15 @@
-/-
+import SHSLib.Gardiner.Basic
+
+/-!
+# A uniform second-order Taylor estimate (Gardiner (3.4.10)–(3.4.11))
+
 Second order Taylor expansion with a *uniform* remainder estimate, corresponding to
 (3.4.10) and (3.4.11) of Gardiner, §3.4.1.
+
+## References
+
+* [Gardiner2004], §3.4.1
 -/
-import SHSLib.Gardiner.Basic
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

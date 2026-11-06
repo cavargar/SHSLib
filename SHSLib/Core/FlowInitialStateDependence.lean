@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Core.FlowRegularityLinearGrowth
 
+/-!
 # Dependence of the flow on the initial state
 
 `SHSLib.Core.FlowRegularityLinearGrowth` bounds the distance between two
@@ -30,7 +33,6 @@ a random initial condition.
   flow with all the regularity of `exists_hasGlobalFlow_regular_of_linear_growth`
   together with continuity and measurability in the initial state.
 -/
-import SHSLib.Core.FlowRegularityLinearGrowth
 
 open MeasureTheory Metric Set Topology
 

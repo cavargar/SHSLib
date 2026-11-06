@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Ito.WienerIntegral
+import SHSLib.Gardiner.Ito.Pathwise
+import SHSLib.Gardiner.SDE.Statistics
+
+/-!
 # The law of the linearised process (Gardiner (6.2.14), (6.2.31)–(6.2.32))
 
 For continuous `k`, `b` the first-order term of the small-noise expansion,
@@ -16,9 +20,6 @@ of any almost-sure pathwise hierarchy (`Gardiner.SDE.IsHierarchy`) is almost sur
 (`Gardiner.Ito.IsWiener.hierarchy_first_order_ae`).  Instance: the Brownian `Gardiner.Ito.ouPath`
 of `SHSLib.Gardiner.Ito.Pathwise` (`Gardiner.Ito.ouPath_stdWiener_law`).
 -/
-import SHSLib.Gardiner.Ito.WienerIntegral
-import SHSLib.Gardiner.Ito.Pathwise
-import SHSLib.Gardiner.SDE.Statistics
 
 open MeasureTheory ProbabilityTheory Filter Topology Set intervalIntegral
 open scoped NNReal

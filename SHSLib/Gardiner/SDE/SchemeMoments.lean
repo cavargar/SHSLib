@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.GaussianMoments
+
+/-!
 # Linear schemes driven by i.i.d. Gaussian increments: exact moment recursions (Gardiner §10.1–§10.4)
 
 All one-variable schemes of Ch. 10, applied to the linear SDEs `dx = -γx dt + σ dW`
@@ -18,7 +20,6 @@ with the Gaussian expectations `⟨G⟩ = g₀ + g₂τ`, `⟨G²⟩ = g₀² + 
 `⟨GH⟩ = g₀h₀ + (g₁h₁ + g₂h₀)τ`, `⟨H⟩ = h₀`, `⟨H²⟩ = h₀² + h₁²τ`
 (`Gardiner.SDE.linScheme_mean`, `Gardiner.SDE.linScheme_sq`).
 -/
-import SHSLib.Gardiner.SDE.GaussianMoments
 
 open MeasureTheory ProbabilityTheory Finset
 open scoped NNReal

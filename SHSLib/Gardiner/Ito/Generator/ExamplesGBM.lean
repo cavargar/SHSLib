@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.Examples
+import SHSLib.Gardiner.Ito.Calculus.GBM
+
+/-!
 # Geometric Brownian motion: Dynkin's formula and the weak Fokker–Planck equation
 
 For GBM `X(t) = x₀ exp((λ - μ²/2) t + μ W(t))` (`Gardiner.Ito.geomBM`, the solution of
@@ -15,8 +18,6 @@ have compact support.
 The file also records `wiener_martingale_clamp`: the Mathlib-`Martingale` form of the martingale
 problem for `W` itself (generator `½ φ''`), when every path of `W` is continuous.
 -/
-import SHSLib.Gardiner.Ito.Generator.Examples
-import SHSLib.Gardiner.Ito.Calculus.GBM
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Real
 open scoped NNReal ENNReal

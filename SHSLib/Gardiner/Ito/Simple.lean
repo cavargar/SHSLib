@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Increments
+
+/-!
 # The Itô integral of simple nonanticipating integrands (Gardiner §4.2.1, §4.2.4, §4.2.6 e–f)
 
 A simple integrand (`Gardiner.Ito.SimpleIntegrand W hWm P ι`) is a finite family of pieces
@@ -23,7 +25,6 @@ integrable.  The pieces may overlap.  Its process is `G(s) = Σᵢ φᵢ 1_{(a�
 Instances for `Gardiner.Ito.stdWiener` are in `SHSLib.Gardiner.Ito.WienerInstances`.  The
 library's `SimpleProcess` is not used.
 -/
-import SHSLib.Gardiner.Ito.Increments
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

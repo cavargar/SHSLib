@@ -1,4 +1,8 @@
-/-
+import SHSLib.Ullah.Limits
+
+/-!
+# The differential Chapman–Kolmogorov equation without integration by parts (Ullah and Wolkenhauer (8.13))
+
 §8.2: the differential Chapman–Kolmogorov equation (8.13).
 
 Adding the two limits (8.11) and (8.12) in the splitting (8.6) gives the dCKE
@@ -10,8 +14,11 @@ Two versions are given: `Ullah.differentialCK`, which takes the two limits as
 hypotheses, and `Ullah.differentialCK_of_kernel`, which derives them from the
 Chapman–Kolmogorov equation, the normalization of the transition density, the
 differentiability conditions (8.8), (8.9) and the jump condition.
+
+## References
+
+* [UllahWolkenhauer2011], §8.2
 -/
-import SHSLib.Ullah.Limits
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

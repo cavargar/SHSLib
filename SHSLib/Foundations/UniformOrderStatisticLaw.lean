@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.UniformOrderStatistic
 
+/-!
 # The law of a uniform order statistic is the Beta law
 
 Batch 187 computed the distribution *function* of the `(j+1)`-st order
@@ -16,7 +19,6 @@ statistic is almost surely larger, above `1` it is almost surely smaller — and
 appealing to the fact that a finite Borel measure on `ℝ` is determined by its
 values on the half-lines `(-∞, a]`.
 -/
-import SHSLib.Foundations.UniformOrderStatistic
 
 open MeasureTheory Set ENNReal
 

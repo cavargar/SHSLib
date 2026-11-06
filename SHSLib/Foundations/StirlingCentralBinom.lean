@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBinetSecond
 
+/-!
 # Sharp bounds on the central binomial coefficient
 
 Batch 157 (`SHSLib/Foundations/StirlingBinetSecond.lean`) bracketed `n!`
@@ -17,7 +20,6 @@ Exponentiating gives two-sided bounds on `C(2n, n)` that are sharp to order
 
   `4ⁿ e^{−1/(7n)} / √(πn) < C(2n, n) < 4ⁿ / √(πn)`.
 -/
-import SHSLib.Foundations.StirlingBinetSecond
 
 open Real Set Filter Topology
 

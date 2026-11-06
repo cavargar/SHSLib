@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.MeanJumpIntensity
 
+/-!
 # The generalized Fokker–Planck–Kolmogorov equation (Section 4 of Bect, 2010)
 
 Formalization of Section 4 of
@@ -44,7 +47,6 @@ Differentiating (13) yields the *generalized FPK equation*
   `r_t^G = (L*μ_t)(G ∩ ·)` is a *positive* measure: a mean jump intensity for the
   forced jumps.
 -/
-import SHSLib.FPK.MeanJumpIntensity
 
 open MeasureTheory Set Filter Topology ProbabilityTheory
 open scoped ENNReal NNReal

@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Brownian
+import SHSLib.Gardiner.SDE.Cubic
+
+/-!
 # The pathwise SDE theorems driven by a genuine Wiener process (Gardiner §6.2, §10.1)
 
 The Itô-free layer `SHSLib.Gardiner.SDE` proves its additive-noise results for **every continuous
@@ -28,8 +31,6 @@ surely, so all of them hold almost surely with `w = W(·, ω)`; for the standard
   path-dependent constant (`Gardiner.Ito.cubic_expansion_path`,
   `Gardiner.Ito.IsWiener.ae_cubic_expansion`).
 -/
-import SHSLib.Gardiner.Ito.Brownian
-import SHSLib.Gardiner.SDE.Cubic
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal

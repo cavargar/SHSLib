@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Localize
+import SHSLib.Gardiner.Ito.Calculus.ItoFormula
+
+/-!
 # Fourth moments of Itô integrals of bounded integrands
 
 For an Itô integrand `G` with `|G| ≤ K` which vanishes outside `(s, t]`,
@@ -11,8 +14,6 @@ time-ordered approximations of the density theorem (`Gardiner.Ito.shiftElem`), c
 `(s, t]`, by Fatou's lemma.  It is the estimate behind the quadratic variation of a general Itô
 integral (`Gardiner.Ito.QuadVar`).
 -/
-import SHSLib.Gardiner.Ito.Calculus.Localize
-import SHSLib.Gardiner.Ito.Calculus.ItoFormula
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

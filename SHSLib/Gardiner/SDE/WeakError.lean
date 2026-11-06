@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.SchemeMoments
+
+/-!
 # Weak error of order `τ` for the Euler, Milstein and semi-implicit schemes on linear SDEs
 (Gardiner §10.1.4 b), §10.1.5, §10.4)
 
@@ -34,7 +36,6 @@ Two generic lemmas carry the analysis: `Gardiner.SDE.weak_factor` (an amplificat
 `Gardiner.SDE.affine_error` (local errors `O(τ²)` of a stable affine recursion accumulate to
 `O(τ)`).
 -/
-import SHSLib.Gardiner.SDE.SchemeMoments
 
 open MeasureTheory ProbabilityTheory Real
 open scoped NNReal

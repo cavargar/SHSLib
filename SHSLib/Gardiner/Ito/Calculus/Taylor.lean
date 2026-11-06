@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Quadratic
+
+/-!
 # Pathwise Taylor estimates for Itô's formula
 
 Deterministic ingredients of the proof of Itô's formula (Gardiner §4.3.3):
@@ -9,7 +11,6 @@ Deterministic ingredients of the proof of Itô's formula (Gardiner §4.3.3):
   `F(T, x_T) - F(0, x_0) = Σᵢ [F_t Δt + F_x Δxᵢ + ½ F_xx Δxᵢ²] + o(1)·(T + Σᵢ Δxᵢ²)`.
 * `Gardiner.Ito.riemannStieltjes_tendsto`: `Σᵢ f(tᵢ) ∫_{tᵢ}^{tᵢ₊₁} a → ∫₀ᵀ f a` for continuous `f, a`.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Quadratic
 
 open Filter Topology Set MeasureTheory
 

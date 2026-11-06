@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Generator presentations and their intertwining morphisms
 
 This file is the hub of the category-theoretic organization of SHSLib
@@ -42,7 +45,6 @@ properties used across the library:
 Each transfers along any morphism (`SatisfiesDynkin.map`, …), and is invariant
 under isomorphism (`satisfiesDynkin_iso_iff`, …).
 -/
-import Mathlib
 
 open CategoryTheory MeasureTheory Set Filter
 

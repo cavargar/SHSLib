@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.Calculus
+
+/-!
 # Jump-process approximation of a diffusion and the Kramers–Moyal expansion
 
 Gardiner, *Handbook of Stochastic Methods*, §7.2.1 and §7.2.2.
@@ -30,7 +32,6 @@ Main results:
   explicit rate.
 * `Gardiner.km_master_change_of_variables`: (7.2.22)–(7.2.23).
 -/
-import SHSLib.Gardiner.Approx.Calculus
 
 open MeasureTheory Filter Topology Set
 open scoped BigOperators Nat

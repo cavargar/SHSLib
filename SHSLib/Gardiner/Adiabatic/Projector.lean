@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Projection-operator algebra of adiabatic elimination
 
 Gardiner, *Handbook of Stochastic Methods*, §6.4.1, §6.4.2, §6.4.5, §6.5, §6.5.4, §6.6.1 and
@@ -32,7 +34,6 @@ The quantitative (normed) versions of the limits `γ → ∞` are in
 `SHSLib.Gardiner.Adiabatic.ProjectorBound`; concrete instances are in
 `SHSLib.Gardiner.Adiabatic.Telegraph`.
 -/
-import Mathlib
 
 open MeasureTheory Filter Topology Set
 

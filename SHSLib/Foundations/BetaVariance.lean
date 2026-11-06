@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaExpectation
 
+/-!
 # Integrability and Mathlib's variance for the Beta law
 
 Batch 179 restated the Beta moments as Bochner integrals against
@@ -18,7 +21,6 @@ interval is integrable — indeed `MemLp` of every order.  The module records
 * `integrable_pow_betaMeasure`, `memLp_id_betaMeasure`;
 * `variance_id_betaMeasure` — `Var[id ; betaMeasure a b] = ab/((a+b)²(a+b+1))`.
 -/
-import SHSLib.Foundations.BetaExpectation
 
 open Real Set Filter Topology MeasureTheory ProbabilityTheory
 open scoped ENNReal

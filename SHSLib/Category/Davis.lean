@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Levy
+import SHSLib.Category.Semigroup
+import SHSLib.Foundations.DavisCh2FiniteProcess
 
+/-!
 # Davis PDPs in the categorical organization
 
 * `Davis.genPres p` — the generator presentation of a PDP: test functions are
@@ -20,9 +25,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
   excessiveness) then hold for the Davis semigroup; we record the Dynkin formula
   and the identification of the two resolvents.
 -/
-import SHSLib.Category.Levy
-import SHSLib.Category.Semigroup
-import SHSLib.Foundations.DavisCh2FiniteProcess
 
 open CategoryTheory MeasureTheory Set Filter
 open scoped ENNReal NNReal

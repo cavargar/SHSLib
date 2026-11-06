@@ -1,4 +1,14 @@
-/-
+import SHSLib.Category.GenPres
+import SHSLib.Category.Semigroup
+import SHSLib.Category.Levy
+import SHSLib.Category.Davis
+import SHSLib.Category.Hespanha
+import SHSLib.Category.HespanhaRegular
+import SHSLib.Category.Bujorianu
+import SHSLib.Category.DCKE
+import SHSLib.Category.Diagram
+
+/-!
 # Category-theoretic organization of SHSLib
 
 Design document: `research/docs/plans/plan_category_theory.md`.
@@ -27,13 +37,13 @@ every morphism and are invariant under isomorphism.
 | dCKE (Gardiner §3.4/3.6, Ullah §8.2)       | `Gardiner.dckePres`, `Gardiner.GardinerKernel.hom`      |
 | Ullah's conditions = Gardiner's            | `Gardiner.GardinerKernel.ofUllah`, `Ullah.fpTerm_add_jumpTerm` |
 | composite transfers                        | `SHS.DavisCompatible.weakDynkin`, `Bujorianu2006.GSHS.weakDynkin_of_satisfiesDynkin` |
+
+## References
+
+* [Hespanha2005]
+* [Davis1993]
+* [Bect2010]
+* [BujorianuLygeros2006]
+* [Gardiner2004]
+* [UllahWolkenhauer2011]
 -/
-import SHSLib.Category.GenPres
-import SHSLib.Category.Semigroup
-import SHSLib.Category.Levy
-import SHSLib.Category.Davis
-import SHSLib.Category.Hespanha
-import SHSLib.Category.HespanhaRegular
-import SHSLib.Category.Bujorianu
-import SHSLib.Category.DCKE
-import SHSLib.Category.Diagram

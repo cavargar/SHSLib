@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBetaIntegral
 
+/-!
 # The Beta distribution: density, normalisation and moments
 
 Euler's integral of the first kind (batch 168) says that for `a, b > 0`
@@ -29,7 +32,6 @@ models of this library, where `X ∈ (0,1)` is the fraction of the mother cell
 inherited by a daughter; the mean and variance computed here are exactly the
 first two summary statistics used there.
 -/
-import SHSLib.Foundations.StirlingBetaIntegral
 
 open Real Set Filter Topology MeasureTheory
 

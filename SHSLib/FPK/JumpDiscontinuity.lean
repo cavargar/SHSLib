@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
+import SHSLib.FPK.DensityEvolution
 
+/-!
 # Section 6.2 of Bect (2010): the jump discontinuity of the density across `H`
 
 Equation (34) of the paper expresses `(L^* μ_t) φ` for a model with forced jumps and
@@ -37,8 +41,6 @@ The main consequences formalized here are
 * `GSHS.boundaryIntensity` and `GSHS.boundaryIntensity_apply` — Eq. (35);
 * `GSHS.boundaryIntensity_unique`     — Eq. (35) determines `β_t`.
 -/
-import Mathlib
-import SHSLib.FPK.DensityEvolution
 
 open MeasureTheory Set Function Metric
 open scoped ENNReal NNReal

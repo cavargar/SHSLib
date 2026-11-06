@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Quantitative adiabatic elimination in the Laplace domain
 
 Gardiner, *Handbook of Stochastic Methods*, (6.4.47)–(6.4.52), (6.5.25)–(6.5.28),
@@ -26,7 +28,6 @@ Fourier mode of a translation-invariant problem with a finite-state fast process
 * `Gardiner.Adiabatic.commuting_laplace_bound`: the special case `PL₃ = L₃P` of (6.5.25)–(6.5.28)
   and (6.6.23)–(6.6.26).
 -/
-import Mathlib
 
 noncomputable section
 

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBetaIntegral
 
+/-!
 # Reflection and binomial coefficients through the Beta function
 
 Two independent readings of the Beta function of batches 167–168.
@@ -18,7 +21,6 @@ with `B(⅓,⅔) = 2π/√3` and `B(½,½) = π` as sample values.
 
   `(n+1)·C(n,k)·B(k+1, n−k+1) = 1`,   `∫₀¹ t^k(1−t)^{n−k} dt = 1/((n+1)C(n,k))`.
 -/
-import SHSLib.Foundations.StirlingBetaIntegral
 
 open Real Set Filter Topology
 

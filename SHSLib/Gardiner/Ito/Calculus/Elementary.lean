@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.Filtered
+
+/-!
 # Elementary nonanticipating integrands for a general filtration (Gardiner §4.2.4, §4.2.6 e–f)
 
 `Gardiner.Ito.ElemIntegrand 𝓕 P ι` is a finite family of pieces `φᵢ 1_{(aᵢ, bᵢ]}` with
@@ -13,7 +15,6 @@ Results, for a Wiener process `W` w.r.t. `𝓕` (`Gardiner.Ito.IsFWiener`):
 * `ElemIntegrand.integral_mul`: `⟨∫ G dW ∫ H dW⟩ = ∫ ds ⟨G(s) H(s)⟩` (4.2.42);
 * `ElemIntegrand.martingale_running`: `t ↦ ∫₀ᵗ G dW` is an `𝓕`-martingale.
 -/
-import SHSLib.Gardiner.Ito.Calculus.Filtered
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBinetSecond
 
+/-!
 # Binet's third-order envelope `1/(12x) − 1/(360x³) + 1/(1260x⁵)`
 
 Batches 156 and 157 gave the two-sided Binet envelope
@@ -28,7 +31,6 @@ whose derivative collapses to
 order, the leading terms of the two contributions cancel — here through order
 `t⁷` — leaving a root of order eight at `0`.
 -/
-import SHSLib.Foundations.StirlingBinetSecond
 
 open Real Set Filter Topology
 

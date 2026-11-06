@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.Digamma
+import Mathlib.NumberTheory.Harmonic.GammaDeriv
 
+/-!
 # The digamma series in classical form: `ψ(x) = −γ + ∑_{k ≥ 0} (1/(k+1) − 1/(x+k))`
 
 `SHSLib/Foundations/Digamma.lean` proves the digamma series in the `γ`-free
@@ -25,8 +29,6 @@ That turns every statement of the previous file into its classical form:
   `∑_{k ≥ 0} (1/(k+1) − 1/(k+1/2)) = −2 log 2`;
 * `deriv_Gamma_eq` — `Γ'(x) = Γ(x) ψ(x)` on `(0, ∞)`.
 -/
-import SHSLib.Foundations.Digamma
-import Mathlib.NumberTheory.Harmonic.GammaDeriv
 
 open Real Set Filter
 

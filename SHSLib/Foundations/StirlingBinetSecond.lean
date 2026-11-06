@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.StirlingBinet
 
+/-!
 # Binet's second-order envelope `1/(12x) − 1/(360x³)`
 
 Batch 156 (`SHSLib/Foundations/StirlingBinet.lean`) trapped the Stirling defect
@@ -29,7 +32,6 @@ whose derivative collapses to the manifestly negative
 `binetAux` and of the new quartic correction cancel exactly, which is why the
 derivative starts at order six.
 -/
-import SHSLib.Foundations.StirlingBinet
 
 open Real Set Filter Topology
 

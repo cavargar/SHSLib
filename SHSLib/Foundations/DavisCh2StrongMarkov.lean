@@ -1,34 +1,36 @@
-/-
-  Davis (1993), "Markov Models and Optimization", Chapter 2.
-
-  # §25.5 — the strong Markov property for *arbitrary* stopping times
-
-  `SHSLib/Foundations/DavisCh2.lean` proves the strong Markov property for
-  stopping times with countably many values
-  (`Davis.pdp_strong_markov_of_countable_range`).  This file removes the
-  countability restriction by the classical dyadic discretisation
-
-      τₙ := (⌊τ·2ⁿ⌋ + 1)/2ⁿ  ↓  τ,      τ < τₙ ≤ τ + 2⁻ⁿ,
-
-  each `τₙ` being a stopping time with countably many values, and then passing
-  to the limit using right continuity of the paths and continuity of `f` and of
-  `Pₛf`.
-
-  The file contains three groups of results.
-
-  * **Dyadic upper approximation** (`dyadicUpper` and its basic properties,
-    `isStoppingTime_dyadicUpper`): reusable discretisation machinery for
-    `ℝ≥0`-indexed stopping times.
-  * **Measurability at a stopping time**
-    (`measurable_apply_stoppingTime_of_countable_range`,
-    `measurable_apply_stoppingTime_of_progMeasurable`,
-    `isStoppingTime_add_const`): the two ways of obtaining
-    `ℱ_τ`-measurability of `ω ↦ h (τ ω) ω`.
-  * **The general strong Markov property**
-    (`pdp_strong_markov_of_rightContinuous`).
--/
-
 import SHSLib.Foundations.DavisCh2
+
+/-!
+# The strong Markov property for arbitrary stopping times (Davis §25.5)
+
+`SHSLib/Foundations/DavisCh2.lean` proves the strong Markov property for
+stopping times with countably many values
+(`Davis.pdp_strong_markov_of_countable_range`).  This file removes the
+countability restriction by the classical dyadic discretisation
+
+    τₙ := (⌊τ·2ⁿ⌋ + 1)/2ⁿ  ↓  τ,      τ < τₙ ≤ τ + 2⁻ⁿ,
+
+each `τₙ` being a stopping time with countably many values, and then passing
+to the limit using right continuity of the paths and continuity of `f` and of
+`Pₛf`.
+
+The file contains three groups of results.
+
+* **Dyadic upper approximation** (`dyadicUpper` and its basic properties,
+  `isStoppingTime_dyadicUpper`): reusable discretisation machinery for
+  `ℝ≥0`-indexed stopping times.
+* **Measurability at a stopping time**
+  (`measurable_apply_stoppingTime_of_countable_range`,
+  `measurable_apply_stoppingTime_of_progMeasurable`,
+  `isStoppingTime_add_const`): the two ways of obtaining
+  `ℱ_τ`-measurability of `ω ↦ h (τ ω) ω`.
+* **The general strong Markov property**
+  (`pdp_strong_markov_of_rightContinuous`).
+
+## References
+
+* [Davis1993], §25.5
+-/
 
 open MeasureTheory Topology Filter Set ProbabilityTheory
 open scoped ENNReal NNReal

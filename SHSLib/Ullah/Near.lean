@@ -1,4 +1,9 @@
-/-
+import SHSLib.Ullah.Basic
+import SHSLib.Gardiner.HigherMoments
+
+/-!
+# The near region: Taylor expansion and conditional moments (Ullah and Wolkenhauer (8.7)–(8.11))
+
 §8.2, the near region `‖y - y'‖ < ε`: equations (8.7)–(8.11).
 
 The substitution `y - y' = q` of (8.7), the auxiliary function
@@ -6,9 +11,11 @@ The substitution `y - y' = q` of (8.7), the auxiliary function
 argument, the cancellation of the first two terms by the symmetry
 `∫ f(y; q) dq = ∫ f(y; -q) dq`, and the appearance of the conditional moments
 `⟨ΔY_i⟩_y`, `⟨ΔY_i ΔY_j⟩_y` of (8.8), (8.9).
+
+## References
+
+* [UllahWolkenhauer2011], §8.2
 -/
-import SHSLib.Ullah.Basic
-import SHSLib.Gardiner.HigherMoments
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

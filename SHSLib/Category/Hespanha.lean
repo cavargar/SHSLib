@@ -1,7 +1,12 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.Davis
+import SHSLib.Core.DavisMartingale
+import SHSLib.FPK.HespanhaBridge
 
+/-!
 # Hespanha's SHS in the categorical organization
 
 * `SHS.presOn S ι` — the generator presentation of an SHS on the
@@ -27,9 +32,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
   state of any Davis realization and *time-dependent* test functions
   (`SHS.weakDynkin_of_davis` covers time-independent test functions only).
 -/
-import SHSLib.Category.Davis
-import SHSLib.Core.DavisMartingale
-import SHSLib.FPK.HespanhaBridge
 
 open CategoryTheory MeasureTheory Set Filter
 open scoped ENNReal NNReal

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Basic
+
+/-!
 # One-dimensional calculus for the approximation methods of Gardiner Ch. 6–7
 
 Two tools used throughout the formalization of the small-noise expansion (§6.3) and of
@@ -14,7 +16,6 @@ the system-size expansion (§7.2):
   [(6.3.18), (7.2.60), (7.2.76)].  Surface terms are not assumed to vanish; they are
   *derived* from integrability.
 -/
-import SHSLib.Gardiner.Basic
 
 open MeasureTheory Filter Topology Set
 open scoped BigOperators Nat

@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.GBM
+
+/-!
 # Moment equations from Itô's formula (job D's moment ODEs)
 
 For the linear multiplicative-noise equation `dx = λx dt + μx dW` of the SDE layer, the moment
@@ -15,7 +17,6 @@ equations are *derived* here from Itô's formula and the mean-value formula (4.2
   the ODEs `m' = λ m` and `m' = (2λ + μ²) m` verified by `Gardiner.SDE.gbmMean_hasDerivAt` and
   `Gardiner.SDE.gbmSecond_hasDerivAt`.
 -/
-import SHSLib.Gardiner.Ito.Calculus.GBM
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.BetaMeasure
 
+/-!
 # The inverse-transform theorem for the Beta law
 
 If `U` is uniform on `[0,1]` then `Q(U)` has the Beta law, where `Q` is the
@@ -19,7 +22,6 @@ suffice.
 Along the way the module records the junk values of the quantile outside
 `[0,1]` and the resulting global measurability of `betaQuantile a b`.
 -/
-import SHSLib.Foundations.BetaMeasure
 
 open Real Set Filter Topology MeasureTheory
 open scoped ENNReal

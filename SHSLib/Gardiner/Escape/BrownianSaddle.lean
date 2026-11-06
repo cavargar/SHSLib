@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.FirstPassage
+
+/-!
 # Bistability in several dimensions, II: Brownian motion in a double potential, §9.3.4
 
 For the Kramers equation (9.3.65) we verify the structure (9.3.66)–(9.3.69), (9.3.75) exactly, and
@@ -37,7 +39,6 @@ symmetric well) is missing from both `τ₀` and `τ₂`; it cancels in `τ₀/�
 `O(s)` but differ at `O(s²)`.  (9.3.108) `V(x, T) = U(xT^{1/2})/T` (the factor `T⁻¹` is missing).
 (9.3.81) is printed with `+U''(0) = -U₂`, consistent with (9.3.113).
 -/
-import SHSLib.Gardiner.Escape.FirstPassage
 
 open MeasureTheory Set Filter Topology Real
 

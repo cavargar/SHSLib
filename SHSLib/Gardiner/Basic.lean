@@ -1,4 +1,8 @@
-/-
+import Mathlib
+
+/-!
+# Setting for the differential Chapman–Kolmogorov equation (Gardiner §3.4)
+
 Formalization of the derivation of the *differential Chapman–Kolmogorov equation*
 following C. W. Gardiner, *Handbook of Stochastic Methods*, §3.4 and §3.4.1.
 
@@ -6,8 +10,11 @@ This file sets up the state space, partial derivatives, the second order Taylor
 remainder (3.4.10)–(3.4.11), the three regularity conditions (i), (ii), (iii)
 of §3.4 [(3.4.1), (3.4.2), (3.4.3)], and the four quantities into which the
 difference quotient (3.4.8)–(3.4.9) is split in (3.4.12).
+
+## References
+
+* [Gardiner2004], §3.4
 -/
-import Mathlib
 
 open MeasureTheory Filter Topology Metric Set
 open scoped BigOperators

@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.ClopperPearsonMonotone
 
+/-!
 # Coverage of the Clopper–Pearson interval
 
 For `n` Bernoulli trials with unknown success probability `p`, the exact
@@ -24,7 +27,6 @@ counts at which the upper endpoint undershoots are handled symmetrically with
 the largest element and a lower tail.  No monotonicity of the endpoints is
 needed: containment in the tail above the minimum is automatic.
 -/
-import SHSLib.Foundations.ClopperPearsonMonotone
 
 open Real Set MeasureTheory ENNReal NNReal
 

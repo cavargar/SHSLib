@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # The generator of an Itô diffusion; test functions (Gardiner §4.3.4)
 
 * `itoGen a b f t y = a(y, t) f'(y) + ½ b(y, t)² f''(y)`: the generator `L` of the Itô SDE
@@ -11,7 +13,6 @@
 * `C2BddDeriv f C1 C2`: `f ∈ C²` with `|f'| ≤ C1`, `|f''| ≤ C2`; every `C²` function with
   compact support is such a test function and is bounded (`exists_c2BddDeriv_of_hasCompactSupport`).
 -/
-import Mathlib
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 

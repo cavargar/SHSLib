@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Category.GenPres
+import SHSLib.FPK.DynkinFormula
 
+/-!
 # Lévy-system presentations: the common shape of the hybrid generators
 
 Davis's PDP generator (26.15), Hespanha's SHS generator (Eq. 9, in the form of
@@ -25,8 +29,6 @@ presentation (a `GenPres` property, hence transportable along morphisms) into
 the hypothesis `WeakDynkin` of Bect's Theorem 8, via
 `GSHS.FPKData.weakDynkin_of_dynkin12`.
 -/
-import SHSLib.Category.GenPres
-import SHSLib.FPK.DynkinFormula
 
 open CategoryTheory MeasureTheory Set Filter
 open scoped ENNReal

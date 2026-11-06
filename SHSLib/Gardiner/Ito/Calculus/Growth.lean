@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Calculus.ItoFormula
+
+/-!
 # Exponential moments of `W` and functions of moderate growth
 
 The hypotheses of Itô's formula (`MSBounded`, `MSUnifCont`) are verified for `g(t, W(t))` when
@@ -11,7 +13,6 @@ neither of which has bounded derivatives.
 * `Gardiner.Ito.ExpGrowth.msBounded`, `Gardiner.Ito.ExpGrowth.msUnifCont`.
 * `Gardiner.Ito.ExpGrowth.of_deriv`, `Gardiner.Ito.expGrowth_pow`, `Gardiner.Ito.expGrowth_exp`.
 -/
-import SHSLib.Gardiner.Ito.Calculus.ItoFormula
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped NNReal ENNReal

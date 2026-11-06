@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.SDE.WeakError
+
+/-!
 # Stability of the Euler, implicit and semi-implicit schemes (Gardiner §10.3)
 
 **Error propagation for the complex test equation.**  For the test equation (10.3.1),
@@ -42,7 +44,6 @@ are the multiplicative linear schemes of `SHSLib.Gardiner.SDE.SchemeMoments`, so
   the exact solution is mean-square stable (`2λ + μ² < 0`, `λ < 0`) it is mean-square stable for
   **every** `τ > 0` (`Gardiner.SDE.implicitGBM_ms_stable`).
 -/
-import SHSLib.Gardiner.SDE.WeakError
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal

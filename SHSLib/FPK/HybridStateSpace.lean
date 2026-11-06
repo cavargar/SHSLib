@@ -1,7 +1,11 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.DivergenceTheorem
+import SHSLib.FPK.BoundaryGeometry
 
+/-!
 # Section 2.1 and Appendix A of Bect (2010): the hybrid state space
 
 The state space of a GSHS is the disjoint union `E = ⋃_{q ∈ Q} {q} × E_q`, where `Q` is
@@ -38,8 +42,6 @@ type `GSHS.HybridSpace nq = Σ q : Q, (Fin (n q) → ℝ)`, together with a fami
   on a box, `GSHS.theorem21_divergence_box`, giving an unconditional hybrid divergence
   theorem for a state space all of whose modes are boxes.
 -/
-import SHSLib.FPK.DivergenceTheorem
-import SHSLib.FPK.BoundaryGeometry
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

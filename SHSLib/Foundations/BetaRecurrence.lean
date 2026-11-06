@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.IncompleteBeta
 
+/-!
 # The recurrence of the incomplete Beta function in its first parameter
 
 Batch 176 proved the Beta–Binomial identity, which is the *integer* form of the
@@ -21,7 +24,6 @@ the endpoint `0` because `a > 0` — even though the derivative itself blows up
 there when `a < 1`.  The version of the fundamental theorem that only requires
 a one-sided derivative on the open interval handles this.
 -/
-import SHSLib.Foundations.IncompleteBeta
 
 open Real Set Filter Topology MeasureTheory
 

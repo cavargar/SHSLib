@@ -1,4 +1,8 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.Gaussian
+import SHSLib.Gardiner.Ito.StochDE.Examples
+import SHSLib.Gardiner.Ito.Calculus.ItoGeneralExamples
+
+/-!
 # Examples: Ornstein–Uhlenbeck, the Wiener process, and `dx = -sin x dt + σ dW`
 
 * **Ornstein–Uhlenbeck** `dx = -k x dt + √D dW` (Gardiner §4.4.4):
@@ -15,9 +19,6 @@
   `sin_isMartingaleOn`, and the instances `sinSDE_exists_dynkin_weakFP` (a solution exists and
   satisfies Dynkin's formula and the weak Fokker–Planck equation).
 -/
-import SHSLib.Gardiner.Ito.Generator.Gaussian
-import SHSLib.Gardiner.Ito.StochDE.Examples
-import SHSLib.Gardiner.Ito.Calculus.ItoGeneralExamples
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Real
 open scoped NNReal ENNReal

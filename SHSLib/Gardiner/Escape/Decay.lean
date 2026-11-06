@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Escape.FirstPassage
+
+/-!
 # Decay from an unstable state: §9.1.5, (9.1.22)–(9.1.32)
 
 The conditional mean exit time `T(a, x)` through `a` satisfies (9.1.22)–(9.1.23), i.e.
@@ -18,7 +20,6 @@ is `Gardiner.Escape.greenSol_eq_split`.  Here:
   and is not formalised; note the text's case label in (9.1.30) should read `x' < b`, not
   `x' < a`.
 -/
-import SHSLib.Gardiner.Escape.FirstPassage
 
 open MeasureTheory Set Filter Topology Real
 

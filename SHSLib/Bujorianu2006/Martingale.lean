@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Bujorianu2006.Resolvent
 
+/-!
 # The strong generator and Dynkin's formula
 
 Formalization of the material around Proposition 6 (martingale property) of
@@ -29,7 +32,6 @@ where the analytic content of that statement lies:
   exactly the statement that the process (27) has zero mean, i.e. the martingale
   property of Proposition 6 tested against the initial time.
 -/
-import SHSLib.Bujorianu2006.Resolvent
 
 open MeasureTheory Set Filter Topology
 

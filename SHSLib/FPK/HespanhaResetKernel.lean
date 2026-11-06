@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.HespanhaBridge
 
+/-!
 # The reset kernel of a Hespanha SHS as a Markov kernel
 
 `SHS.resetKernel` (in `SHSLib/FPK/HespanhaBridge.lean`) is the measure
@@ -14,7 +17,6 @@ measurability of `x ↦ K(x, Γ)`.  This file provides that packaging, at a fixe
 the clock coordinate: `SHS.resetKernelAt` is a Markov kernel on the SHS state space
 `Q × ℝⁿ`.
 -/
-import SHSLib.FPK.HespanhaBridge
 
 open MeasureTheory Set ProbabilityTheory
 open scoped ENNReal NNReal

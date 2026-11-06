@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import Mathlib
 
+/-!
 # Section 4.2 and Appendix C of Bect (2010): the probability current
 
 Inside one mode of the hybrid state space the continuous variable lives in (an open
@@ -40,7 +43,6 @@ all differential data (first and second partial derivatives of `p`, of the vecto
 and of the test function) enter the statements as explicit values, so that no global
 smoothness assumption is needed.
 -/
-import Mathlib
 
 open MeasureTheory Set Finset
 

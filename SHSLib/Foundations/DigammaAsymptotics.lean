@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.DigammaEuler
 
+/-!
 # Asymptotics of `ψ`: `log x − 1/x < ψ(x) < log x`
 
 The two functional facts already in the development —
@@ -25,7 +28,6 @@ Consequences recorded here:
 * `tendsto_harmonic_sub_log_succ` — `H_n − log(n+1) → γ`, an identification of
   the Euler–Mascheroni constant as the limit of the harmonic defect.
 -/
-import SHSLib.Foundations.DigammaEuler
 
 open Real Set Filter Topology
 

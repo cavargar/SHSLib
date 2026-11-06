@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.Foundations.Trigamma
 
+/-!
 # The trigamma series `ψ'(x) = ∑_{k ≥ 0} 1/(x+k)²`
 
 `SHSLib/Foundations/Trigamma.lean` evaluates the second derivative of `log Γ`
@@ -22,7 +25,6 @@ says exactly that `defect x` is the limit of `ψ'(x+n)`, so `defect` is
 `ψ'` on a compact period bounds `defect` by some `K`; the duplication relation
 then improves the bound to `K/2`, hence to `K/2ⁿ`, hence to `0`.
 -/
-import SHSLib.Foundations.Trigamma
 
 open Real Set Filter
 

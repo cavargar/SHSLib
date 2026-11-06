@@ -1,4 +1,16 @@
-/-
+import SHSLib.Gardiner.Escape.Laplace
+import SHSLib.Gardiner.Escape.Kramers
+import SHSLib.Gardiner.Escape.DoubleWell
+import SHSLib.Gardiner.Escape.Splitting
+import SHSLib.Gardiner.Escape.AsymWell
+import SHSLib.Gardiner.Escape.FirstPassage
+import SHSLib.Gardiner.Escape.Decay
+import SHSLib.Gardiner.Escape.BirthDeath
+import SHSLib.Gardiner.Escape.Populations
+import SHSLib.Gardiner.Escape.ExitPoints
+import SHSLib.Gardiner.Escape.BrownianSaddle
+
+/-!
 # First-passage times, bistability and escape over a barrier (Gardiner §5.2.7–5.2.8, §7.4, Ch. 9)
 
 Index of the escape layer (C. W. Gardiner, *Handbook of Stochastic Methods*: §5.2.7 mean
@@ -186,14 +198,3 @@ Smoluchowski).
 * (9.3.100): equality holds only to first order in `U₂/γ²` (`BrownianSaddle`).
 * (9.3.108): `V(x, T) = U(xT^{1/2})/T` (`BrownianSaddle`).
 -/
-import SHSLib.Gardiner.Escape.Laplace
-import SHSLib.Gardiner.Escape.Kramers
-import SHSLib.Gardiner.Escape.DoubleWell
-import SHSLib.Gardiner.Escape.Splitting
-import SHSLib.Gardiner.Escape.AsymWell
-import SHSLib.Gardiner.Escape.FirstPassage
-import SHSLib.Gardiner.Escape.Decay
-import SHSLib.Gardiner.Escape.BirthDeath
-import SHSLib.Gardiner.Escape.Populations
-import SHSLib.Gardiner.Escape.ExitPoints
-import SHSLib.Gardiner.Escape.BrownianSaddle

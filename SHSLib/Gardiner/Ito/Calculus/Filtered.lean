@@ -1,4 +1,6 @@
-/-
+import Mathlib
+
+/-!
 # Wiener processes with respect to a filtration (Gardiner §3.8.1, §4.2.4)
 
 The general Itô calculus of `SHSLib.Gardiner.Ito.Calculus` is developed for a Wiener process
@@ -18,7 +20,6 @@ filtration is what lets an initial value `x(0)` independent of `W` enter an inte
 This file only depends on Mathlib.  It also provides the first four moments of a centred
 Gaussian (`Gardiner.Ito.gaussReal_moment_two`, `Gardiner.Ito.gaussReal_moment_four`, …).
 -/
-import Mathlib
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

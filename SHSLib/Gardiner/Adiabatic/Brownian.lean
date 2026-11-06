@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Approx.ChemicalLNA
+
+/-!
 # Brownian motion: Kramers versus Smoluchowski, with rates
 
 Gardiner, *Handbook of Stochastic Methods*, §6.4, (6.4.1)–(6.4.18): free and harmonically bound
@@ -36,7 +38,6 @@ The proofs use a comparison lemma (`Gardiner.Adiabatic.decay_compare`), an energ
 (`k⟨x⟩² + τ⟨v⟩²` is nonincreasing) and the slaving variable `⟨v⟩ + k⟨x⟩` (the deviation of the
 fast variable from its adiabatic value `F(x)`, cf. (6.4.16)).
 -/
-import SHSLib.Gardiner.Approx.ChemicalLNA
 
 open Filter Topology Set
 

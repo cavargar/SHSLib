@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.Generator.ExamplesGBM
+
+/-!
 # The Markov property (Gardiner §4.3.2) for the Wiener process and geometric Brownian motion
 
 * `condExp_freeze` (**freezing lemma**): if `Z` is `𝓖`-measurable, `Y` is independent of `𝓖` and
@@ -14,7 +16,6 @@
 The Markov property for general Lipschitz SDEs (needs a jointly measurable flow `y ↦ x^{s,y}`
 measurable with respect to the increments of `W` after `s`) remains open; see the plan.
 -/
-import SHSLib.Gardiner.Ito.Generator.ExamplesGBM
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Real
 open scoped NNReal ENNReal

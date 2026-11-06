@@ -1,7 +1,10 @@
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SHSLib.FPK.MeanJumpIntensity
 
+/-!
 # Section 3.2 of Bect (2010): where the initial law comes into play
 
 The hybrid dynamics on `E = [0;1]`: the state moves to the right at constant speed
@@ -26,7 +29,6 @@ Two initial laws are considered.
 The state space is modelled inside the ambient real line; all the mass of the process
 lives in `[0;1]`.
 -/
-import SHSLib.FPK.MeanJumpIntensity
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal NNReal

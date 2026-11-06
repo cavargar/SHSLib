@@ -1,4 +1,7 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Picard
+import SHSLib.Gardiner.Ito.StochDE.ItoIncr
+
+/-!
 # The Euler–Maruyama (Cauchy–Euler) scheme
 
 Gardiner §4.3.1 (4.3.5)–(4.3.9) and §10.1.4 (10.1.13)–(10.1.17).  On the uniform grid
@@ -10,8 +13,6 @@ For the error analysis we use the continuous-time interpolation (`eulerInterp`)
 which satisfies `X(t_k) = x_k` (`eulerInterp_grid`) and is the Itô process with the step
 coefficients (`eulerInterp_eq`).
 -/
-import SHSLib.Gardiner.Ito.StochDE.Picard
-import SHSLib.Gardiner.Ito.StochDE.ItoIncr
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal

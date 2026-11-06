@@ -1,4 +1,6 @@
-/-
+import SHSLib.Gardiner.Ito.StochDE.Euler
+
+/-!
 # The restart (flow) property of solutions
 
 Gardiner §4.3.2 (first step of the Markov property): "with a given initial condition `x(t₀)`, the
@@ -10,7 +12,6 @@ started afresh at time `s` from `x(s)` (`IsSDESol.eq_sdeSol_restart`).
 The Markov property `E[f(x(t)) | 𝓕_s] = (P_{s,t} f)(x(s))` itself is not formalized here; see the
 plan file for the remaining steps.
 -/
-import SHSLib.Gardiner.Ito.StochDE.Euler
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal ENNReal
