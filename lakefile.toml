@@ -1,6 +1,9 @@
 name = "SHSLib"
 version = "2.4.0"
 keywords = ["math", "stochastic-hybrid-systems", "formalization"]
+description = "Stochastic hybrid systems formalized in Lean 4 / Mathlib: Hespanha's SHS, Davis PDMPs, Bect's generalized Fokker–Planck–Kolmogorov equation, Gardiner's differential Chapman–Kolmogorov equation and Itô calculus"
+homepage = "https://cavargar.github.io/SHSLib/"
+license = "MIT"
 defaultTargets = ["SHSLib"]
 
 [[require]]
@@ -10,7 +13,7 @@ rev = "v4.28.0"
 
 [[lean_lib]]
 name = "SHSLib"
-globs = ["SHSLib.+"]
+globs = ["SHSLib.*"]
 
 [[require]]
 name = "BrownianMotion"

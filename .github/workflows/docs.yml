@@ -1,0 +1,69 @@
+name: Build and publish docs
+
+# Every push and pull request to `main` builds the library and the homepage (`home_page/`).
+# Pushes to `main` also generate the API documentation with doc-gen4, the generator behind
+# mathlib4_docs, and deploy everything to GitHub Pages:
+#   https://cavargar.github.io/SHSLib/       homepage
+#   https://cavargar.github.io/SHSLib/docs/  API documentation
+#
+# One-time setup: Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# A newer push to the same branch or pull request supersedes the running build.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build library and docs
+    runs-on: ubuntu-latest
+    steps:
+      # Mathlib's build plus the docs of its import closure need more room than a fresh runner has.
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: false
+          haskell: false
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Installs the toolchain from `lean-toolchain`, fetches the Mathlib cache and runs `lake build`.
+      - name: Build library
+        uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6 # v1.6.2
+
+      # The homepage is built first, into `_site`. The API docs are copied into `_site/docs`
+      # afterwards, so Jekyll never walks the thousands of generated HTML files.
+      - name: Build homepage
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
+        with:
+          source: home_page
+          destination: ./_site
+
+      # On pushes to `main` only (the action skips these steps on pull requests): writes `docbuild/`
+      # with doc-gen4 pinned to the tag matching `lean-toolchain`, copies `references.bib` into it,
+      # builds `SHSLib:docs` (caching the docs of Lean core and Mathlib between runs), copies the
+      # HTML to `_site/docs`, then uploads `_site` and deploys it to GitHub Pages.
+      - name: Build API docs and deploy
+        uses: leanprover-community/docgen-action@dacc1acc2a3f532cc577266979ba9c36c7593f7c # main, 2026-10-05
+        with:
+          homepage: _site
+          build-page: false

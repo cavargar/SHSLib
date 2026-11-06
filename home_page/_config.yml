@@ -1,0 +1,18 @@
+# Homepage of https://cavargar.github.io/SHSLib/ (built in CI by actions/jekyll-build-pages).
+# The API docs are added under /docs/ by the docgen-action step of .github/workflows/docs.yml.
+
+title: SHSLib
+description: Stochastic hybrid systems formalized in Lean 4 and Mathlib
+url: "https://cavargar.github.io"
+baseurl: "/SHSLib"
+repo_url: "https://github.com/cavargar/SHSLib"
+
+theme: jekyll-theme-cayman
+plugins:
+  - jekyll-seo-tag
+
+# kramdown turns $$ … $$ into \( … \) inline and \[ … \] for display; MathJax (see
+# _layouts/default.html) renders both. Write all math with $$, never single $.
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
