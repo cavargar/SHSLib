@@ -4,8 +4,7 @@
 #
 # Usage: scripts/preview_docs.sh [--no-serve]
 #
-# Build SHSLib first (`lake build`). Source links point at the current commit on GitHub, so they work
-# once that commit is pushed.
+# Source links point at the current commit on GitHub, so they work once that commit is pushed.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

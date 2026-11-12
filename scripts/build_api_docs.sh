@@ -18,11 +18,15 @@
 #   DOCS_OFFLINE=1  don't download the Mathlib documentation's index; link declarations through
 #                   its find page instead.
 #
-# CI (.github/workflows/docs.yml) and scripts/preview_docs.sh both run this script. SHSLib itself
-# must already be built (`lake build`).
+# CI (.github/workflows/docs.yml) and scripts/preview_docs.sh both run this script. It runs
+# `lake build` first, so the docs always describe the current sources.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+# doc-gen4 reads the compiled modules (.olean files), so bring them up to date first. Nothing is
+# rebuilt when they already are, as right after CI's build step.
+lake build
 
 # doc-gen4 is tagged per Lean release: use the tag that matches lean-toolchain (e.g. v4.28.0).
 toolchain=$(<lean-toolchain)
