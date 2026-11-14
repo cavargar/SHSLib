@@ -19,9 +19,7 @@ Index of `SHSLib.Gardiner.Ito.StochDE.*` (Gardiner §4.3.1–§4.3.2, §4.4.2, �
 §10.1.1–§10.1.4), namespace `Gardiner.Ito.StochDE`.  Everything is stated for a Wiener process
 with respect to an arbitrary filtration, `Gardiner.Ito.IsFWiener W 𝓕 P`, and built on the Itô
 calculus `SHSLib.Gardiner.Ito.Calculus.*` (job E3: `itoInt`, `IsItoIntegrand`, isometry,
-martingale property, `geomBM`).  These files import only Mathlib and the E3 calculus.  The plan,
-including the remaining work (Markov property §4.3.2), is
-`research/docs/plans/plan_gardiner_ito_sde.md`.
+martingale property, `geomBM`).  These files import only Mathlib and the E3 calculus.
 
 ## Files
 

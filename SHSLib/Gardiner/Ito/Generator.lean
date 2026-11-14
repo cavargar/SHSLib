@@ -17,7 +17,7 @@ process with respect to an arbitrary filtration, `Gardiner.Ito.IsFWiener W 𝓕 
 Itô calculus of job E3 (`IsItoProcess`, `itoInt`, `condExp_itoInt`, `itoInt_mean`,
 `ito_formula_process`, `ito_formula_process_C2`) and the SDE layer of job E4 (`SDECoeffs`,
 `IsSDESol`, `memLp_apply`, `isItoIntegrand_drive`, `existsUnique_sdeSol`, the GBM/OU/sin
-examples).  Plan and remaining work: `research/docs/plans/plan_gardiner_ito_bridges.md`.
+examples).
 
 ## Files
 

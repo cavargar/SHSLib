@@ -17,11 +17,9 @@ import SHSLib.Gardiner.Ito.Multiple
 # Wiener process and the first Itô computations (Gardiner §3.8.1, §4.2.2, §4.2.5, (6.2.40))
 
 Index of the Brownian-motion layer.  It connects a genuine Brownian motion (from the
-`brownian-motion` dependency, see `research/wiki/Dependencies.md`) to Gardiner Ch. 4 and to the
+`brownian-motion` dependency) to Gardiner Ch. 4 and to the
 Itô-free SDE layer `SHSLib.Gardiner.SDE`, and is the base on which later jobs build the Itô
-integral, the Itô formula and SDE solutions.  Plans: `research/docs/plans/plan_gardiner_ito_bm.md`
-(job E1) and `research/docs/plans/plan_gardiner_ito_wiener.md` (job E2: simple and Wiener
-integrals).
+integral, the Itô formula and SDE solutions.
 Conventions as in `SHSLib.Gardiner.SDE`:
 
 * all declarations are in the namespace `Gardiner.Ito`;

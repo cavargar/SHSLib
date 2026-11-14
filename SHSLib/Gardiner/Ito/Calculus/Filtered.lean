@@ -13,8 +13,8 @@ The general Itô calculus of `SHSLib.Gardiner.Ito.Calculus` is developed for a W
 
 These are exactly the fields of `Gardiner.Ito.IsWiener` with `𝓕 = wienerFiltration W`, so an
 `IsWiener` process is an `IsFWiener` process for its natural filtration
-(the one-line bridge `Gardiner.Ito.IsWiener.isFWiener` is specified in
-`research/docs/plans/plan_gardiner_ito_formula.md`).  Allowing a larger
+(the one-line bridge `Gardiner.Ito.IsWiener.isFWiener` is in
+`SHSLib.Gardiner.Ito.CalculusBridge`).  Allowing a larger
 filtration is what lets an initial value `x(0)` independent of `W` enter an integrand.
 
 This file only depends on Mathlib.  It also provides the first four moments of a centred

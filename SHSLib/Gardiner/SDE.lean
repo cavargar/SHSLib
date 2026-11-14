@@ -38,8 +38,8 @@ Fokker–Planck expansion is the counterpart of §6.2), `SHSLib.Gardiner.Adiabat
   OU process `k = b = 1`, `B_{ij} = xᵢG_{ij}` with `G = [[1,2],[3,4]]`, `A = sin`, `b = cos`.
 
 **Note (Brownian-motion layer).**  SHSLib now has a genuine Wiener process:
-`SHSLib.Gardiner.Ito` (index `SHSLib/Gardiner/Ito.lean`, plan
-`research/docs/plans/plan_gardiner_ito_bm.md`) provides the interface `Gardiner.Ito.IsWiener`
+`SHSLib.Gardiner.Ito` (index `SHSLib/Gardiner/Ito.lean`)
+provides the interface `Gardiner.Ito.IsWiener`
 with its natural filtration, a concrete standard Wiener process `Gardiner.Ito.stdWiener`, and
 instantiates this layer with it: `IsPathSol`, the pathwise expansion and Euler convergence hold
 almost surely for Brownian paths, and Brownian grid increments satisfy the hypotheses of

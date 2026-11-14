@@ -32,9 +32,9 @@ import SHSLib.Gardiner.Ito.Calculus.MomentsL2
 Index of the stochastic-calculus layer `SHSLib.Gardiner.Ito.Calculus.*` (Gardiner §4.2–§4.4).
 Everything is stated for a Wiener process with respect to an arbitrary filtration,
 `Gardiner.Ito.IsFWiener W 𝓕 P`; a process with `Gardiner.Ito.IsWiener W P` is one for its natural
-filtration `Gardiner.Ito.wienerFiltration`.  These files import Mathlib only; the bridge to
-`IsWiener`, `SimpleIntegrand`, `wienerInt`, `stdWiener` and the job-D GBM theorems is specified in
-`research/docs/plans/plan_gardiner_ito_formula.md`.
+filtration `Gardiner.Ito.wienerFiltration`.  These files import Mathlib only;
+`SHSLib.Gardiner.Ito.CalculusBridge` connects them to `IsWiener`, `wienerInt`, `stdWiener` and the
+job-D GBM theorems.
 
 | file | content |
 | --- | --- |

@@ -5,9 +5,7 @@ import SHSLib.Gardiner.Ito.Calculus.Filtered
 
 `Gardiner.Ito.ElemIntegrand 𝓕 P ι` is a finite family of pieces `φᵢ 1_{(aᵢ, bᵢ]}` with
 `0 ≤ aᵢ ≤ bᵢ`, `φᵢ` square integrable and `𝓕 aᵢ`-measurable.  The fields are those of
-`Gardiner.Ito.SimpleIntegrand` with `wienerFiltration W` replaced by `𝓕`, so a simple integrand is
-an elementary integrand for the natural filtration (`Gardiner.Ito.SimpleIntegrand.toElem`, specified in
-`research/docs/plans/plan_gardiner_ito_formula.md`), with the same process and integral.
+`Gardiner.Ito.SimpleIntegrand` with `wienerFiltration W` replaced by `𝓕`.
 
 Results, for a Wiener process `W` w.r.t. `𝓕` (`Gardiner.Ito.IsFWiener`):
 

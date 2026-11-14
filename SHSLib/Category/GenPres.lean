@@ -7,8 +7,7 @@ import Mathlib
 /-!
 # Generator presentations and their intertwining morphisms
 
-This file is the hub of the category-theoretic organization of SHSLib
-(see `research/docs/plans/plan_category_theory.md`).
+This file is the hub of the category-theoretic organization of SHSLib.
 
 Every framework formalized in the library — Hespanha's SHS, Davis's PDPs,
 Bujorianu–Lygeros GSHS and transition semigroups, Bect's Lévy-system

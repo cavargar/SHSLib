@@ -11,8 +11,6 @@ import SHSLib.Category.Diagram
 /-!
 # Category-theoretic organization of SHSLib
 
-Design document: `research/docs/plans/plan_category_theory.md`.
-
 The five frameworks of the library are related through one category,
 `SHSCat.GenPres`, of **generator presentations** (state space, test functions,
 evaluation, generator) and **intertwiners** (state map + test-function pull-back

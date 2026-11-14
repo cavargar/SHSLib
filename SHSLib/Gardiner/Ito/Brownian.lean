@@ -4,8 +4,8 @@ import SHSLib.Gardiner.Ito.Wiener
 /-!
 # Adapter: a concrete standard Wiener process from the `brownian-motion` library
 
-This is the **only** SHSLib file that imports the `brownian-motion` dependency (and, per
-`research/wiki/Dependencies.md`, it imports only `BrownianMotion.Gaussian.BrownianMotion`).  It
+This is the **only** SHSLib file that imports the `brownian-motion` dependency, and it imports
+only `BrownianMotion.Gaussian.BrownianMotion` from it.  It
 turns the library's Brownian motion `ProbabilityTheory.brownian`, indexed by `ℝ≥0` and defined on
 `ℝ≥0 → ℝ` under the measure `ProbabilityTheory.gaussianLimit`, into a process on real time,
 

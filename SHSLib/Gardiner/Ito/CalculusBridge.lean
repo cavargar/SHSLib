@@ -12,8 +12,6 @@ that a Wiener process in the sense of E1, `Gardiner.Ito.IsWiener W P`, is such a
 natural filtration `Gardiner.Ito.wienerFiltration`. As a result, every E3 result applies to the
 standard Wiener process `Gardiner.Ito.stdWiener` built from the brownian-motion dependency.
 
-This is deferred item 1 of `research/docs/plans/plan_gardiner_ito_formula.md`.
-
 | Lean | content |
 | --- | --- |
 | `IsWiener.isFWiener` | `IsWiener W P → IsFWiener W (wienerFiltration W _) P` |
@@ -94,8 +92,7 @@ lemma riemannSum_eq_itoRiemann (f : ℝ → ℝ) (T : ℝ) (n : ℕ) :
   rfl
 
 /-- For continuous deterministic `f`, the general Itô integral (E3) agrees almost surely with the
-Wiener integral (E2). Both are mean-square limits of the same left-point Riemann sums. This is
-deferred item 3 of `plan_gardiner_ito_formula.md`. -/
+Wiener integral (E2). Both are mean-square limits of the same left-point Riemann sums. -/
 theorem IsWiener.itoInt_det_eq_wienerInt (hW : IsWiener W P) {T : ℝ} (hT : 0 < T) {f : ℝ → ℝ}
     (hf : Continuous f) :
     itoInt W (wienerFiltration W hW.measurable) P T (fun t _ => f t) =ᵐ[P] wienerInt W P f 0 T := by
